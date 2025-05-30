@@ -57,7 +57,7 @@ export default withSentryConfig(nextConfig, {
     // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
     org: "azuri-tech",
-    project: "javascript-nextjs",
+    project: "harrispye-az-next",
 
     // Only print logs for uploading source maps in CI
     silent: !process.env.CI,
