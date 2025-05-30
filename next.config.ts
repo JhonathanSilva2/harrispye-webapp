@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
+                protocol: "http",
+                hostname: "localhost",
+            },
+            {
                 protocol: "https",
                 hostname: "avantisstorage147852369.blob.core.windows.net",
             },
