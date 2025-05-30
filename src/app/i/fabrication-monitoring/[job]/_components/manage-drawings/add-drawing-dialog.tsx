@@ -24,7 +24,7 @@ import { JSX, useState } from "react"; // Removido useEffect, useMemo, useCallba
 import { FormProvider, useForm } from "react-hook-form";
 
 interface DialogProps {
-    jobId: string; // jobId é necessário para a URL
+    jobId: number; // jobId é necessário para a URL
     open: boolean;
     setOpen: (open: boolean) => void;
     triggerBtn?: JSX.Element;
@@ -32,14 +32,14 @@ interface DialogProps {
 }
 
 // Simulação de um hook de mutação (substitua pelo seu)
-const useSubmitDrawingMutation = (jobId: string) => {
+const useSubmitDrawingMutation = (jobId: number) => {
     const [isLoading, setIsLoading] = useState(false);
     const mutateAsync = async ({
         payload,
         jobId,
     }: {
         payload: FormData;
-        jobId: string | number;
+        jobId: number;
     }) => {
         setIsLoading(true);
         const apiUrl = `http://localhost:3000/api/fabrication-monitoring/designs?jobId=${jobId}`;
@@ -80,7 +80,7 @@ const useSubmitDrawingMutation = (jobId: string) => {
     return { mutateAsync, isLoading };
 };
 
-export const FileDialog = ({
+export const AddDrawingDialog = ({
     jobId,
     open,
     setOpen,
@@ -146,6 +146,7 @@ export const FileDialog = ({
                         <div className="grid w-full items-center gap-1.5">
                             <Label htmlFor="file-input">Drawing File</Label>
                             <Input
+                                className="mt-2"
                                 id="file-input"
                                 type="file"
                                 {...register("file")}
@@ -162,13 +163,20 @@ export const FileDialog = ({
                             placeholder="Insira uma breve descrição..."
                         />
                         {errors.description && (
-                            <p className="-mt-4 text-sm font-medium text-destructive">
+                            <p className="mt-4 text-sm font-medium text-destructive">
                                 {errors.description.message}
                             </p>
                         )}
                     </form>
                 </FormProvider>
                 <DialogFooter>
+                    <Button
+                        variant="outline"
+                        onClick={() => handleDialogClose(false)}
+                        className="mt-2 w-full sm:mt-0 sm:w-auto"
+                    >
+                        Cancelar
+                    </Button>
                     <AlertDialogComponent
                         actionText="Confirmar e Enviar" // Texto de ação mais específico
                         triggerBtn={
@@ -176,6 +184,7 @@ export const FileDialog = ({
                                 type="button" // O botão do trigger não deve submeter o form diretamente
                                 className="w-full sm:w-auto" // Ajuste de largura para responsividade
                                 disabled={isLoading}
+                                variant={"constructive"}
                             >
                                 {isLoading ? (
                                     <>
@@ -189,13 +198,6 @@ export const FileDialog = ({
                         }
                         onConfirm={handleSubmit(onSubmit)} // O AlertDialog agora dispara o submit validado
                     />
-                    <Button
-                        variant="outline"
-                        onClick={() => handleDialogClose(false)}
-                        className="mt-2 w-full sm:mt-0 sm:w-auto"
-                    >
-                        Cancelar
-                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

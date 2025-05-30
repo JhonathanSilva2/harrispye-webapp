@@ -1,7 +1,6 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { fabrication_monitoring_designs } from "../../../../../../prisma/generated/client-hp-base";
-import { ActionsCell } from "../actions-cell";
 import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { fabrication_monitoring_designs } from "../../../../../../../prisma/generated/client-hp-base";
 
 export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitoring_designs>[] =
     [

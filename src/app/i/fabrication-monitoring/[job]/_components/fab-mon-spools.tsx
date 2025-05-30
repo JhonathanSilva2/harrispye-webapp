@@ -7,22 +7,20 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useFabMon } from "@/hooks/query/use-fab-mon";
 import { useFilters } from "@/hooks/use-filters";
 import { PaginationConstants } from "@/lib/constants/pagination";
+import { formatMoney } from "@/utils/format-currency";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
 import { format } from "date-fns";
 import _ from "lodash";
 import { useMemo, useState } from "react";
 import { EditDialog } from "../../_components/edit-dialog";
-import AddSpoolButton from "./add-spool-button";
+import { ChartLegend } from "./chart-legend";
 import { fabricationMonitoringColumns } from "./column-def";
 import JobCharts from "./job-charts";
+import { DrawingDialog } from "./manage-drawings/drawing-dialog";
 import { PieChartApprovals } from "./pie-chart-approval";
 import { SummaryCard } from "./summary-card";
-import { ChartLegend } from "./chart-legend";
-import { formatMoney } from "@/utils/format-currency";
 import TableHeader from "./table-header";
-import { DrawingDialog } from "../../_components/manage-drawing/drawing-dialog";
-import { fabrication_monitoring_jobs } from "../../../../../../prisma/generated/client-hp-base";
 
 interface ApprovedType {
     APPROVED: number;
@@ -204,7 +202,7 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
                                 setOpen={setIsOpen}
                             />
                             <DrawingDialog
-                                jobId={String(data?.data.job.id)}
+                                jobId={data?.data.job.id}
                                 designs={data?.data.designs}
                                 triggerBtn={
                                     <Button
