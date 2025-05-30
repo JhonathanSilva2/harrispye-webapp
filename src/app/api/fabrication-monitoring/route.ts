@@ -1,6 +1,6 @@
 import {
-	fabrication_monitoring_jobs,
-	Prisma,
+    fabrication_monitoring_jobs,
+    Prisma,
 } from "@/../prisma/generated/client-hp-base";
 import { TPayload } from "@/app/types";
 import { prismaBase } from "@/db/base-client";
@@ -11,132 +11,139 @@ import _ from "lodash";
 import { NextRequest, NextResponse } from "next/server";
 
 export interface FabricationMonitoringFetchReturn
-	extends fabrication_monitoring_jobs {
-	progress: number;
-	grossCost: number;
+    extends fabrication_monitoring_jobs {
+    progress: number;
+    grossCost: number;
 }
 
 export async function GET(
-	request: NextRequest,
+    request: NextRequest,
 ): Promise<NextResponse<TPayload<FabricationMonitoringFetchReturn[]>>> {
-	try {
-		const urlObj = new URL(request.nextUrl);
-		const validSort: ValidSort[] = [
-			{ key: "hp", type: "string" },
-			{ key: "mr_number", type: "string" },
-			{ key: "shutdown_id", type: "string" },
-			{ key: "client", type: "string" },
-			{ key: "po_number", type: "string" },
-			{ key: "contract_delivery_date", type: "date" },
-			{ key: "expected_delivery_date", type: "date" },
-		];
+    try {
+        const urlObj = new URL(request.nextUrl);
+        const validSort: ValidSort[] = [
+            { key: "hp", type: "string" },
+            { key: "mr_number", type: "string" },
+            { key: "shutdown_id", type: "string" },
+            { key: "client", type: "string" },
+            { key: "po_number", type: "string" },
+            { key: "contract_delivery_date", type: "date" },
+            { key: "expected_delivery_date", type: "date" },
+        ];
 
-		const advancedFilterKeys: ValidSort[] = [
-			{ key: "hp", type: "string" },
-			{ key: "client", type: "string" },
-			{ key: "po_number", type: "string" },
-			{ key: "expected_delivery_date", type: "date" },
-		];
+        const advancedFilterKeys: ValidSort[] = [
+            { key: "hp", type: "string" },
+            { key: "client", type: "string" },
+            { key: "po_number", type: "string" },
+            { key: "expected_delivery_date", type: "date" },
+        ];
 
-		const { page, pageSize, where, skip, take, orderBy } =
-			getApiPagination<Prisma.fabrication_monitoring_jobsWhereInput>(
-				urlObj,
-				validSort,
-				advancedFilterKeys,
-			);
+        const { page, pageSize, where, skip, take, orderBy } =
+            getApiPagination<Prisma.fabrication_monitoring_jobsWhereInput>(
+                urlObj,
+                validSort,
+                advancedFilterKeys,
+            );
 
-		const jobs = await prismaBase.fabrication_monitoring_jobs.findMany({
-			where,
-			skip,
-			take,
-			include: {
-				fabrication_monitoring: true, // Include related fabrication_monitoring data
-			},
-			orderBy,
-		});
+        const jobs = await prismaBase.fabrication_monitoring_jobs.findMany({
+            where,
+            skip,
+            take,
+            include: {
+                fabrication_monitoring: true, // Include related fabrication_monitoring data
+            },
+            orderBy,
+        });
 
-		const jobsWithSummary = jobs.map((job) => {
-			const spools = job.fabrication_monitoring;
+        const jobsWithSummary = jobs.map((job) => {
+            const spools = job.fabrication_monitoring;
 
-			const progressFields = spools.reduce(
-				(acc, spool) => {
-					const materials_ordered = spool.materials_ordered || 0;
-					const materials_arrived = spool.materials_arrived || 0;
-					const fabrication_complete =
-						spool.fabrication_complete || 0;
-					const ndt_complete = spool.ndt_complete || 0;
-					const pressure_test = spool.pressure_test || 0;
-					const internal_coating = spool.internal_coating || 0;
-					const external_coating = spool.external_coating || 0;
-					const packing = spool.packing || 0;
-					const dispatch = spool.dispatch || 0;
+            const progressFields = spools.reduce(
+                (acc, spool) => {
+                    const materials_ordered = spool.materials_ordered || 0;
+                    const materials_arrived = spool.materials_arrived || 0;
+                    const fabrication_complete =
+                        spool.fabrication_complete || 0;
+                    const ndt_complete = spool.ndt_complete || 0;
+                    const pressure_test = spool.pressure_test || 0;
+                    const internal_coating = spool.internal_coating || 0;
+                    const external_coating = spool.external_coating || 0;
+                    const packing = spool.packing || 0;
+                    const dispatch = spool.dispatch || 0;
 
-					return {
-						materials_ordered:
-							acc.materials_ordered + materials_ordered,
-						materials_arrived:
-							acc.materials_arrived + materials_arrived,
-						fabrication_complete:
-							acc.fabrication_complete + fabrication_complete,
-						ndt_complete: acc.ndt_complete + ndt_complete,
-						pressure_test: acc.pressure_test + pressure_test,
-						internal_coating:
-							acc.internal_coating + internal_coating,
-						external_coating:
-							acc.external_coating + external_coating,
-						packing: acc.packing + packing,
-						dispatch: acc.dispatch + dispatch,
-					};
-				},
-				{
-					materials_ordered: 0,
-					materials_arrived: 0,
-					fabrication_complete: 0,
-					ndt_complete: 0,
-					pressure_test: 0,
-					internal_coating: 0,
-					external_coating: 0,
-					packing: 0,
-					dispatch: 0,
-				},
-			);
+                    const progress = {
+                        materials_ordered:
+                            acc.materials_ordered + materials_ordered,
+                        materials_arrived:
+                            acc.materials_arrived + materials_arrived,
+                        fabrication_complete:
+                            acc.fabrication_complete + fabrication_complete,
+                        ndt_complete: acc.ndt_complete + ndt_complete,
+                        pressure_test: acc.pressure_test + pressure_test,
+                        internal_coating:
+                            acc.internal_coating + internal_coating,
+                        external_coating:
+                            acc.external_coating + external_coating,
+                        packing: acc.packing + packing,
+                        dispatch: acc.dispatch + dispatch,
+                    };
 
-			const progressValues = Object.values(progressFields);
-			const progressTotal = _.sum(progressValues);
-			const progress = (progressTotal / progressValues.length).toFixed(2);
+                    return {
+                        ...progress,
+                    };
+                },
+                {
+                    materials_ordered: 0,
+                    materials_arrived: 0,
+                    fabrication_complete: 0,
+                    ndt_complete: 0,
+                    pressure_test: 0,
+                    internal_coating: 0,
+                    external_coating: 0,
+                    packing: 0,
+                    dispatch: 0,
+                },
+            );
 
-			const grossCost = spools.reduce((acc, grossCost) => {
-				const parseDecimal = Number(grossCost.gross_spool_cost) || 0;
-				return acc + parseDecimal;
-			}, 0);
+            const progressValues = Object.values(progressFields);
+            const progressTotal = _.sum(progressValues);
+            const progress = (
+                progressTotal /
+                (spools.length * progressValues.length)
+            ).toFixed(2);
 
-			return {
-				...job,
-				progress,
-				grossCost,
-			};
-		});
+            const grossCost = spools.reduce((acc, grossCost) => {
+                const parseDecimal = Number(grossCost.gross_spool_cost) || 0;
+                return acc + parseDecimal;
+            }, 0);
 
-		const jobsCount = await prismaBase.fabrication_monitoring_jobs.count({
-			where,
-		});
+            return {
+                ...job,
+                progress,
+                grossCost,
+            };
+        });
 
-		const payload: TPayload<typeof jobsWithSummary> = {
-			data: jobsWithSummary,
-			page,
-			pageSize,
-			rowCount: jobsCount,
-		};
+        const jobsCount = await prismaBase.fabrication_monitoring_jobs.count({
+            where,
+        });
 
-		return new NextResponse(JSON.stringify(payload, null, 4), {
-			headers: {
-				"content-type": "application/json",
-			},
-		});
-	} catch (err) {
-		assert(err instanceof Error);
-		return new NextResponse(err.message, { status: 500 });
-	}
+        const payload: TPayload<typeof jobsWithSummary> = {
+            data: jobsWithSummary,
+            page,
+            pageSize,
+            rowCount: jobsCount,
+        };
+
+        return new NextResponse(JSON.stringify(payload, null, 4), {
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+    } catch (err) {
+        assert(err instanceof Error);
+        return new NextResponse(err.message, { status: 500 });
+    }
 }
 
 /**
@@ -162,43 +169,43 @@ export async function GET(
  * @throws {Error} - Lança erro caso ocorra algum problema durante o processamento (por exemplo, erro de banco de dados).
  */
 export async function POST(request: NextRequest) {
-	try {
-		const body = await request.json();
-		const validation = fabricationMonitoringJobCreateSchema.safeParse(body);
-		if (!validation.success)
-			return NextResponse.json(validation.error.format(), {
-				status: 400,
-			});
+    try {
+        const body = await request.json();
+        const validation = fabricationMonitoringJobCreateSchema.safeParse(body);
+        if (!validation.success)
+            return NextResponse.json(validation.error.format(), {
+                status: 400,
+            });
 
-		const newBody = validation.data;
-		const duplicate =
-			await prismaBase.fabrication_monitoring_jobs.findUnique({
-				where: {
-					hp: newBody.hp,
-				},
-			});
-		if (duplicate)
-			return NextResponse.json(
-				{ message: "Duplicate Job" },
-				{ status: 409 },
-			);
+        const newBody = validation.data;
+        const duplicate =
+            await prismaBase.fabrication_monitoring_jobs.findUnique({
+                where: {
+                    hp: newBody.hp,
+                },
+            });
+        if (duplicate)
+            return NextResponse.json(
+                { message: "Duplicate Job" },
+                { status: 409 },
+            );
 
-		const newJob = await prismaBase.fabrication_monitoring_jobs.create({
-			data: {
-				hp: newBody.hp,
-				client: newBody.client,
-				po_number: newBody.po_number,
-				contract_delivery_date: newBody.contract_delivery_date,
-				expected_delivery_date: newBody.expected_delivery_date,
-				mr_number: newBody.mr_number,
-				shutdown_id: newBody.shutdown_id,
-			},
-		});
-		return new NextResponse(JSON.stringify(newJob, null, 4), {
-			status: 201,
-		});
-	} catch (err) {
-		assert(err instanceof Error);
-		return new NextResponse(err.message, { status: 500 });
-	}
+        const newJob = await prismaBase.fabrication_monitoring_jobs.create({
+            data: {
+                hp: newBody.hp,
+                client: newBody.client,
+                po_number: newBody.po_number,
+                contract_delivery_date: newBody.contract_delivery_date,
+                expected_delivery_date: newBody.expected_delivery_date,
+                mr_number: newBody.mr_number,
+                shutdown_id: newBody.shutdown_id,
+            },
+        });
+        return new NextResponse(JSON.stringify(newJob, null, 4), {
+            status: 201,
+        });
+    } catch (err) {
+        assert(err instanceof Error);
+        return new NextResponse(err.message, { status: 500 });
+    }
 }
