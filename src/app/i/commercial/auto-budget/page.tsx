@@ -1,9 +1,11 @@
+import NotImplemented from "@/components/not-implemented";
 import AutoBudget from "./_components/autobudget";
 
 export default function Page() {
-	return (
-		<div>
-			<AutoBudget />
-		</div>
-	);
+    return (
+        <div>
+            <NotImplemented />
+            <AutoBudget />
+        </div>
+    );
 }

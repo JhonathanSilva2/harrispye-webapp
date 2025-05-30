@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
+                protocol: "http",
+                hostname: "localhost",
+            },
+            {
                 protocol: "https",
                 hostname: "avantisstorage147852369.blob.core.windows.net",
             },
@@ -43,12 +47,16 @@ const nextConfig: NextConfig = {
         NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
         NOREPLY_PASSWORD: process.env.NOREPLY_PASSWORD,
         STORAGE_PATH: process.env.STORAGE_PATH,
+        COMPANY_ACRONYM: process.env.COMPANY_ACRONYM,
         NEXT_PUBLIC_AZURE_STORAGE_URL:
             process.env.NEXT_PUBLIC_AZURE_STORAGE_URL,
         AZURE_STORAGE_CONNECTION_STRING:
             process.env.AZURE_STORAGE_CONNECTION_STRING,
         AZURE_STORAGE_ACCOUNT_NAME: process.env.AZURE_STORAGE_ACCOUNT_NAME,
         AZURE_STORAGE_ACCOUNT_KEY: process.env.AZURE_STORAGE_ACCOUNT_KEY,
+        SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+        SENTRY_DSN: process.env.SENTRY_DSN,
+        NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     },
 };
 
@@ -57,7 +65,7 @@ export default withSentryConfig(nextConfig, {
     // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
     org: "azuri-tech",
-    project: "javascript-nextjs",
+    project: "harrispye-az-next",
 
     // Only print logs for uploading source maps in CI
     silent: !process.env.CI,

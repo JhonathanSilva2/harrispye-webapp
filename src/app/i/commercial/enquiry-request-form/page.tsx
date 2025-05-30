@@ -1,10 +1,11 @@
-import React from "react";
+import NotImplemented from "@/components/not-implemented";
 import EnquiryRequestForm from "./components/erf-form";
 
 export default function page() {
-	return (
-		<div>
-			<EnquiryRequestForm />
-		</div>
-	);
+    return (
+        <div>
+            <NotImplemented />
+            <EnquiryRequestForm />
+        </div>
+    );
 }
