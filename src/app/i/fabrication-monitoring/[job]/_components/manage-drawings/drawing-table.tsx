@@ -1,11 +1,11 @@
 import { DataTable } from "@/components/data-table";
-import { fabrication_monitoring_designs } from "../../../../../../prisma/generated/client-hp-base";
 import { useLocalStateFilters } from "@/hooks/use-filters";
-import { useMemo, useState } from "react";
 import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
-import { fabricationMonitoringDrawingColumns } from "./columns-def";
 import { SortingState, Updater } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import { fabrication_monitoring_designs } from "../../../../../../../prisma/generated/client-hp-base";
+import { fabricationMonitoringDrawingColumns } from "./columns-def";
 
 interface DrawingTable {
     designs: fabrication_monitoring_designs[];
@@ -80,7 +80,7 @@ export function DrawingTable({ designs }: DrawingTable) {
             isPending={false}
             isError={false}
             columns={columns}
-            headerClassName="flex justify-between items-center"
+            headerClassName="flex justify-end items-center"
         />
     );
 }
