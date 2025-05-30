@@ -1,0 +1,425 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "./generated/client-proposals"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource dbProposals {
+  provider = "mysql"
+  url      = env("DATABASE_URL_PROPOSALS")
+}
+
+model job {
+  id          Int      @id @default(autoincrement())
+  job_no      String?   @unique(map: "job_no") @dbProposals.VarChar(255)
+  erf_id      Int      @unique @dbProposals.Int
+  erf         erf      @relation(fields: [erf_id], references: [id])
+  budget      Json     @dbProposals.Json
+  delivery    Json     @dbProposals.Json
+  status      String?  @dbProposals.VarChar(255)
+  created_at  DateTime @default(now()) @dbProposals.Timestamp(0)
+  updated_at  DateTime @updatedAt
+}
+
+model erf {
+  id                           Int      @id @default(autoincrement())
+  acronym_number               String?
+  received_date                DateTime
+  enquiry_source               Enquiry
+  description                  String
+  client_name                  String
+  division                     String
+  client_contact_name          String
+  client_email                 String
+  invoicing_address            String
+  avantis_station              AvantistStation 
+  avantis_services             AvantisServices
+  requester                    String
+  estimated_quote_date         DateTime
+  probability_award            ProbabilityAward  
+  expected_start_date          DateTime
+  estimated_quote_value        Float?
+  expected_duration            Int
+  comments                     String
+  general_operations_manager   String
+  client_interface             String
+  vessel_site                  String
+  job                          job?             
+  created_by                   String?
+  created_at                   DateTime @default(now())
+  updated_at                   DateTime @updatedAt
+}
+
+enum AvantisServices {
+  DRILLING
+  MARINE_BOILERS
+  MARINE_MAINTENANCE
+  MARINE_SHIPYARD
+  SUPPORT
+  PRODUCTION
+  SHUT_DOWN_MAINTENANCE
+}
+
+enum ProbabilityAward {
+  A
+  B
+  C
+}
+
+enum Enquiry {
+  EMAIL
+  VERBAL
+}
+
+enum AvantistStation {
+  UNITED_KINGDOM
+  SINGAPORE
+  UNITED_ARAB_EMIRATES
+  BRAZIL
+  BCS
+  AES
+  LCAM
+}
+
+model accounts {
+  id      String  @id @dbProposals.VarChar(255)
+  name    String? @dbProposals.VarChar(255)
+  code    String? @dbProposals.VarChar(255)
+  address String? @dbProposals.VarChar(255)
+}
+
+model approval_types {
+  id                        Int                         @id @default(autoincrement())
+  type                      String                      @dbProposals.VarChar(255)
+  approvals                 approvals[]
+  variation_order_approvals variation_order_approvals[]
+}
+
+model approvals {
+  id               Int            @id @default(autoincrement())
+  proposal_id      Int
+  auth_id          Int
+  approval_type_id Int
+  token            String         @dbProposals.VarChar(255)
+  approved_by      Int?
+  declined_by      Int?
+  declined_reason  String?        @dbProposals.Text
+  approval_types   approval_types @relation(fields: [approval_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approval_type_id")
+  history          history        @relation(fields: [proposal_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_proposal_id")
+
+  @@index([approval_type_id], map: "fk_approval_type_id")
+  @@index([approved_by], map: "fk_approved_by")
+  @@index([auth_id], map: "fk_auth_id")
+  @@index([declined_by], map: "fk_declined_by")
+  @@index([proposal_id], map: "fk_proposal_id")
+}
+
+model bolts {
+  id             Int    @id @default(autoincrement())
+  diameter       String @dbProposals.VarChar(255)
+  pressure_class String @dbProposals.VarChar(255)
+  qty            Int?
+  mm             Int?
+}
+
+model committed_cost_ledger_entries {
+  id                    Int       @id @default(autoincrement())
+  Company_Name          String?   @map("Company Name") @dbProposals.VarChar(255)
+  Line_No_              Int?      @map("Line No.")
+  Order_Date            DateTime? @map("Order Date") @dbProposals.Date
+  Entry_Type            String?   @map("Entry Type") @dbProposals.VarChar(255)
+  Document_No_          String?   @map("Document No.") @dbProposals.VarChar(255)
+  Job_No_               String?   @map("Job No.") @dbProposals.VarChar(255)
+  Job_Task_No_          String?   @map("Job Task No.") @dbProposals.VarChar(255)
+  Type                  String?   @dbProposals.VarChar(255)
+  No_                   String?   @map("No.") @dbProposals.VarChar(255)
+  Parent_Cost_Type      String?   @map("Parent Cost Type") @dbProposals.VarChar(255)
+  Cost_Type             String?   @map("Cost Type") @dbProposals.VarChar(255)
+  Detailed_Cost_Type    String?   @map("Detailed Cost Type") @dbProposals.VarChar(255)
+  Detailed_Description  String?   @map("Detailed Description") @dbProposals.Text
+  Unit_of_Measure       String?   @map("Unit of Measure") @dbProposals.VarChar(255)
+  Committed_Quantity    Decimal?  @map("Committed Quantity") @dbProposals.Decimal(10, 2)
+  Job_Currency_Code     String?   @map("Job Currency Code") @dbProposals.VarChar(255)
+  Committed_Cost        Decimal?  @map("Committed Cost") @dbProposals.Decimal(10, 2)
+  Committed_Cost__LCY_  Decimal?  @map("Committed Cost (LCY)") @dbProposals.Decimal(10, 2)
+  Committed_Cost__USD_  Decimal?  @map("Committed Cost (USD)") @dbProposals.Decimal(10, 2)
+  Buy_from_Vendor_No_   String?   @map("Buy-from Vendor No.") @dbProposals.VarChar(255)
+  Buy_from_Vendor_Name  String?   @map("Buy from Vendor Name") @dbProposals.VarChar(255)
+  Expected_Receipt_Date DateTime? @map("Expected Receipt Date") @dbProposals.Date
+  Vendor_Posting_Group  String?   @map("Vendor Posting Group") @dbProposals.VarChar(255)
+  Blocked_Status        String?   @map("Blocked Status") @dbProposals.VarChar(255)
+  User_ID               String?   @map("User ID") @dbProposals.VarChar(255)
+  Phrase_Description    String?   @map("Phrase Description") @dbProposals.VarChar(255)
+}
+
+model contacts {
+  id    String  @id @dbProposals.VarChar(255)
+  name  String? @dbProposals.VarChar(255)
+  email String? @dbProposals.VarChar(255)
+  phone String? @dbProposals.VarChar(255)
+}
+
+model debtors {
+  id                  Int       @id @default(autoincrement())
+  DATE_OF_ISSUE       DateTime? @map("DATE OF ISSUE") @dbProposals.Date
+  INV_SUBS            String?   @map("INV SUBS") @dbProposals.VarChar(255)
+  CUSTOMER            String?   @dbProposals.VarChar(255)
+  M_I_                String?   @map("M.I.") @dbProposals.VarChar(255)
+  VESSEL              String?   @dbProposals.VarChar(255)
+  PROJECT_MANAGER     String?   @map("PROJECT MANAGER") @dbProposals.VarChar(255)
+  P_O                 String?   @map("P.O") @dbProposals.VarChar(255)
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // % Float? @map("%") @dbProposals.Float
+  INVOICE_VALUE       Decimal?  @map("INVOICE VALUE") @dbProposals.Decimal(10, 2)
+  COFINS_3_           Decimal?  @map("COFINS 3%") @dbProposals.Decimal(10, 2)
+  CSLL_1_             Decimal?  @map("CSLL 1%") @dbProposals.Decimal(10, 2)
+  INSS_11_            Decimal?  @map("INSS 11%") @dbProposals.Decimal(10, 2)
+  IRPJ_1_5_           Decimal?  @map("IRPJ 1.5%") @dbProposals.Decimal(10, 2)
+  PIS_0_65_           Decimal?  @map("PIS 0.65%") @dbProposals.Decimal(10, 2)
+  ISS                 Decimal?  @dbProposals.Decimal(10, 2)
+  WITHHOLING_TAXES    Decimal?  @map("WITHHOLING TAXES") @dbProposals.Decimal(10, 2)
+  NET                 Decimal?  @dbProposals.Decimal(10, 2)
+  DUE_DATE            DateTime? @map("DUE DATE") @dbProposals.Date
+  DUE_REAL_DATE       DateTime? @map("DUE REAL DATE") @dbProposals.Date
+  PAID_or_NOT_PAID    String?   @map("PAID or NOT PAID") @dbProposals.VarChar(255)
+  PAYMENT_DATE        DateTime? @map("PAYMENT DATE") @dbProposals.Date
+  Amount_PAID         Decimal?  @map("Amount PAID") @dbProposals.Decimal(10, 2)
+  Invoice_to_RECEIVED Decimal?  @map("Invoice to RECEIVED") @dbProposals.Decimal(10, 2)
+  Difference          Decimal?  @dbProposals.Decimal(10, 2)
+  Days_Overdue        Int?      @map("Days Overdue")
+  Current             Decimal?  @dbProposals.Decimal(10, 2)
+  DAYS___30_DAYS      Decimal?  @map("> 0 DAYS < 30 DAYS") @dbProposals.Decimal(10, 2)
+  DAYS___60_DAYS      Decimal?  @map("> 30 DAYS < 60 DAYS") @dbProposals.Decimal(10, 2)
+  DAYS___90_DAYS      Decimal?  @map("> 60 DAYS < 90 DAYS") @dbProposals.Decimal(10, 2)
+  DAYS                Decimal?  @map("> 90 DAYS") @dbProposals.Decimal(10, 2)
+  OBSERVATIONS        String?   @dbProposals.Text
+}
+
+model estimator {
+  id    String  @id @dbProposals.VarChar(255)
+  name  String? @dbProposals.VarChar(255)
+  email String? @dbProposals.VarChar(255)
+}
+
+model hist {
+  id                                  String   @id @dbProposals.VarChar(255)
+  hp                                  String?  @dbProposals.VarChar(255)
+  word_json                           Json?
+  Key_Opportunity                     Boolean?
+  Owner                               Json?
+  HP_Division                         String?  @dbProposals.VarChar(255)
+  Enquiry_Division                    String?  @dbProposals.VarChar(255)
+  Enquiry_Region                      String?  @dbProposals.VarChar(255)
+  Project_Location                    String?  @dbProposals.VarChar(255)
+  Enquiry_ABC_Category                String?  @dbProposals.VarChar(255)
+  Billing_Country                     String?  @dbProposals.VarChar(255)
+  Lost_Reason                         String?  @dbProposals.VarChar(255)
+  Type_of_Quote                       String?  @dbProposals.VarChar(255)
+  Record_Approved                     Boolean?
+  Currency                            String?  @dbProposals.VarChar(255)
+  Exchange_Rate                       Float?   @dbProposals.Float
+  Job_Type                            String?  @dbProposals.VarChar(255)
+  Opportunity_Stages                  String?  @dbProposals.VarChar(255)
+  Stage                               String?  @dbProposals.VarChar(255)
+  Additional_Preliminary_Information  String?  @dbProposals.VarChar(255)
+  Pipeline                            String?  @dbProposals.VarChar(255)
+  Project_Type                        String?  @dbProposals.VarChar(255)
+  Budgeted_Amount                     String?  @dbProposals.VarChar(255)
+  Quote_Value                         String?  @dbProposals.VarChar(255)
+  Amount                              String?  @dbProposals.VarChar(255)
+  Original_Equipment_Manufacturer_OEM String?  @dbProposals.VarChar(255)
+  Boiler_Type                         String?  @dbProposals.VarChar(255)
+  Approximate_Budget_Quote_Value      String?  @dbProposals.VarChar(255)
+  Lead_Source                         String?  @dbProposals.VarChar(255)
+  Project_Manager                     Json?
+  Estimator_Assigned                  Json?
+  Enquiry_Received_Date               String?  @dbProposals.VarChar(255)
+  Client_RFQ_Deadline                 String?  @dbProposals.VarChar(255)
+  Internal_Quotation_Deadline         String?  @dbProposals.VarChar(255)
+  Planned_Start_Date                  String?  @dbProposals.VarChar(255)
+  Expected_Order_Date                 String?  @dbProposals.VarChar(255)
+  Expected_Completion_Date            String?  @dbProposals.VarChar(255)
+  Account_Name                        Json?
+  Vessel_Plant_Facility_Name          String?  @dbProposals.VarChar(255)
+  Deal_Name                           String?  @dbProposals.VarChar(255)
+  Work_Scope_Description              String?  @dbProposals.VarChar(255)
+  Client_Commercial_Contact           Json?
+  Client_Technical_Contact            Json?
+  Project_Category                    String?  @dbProposals.VarChar(255)
+  Business_Sector                     String?  @dbProposals.VarChar(255)
+  Business_Segment                    String?  @dbProposals.VarChar(255)
+  Primary_Selection_Criteria          String?  @dbProposals.VarChar(255)
+  Go_Probability                      String?  @dbProposals.VarChar(255)
+  Get_Probability                     String?  @dbProposals.VarChar(255)
+  Expected_Revenue2                   String?  @dbProposals.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model history {
+  id                    Int         @id @default(autoincrement())
+  id_crm                String      @unique(map: "id_crm") @dbProposals.VarChar(255)
+  hp                    String?     @dbProposals.VarChar(50)
+  id_user               BigInt
+  email_user            String      @dbProposals.VarChar(255)
+  status                Int?        @default(0) @dbProposals.TinyInt
+  json_crm              Json?
+  json_proposal         Json?
+  json_jes              Json?
+  timestamp             DateTime    @default(now()) @dbProposals.Timestamp(0)
+  approval_signature    String?     @dbProposals.VarChar(64)
+  approval_signature_po String?     @dbProposals.VarChar(64)
+  path_proposal         String?     @dbProposals.VarChar(255)
+  path_jes              String?     @dbProposals.VarChar(255)
+  path_po               String?     @dbProposals.VarChar(255)
+  proposal_hash_auth    String?     @dbProposals.VarChar(64)
+  folder_name           String?     @dbProposals.VarChar(255)
+  rev                   Int         @default(0)
+  justificativa_rev     Json?
+  nav_status            String?     @dbProposals.VarChar(255)
+  approvals             approvals[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model prices {
+  id          Int     @id @default(autoincrement())
+  company     String  @dbProposals.VarChar(255)
+  variant     String? @dbProposals.VarChar(255)
+  json_prices Json
+}
+
+model service {
+  id         Int           @id @default(autoincrement())
+  trade      String?       @unique(map: "trade") @dbProposals.VarChar(100)
+  type       service_type? @default(DAILY)
+  cost       Decimal?      @dbProposals.Decimal(10, 2)
+  tax_id     Int?
+  created_at DateTime?     @default(now()) @dbProposals.Timestamp(0)
+  created_by Int
+  updated_by Int?
+
+  @@index([tax_id], map: "fk_service_tax_categories")
+}
+
+model service_accounts_rate {
+  id         Int       @id @default(autoincrement())
+  service_id Int?
+  account_id String?   @dbProposals.VarChar(255)
+  cost       Decimal?  @dbProposals.Decimal(10, 2)
+  created_at DateTime? @default(now()) @dbProposals.Timestamp(0)
+  created_by Int
+  updated_by Int?
+
+  @@index([account_id(length: 250)], map: "fk_account_service_rate_account")
+  @@index([service_id], map: "fk_account_service_rate_service")
+}
+
+model service_accounts_rate_log {
+  id                       Int       @id @default(autoincrement())
+  service_accounts_rate_id Int?
+  previous_state           Json?
+  new_state                Json?
+  updated_at               DateTime? @default(now()) @dbProposals.Timestamp(0)
+  updated_by               Int
+
+  @@index([service_accounts_rate_id], map: "fk_service_accounts_rate_log_service")
+}
+
+model service_log {
+  id             Int       @id @default(autoincrement())
+  service_id     Int?
+  previous_state Json?
+  new_state      Json?
+  updated_at     DateTime? @default(now()) @dbProposals.Timestamp(0)
+  updated_by     Int
+
+  @@index([service_id], map: "fk_service_log_service")
+}
+
+model tax_categories {
+  id            Int     @id @default(autoincrement())
+  category_name String  @dbProposals.VarChar(255)
+  description   String? @dbProposals.Text
+}
+
+model tax_components {
+  id              Int       @id @default(autoincrement())
+  tax_category_id Int
+  tax_component   String    @dbProposals.VarChar(255)
+  percentage      Decimal   @dbProposals.Decimal(5, 2)
+  created_by      String    @dbProposals.VarChar(255)
+  created_at      DateTime  @dbProposals.DateTime(0)
+  expires_at      DateTime? @dbProposals.DateTime(0)
+  updated_at      DateTime? @default(now()) @dbProposals.Timestamp(0)
+  updated_by      Int?
+
+  @@index([tax_category_id], map: "tax_category_id")
+}
+
+model tax_components_log {
+  id                Int       @id @default(autoincrement())
+  tax_components_id Int
+  previous_state    Json
+  new_state         Json
+  updated_at        DateTime? @default(now()) @dbProposals.Timestamp(0)
+  updated_by        Int
+
+  @@index([tax_components_id], map: "tax_components_id")
+}
+
+model taxes {
+  id         Int    @id @default(autoincrement())
+  type       String @dbProposals.VarChar(255)
+  ncm        String @dbProposals.VarChar(255)
+  pis_cofins Float  @default(9.25) @map("pis/cofins") @dbProposals.Float
+  icms       Float  @default(20) @dbProposals.Float
+  ipi        Float  @default(0) @dbProposals.Float
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model variation_order {
+  id                        Int                         @id @default(autoincrement())
+  id_crm                    String                      @unique(map: "id_crm") @dbProposals.VarChar(255)
+  proposal_id               Int
+  vo                        String?                     @dbProposals.VarChar(50)
+  id_user                   BigInt
+  email_user                String                      @dbProposals.VarChar(255)
+  status                    Int?                        @default(0) @dbProposals.TinyInt
+  json_crm                  Json?
+  json_proposal             Json?
+  json_jes                  Json?
+  timestamp                 DateTime                    @default(now()) @dbProposals.Timestamp(0)
+  approval_signature        String?                     @dbProposals.VarChar(64)
+  approval_signature_po     String?                     @dbProposals.VarChar(64)
+  path_proposal             String?                     @dbProposals.VarChar(255)
+  path_po                   String?                     @dbProposals.VarChar(255)
+  proposal_hash_auth        String?                     @dbProposals.VarChar(64)
+  folder_name               String?                     @dbProposals.VarChar(255)
+  rev                       Int                         @default(0)
+  justificativa_rev         Json?
+  nav_status                String?                     @dbProposals.VarChar(255)
+  variation_order_approvals variation_order_approvals[]
+}
+
+model variation_order_approvals {
+  id                 Int             @id @default(autoincrement())
+  variation_order_id Int
+  auth_id            Int
+  approval_type_id   Int
+  token              String          @dbProposals.VarChar(255)
+  approved_by        Int?
+  declined_by        Int?
+  declined_reason    String?         @dbProposals.Text
+  approval_types     approval_types  @relation(fields: [approval_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approval_type_id_var_order")
+  variation_order    variation_order @relation(fields: [variation_order_id], references: [id], onDelete: Cascade, map: "fk_variation_order_id")
+
+  @@index([approval_type_id], map: "fk_approval_type_id_var_order")
+  @@index([approved_by], map: "fk_approved_by_var_order")
+  @@index([auth_id], map: "fk_auth_id_var_order")
+  @@index([declined_by], map: "fk_declined_by_var_order")
+  @@index([variation_order_id], map: "fk_variation_order_id")
+}
+
+enum service_type {
+  DAILY
+  UNIT
+}

@@ -1,0 +1,493 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client-hp-base"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource dbHPBase {
+  provider = "mysql"
+  url      = env("DATABASE_URL_HPBASE")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model adobe {
+  hash         String   @id @dbHPBase.VarChar(255)
+  data         DateTime @dbHPBase.Date
+  id_perfil    BigInt?
+  adobe_id     String?  @dbHPBase.VarChar(50)
+  adobe_status String?  @dbHPBase.VarChar(255)
+  json_data    Json?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model adobe_pdf_data {
+  hash             String   @dbHPBase.VarChar(255)
+  vessel           String   @dbHPBase.VarChar(255)
+  job              String   @dbHPBase.VarChar(255)
+  week_ending      DateTime @dbHPBase.Date
+  client           String   @dbHPBase.VarChar(255)
+  shift1           String   @dbHPBase.VarChar(255)
+  nationality      String   @dbHPBase.VarChar(255)
+  total_head_count Int      @dbHPBase.TinyInt
+  name             Json
+  trade            Json
+  shift            Json
+  mon              Json
+  tue              Json
+  wed              Json
+  thu              Json
+  fri              Json
+  sat              Json
+  sun              Json
+  hours            Json
+  rate             Json?
+  total_each       Json?
+  total_final      String?  @dbHPBase.VarChar(255)
+  job_mon          Json
+  job_tue          Json
+  job_wed          Json
+  job_thu          Json
+  job_fri          Json
+  job_sat          Json
+  job_sun          Json
+
+  @@ignore
+}
+
+model appraisal {
+  id              Int      @id @default(autoincrement())
+  hp_registration Int
+  questions       Json?
+  comments        Json?
+  year            Int
+  created_at      DateTime @default(now()) @dbHPBase.DateTime(0)
+}
+
+model certificates {
+  id                 Int       @id @default(autoincrement())
+  hp_number          Int
+  certificate_number Int
+  form_data          Json
+  date_created       DateTime? @default(now()) @dbHPBase.Timestamp(0)
+  created_by         String    @dbHPBase.VarChar(255)
+}
+
+model departments {
+  id         Int    @id @default(autoincrement())
+  department String @dbHPBase.VarChar(255)
+  manager    Int
+}
+
+model fabrication_monitoring {
+  id                               Int                                    @id @default(autoincrement())
+  fabrication_monitoring_design_id Int?
+  id_fabrication_monitoring_jobs   Int
+  spec                             String?                                @dbHPBase.VarChar(255)
+  mass                             Decimal?                               @dbHPBase.Decimal(10, 2)
+  price_per_kg                     Decimal?                               @dbHPBase.Decimal(10, 2)
+  gross_spool_cost                 Decimal?                               @dbHPBase.Decimal(10, 2)
+  description                      String?                                @dbHPBase.VarChar(255)
+  drawing_ref                      String?                                @dbHPBase.VarChar(255)
+  spool_number                     String?                                @dbHPBase.VarChar(255)
+  materials_ordered                Int?
+  materials_arrived                Int?
+  fabrication_complete             Int?
+  ndt_complete                     Int?
+  pressure_test                    Int?
+  internal_coating                 Int?
+  external_coating                 Int?
+  packing                          Int?
+  dispatch                         Int?
+  notes                            String?                                @dbHPBase.VarChar(255)
+  client_approval                  fabrication_monitoring_client_approval @default(PENDING)
+  updated_by                       Int?
+  updated_at                       DateTime?                              @dbHPBase.DateTime(0)
+  fabrication_monitoring_designs   fabrication_monitoring_designs?        @relation(fields: [fabrication_monitoring_design_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_designs")
+  fabrication_monitoring_jobs      fabrication_monitoring_jobs            @relation(fields: [id_fabrication_monitoring_jobs], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_jobs")
+
+  @@index([fabrication_monitoring_design_id], map: "fk_fabrication_monitoring_designs")
+  @@index([id_fabrication_monitoring_jobs], map: "fk_fabrication_monitoring_jobs")
+}
+
+model fabrication_monitoring_designs {
+  id                             Int                         @id @default(autoincrement())
+  fabrication_monitoring_jobs_id Int
+  filename                       String                      @dbHPBase.VarChar(255)
+  display_name                   String                      @dbHPBase.VarChar(255)
+  created_at                     DateTime                    @default(now()) @dbHPBase.DateTime(0)
+  fabrication_monitoring         fabrication_monitoring[]
+  fabrication_monitoring_jobs    fabrication_monitoring_jobs @relation(fields: [fabrication_monitoring_jobs_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_jobs_id")
+
+  @@index([fabrication_monitoring_jobs_id], map: "fk_fabrication_monitoring_jobs_id")
+}
+
+model fabrication_monitoring_jobs {
+  id                             Int                              @id @default(autoincrement())
+  hp                             String                           @unique  @dbHPBase.VarChar(255)
+  mr_number                      String?                          @dbHPBase.VarChar(255)
+  shutdown_id                    String?                          @dbHPBase.VarChar(255)
+  client                         String                           @dbHPBase.VarChar(255)
+  contract_delivery_date         DateTime                         @dbHPBase.Date
+  expected_delivery_date         DateTime                         @dbHPBase.Date
+  existing_design                String?                          @dbHPBase.VarChar(255)
+  updated_design                 String?                          @dbHPBase.VarChar(255)
+  po_number                      String                           @dbHPBase.VarChar(255)
+  fabrication_monitoring         fabrication_monitoring[]
+  fabrication_monitoring_designs fabrication_monitoring_designs[]
+}
+
+model fabrication_monitoring_log {
+  id                             Int       @id @default(autoincrement())
+  fabrication_monitoring_id      Int
+  fabrication_monitoring_jobs_id Int
+  method                         String    @dbHPBase.VarChar(255)
+  previous_state                 String    @dbHPBase.Text
+  new_state                      String    @dbHPBase.Text
+  updated_at                     DateTime? @default(now()) @dbHPBase.DateTime(0)
+  updated_by                     Int
+
+  @@index([fabrication_monitoring_id], map: "fabrication_monitoring_id")
+  @@index([fabrication_monitoring_jobs_id], map: "fabrication_monitoring_jobs_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model feriados {
+  id         Int       @id @default(autoincrement())
+  data       DateTime? @dbHPBase.Date
+  nome       String?   @dbHPBase.VarChar(50)
+  n_dias     Int       @default(1)
+  permanente Boolean   @default(false)
+}
+
+model finances {
+  hp   String @id @dbHPBase.VarChar(255)
+  data Json
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finances_comment {
+  hp       String   @dbHPBase.VarChar(255)
+  date     DateTime @dbHPBase.Date
+  comments String?  @dbHPBase.MediumText
+
+  @@ignore
+}
+
+model finances_hist {
+  hp               String   @id @dbHPBase.VarChar(255)
+  date             DateTime @dbHPBase.Date
+  ctc              Float?
+  wip              Float?
+  status           String   @dbHPBase.VarChar(255)
+  invoice_target   Decimal? @dbHPBase.Decimal(65, 5)
+  invoice_priority String   @default("MEDIUM") @dbHPBase.VarChar(255)
+}
+
+model funcionarios {
+  funcionario          Int       @id
+  nome_do_funcionario  String?   @dbHPBase.VarChar(255)
+  funcao               String?   @dbHPBase.VarChar(255)
+  departamento         String?   @dbHPBase.VarChar(255)
+  admissao             DateTime? @dbHPBase.DateTime(0)
+  gerente              String?   @dbHPBase.VarChar(255)
+  email_do_funcionario String?   @dbHPBase.VarChar(255)
+  email_do_gerente     String?   @dbHPBase.VarChar(255)
+}
+
+model hp {
+  hp     String @id @dbHPBase.VarChar(8)
+  status String @dbHPBase.VarChar(255)
+}
+
+model jobs {
+  hp              String  @id @dbHPBase.VarChar(12)
+  po_number       String? @dbHPBase.VarChar(255)
+  project_manager String  @dbHPBase.VarChar(255)
+  client_company  String  @dbHPBase.VarChar(255)
+  json_rates      Json
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model json_jornada {
+  id_registro      Int      @id @default(autoincrement())
+  dia              DateTime @dbHPBase.Date
+  jornada          String?  @dbHPBase.VarChar(255)
+  input_user       String?  @dbHPBase.VarChar(255)
+  hp_assigned      String?  @dbHPBase.VarChar(10)
+  hp_status        String?  @dbHPBase.VarChar(255)
+  id_work_type     Int      @default(1)
+  id_justificativa Int      @default(25)
+  id_nome          BigInt
+  aprovacao_gestor Boolean?
+  aprovacao_rh     Int?     @dbHPBase.TinyInt
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model justificativas {
+  id                 Int    @id @default(autoincrement())
+  nome_justificativa String @dbHPBase.VarChar(50)
+  permissao          String @dbHPBase.VarChar(10)
+  flag_preencher     String @dbHPBase.VarChar(4)
+}
+
+model password_requests {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token      String    @dbHPBase.VarChar(255)
+  is_expired Boolean   @default(false)
+  created_at DateTime  @default(now()) @dbHPBase.DateTime(0)
+  expired_at DateTime? @dbHPBase.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model pedidos {
+  id    Int       @id @default(autoincrement())
+  hp    Int?
+  data  DateTime? @dbHPBase.Date
+  lista Json?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model perfil {
+  id             Int      @id @default(autoincrement())
+  name           String   @dbHPBase.VarChar(200)
+  id_alterdata   BigInt
+  admission_date DateTime @dbHPBase.Date
+  pis            String   @dbHPBase.VarChar(14)
+  ativo          Boolean  @default(true)
+}
+
+model permissions {
+  id          Int     @id @default(autoincrement())
+  permission  String  @unique(map: "permission") @dbHPBase.VarChar(50)
+  description String? @dbHPBase.VarChar(255)
+  disabled    Boolean @default(false)
+}
+
+model requisicao_ferias {
+  id_ferias    Int      @id @default(autoincrement())
+  data_inicio  DateTime @dbHPBase.Date
+  data_fim     DateTime @dbHPBase.Date
+  motivo       String   @dbHPBase.VarChar(255)
+  total_ferias Int
+  id_perfil    BigInt?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model respostas {
+  id_pedido     Int?
+  id_fornecedor String?  @dbHPBase.VarChar(1000)
+  data_hora     DateTime @default(now()) @dbHPBase.DateTime(0)
+  reposta       Json?
+
+  @@ignore
+}
+
+model roles {
+  id   Int    @id @default(autoincrement())
+  role String @dbHPBase.VarChar(255)
+}
+
+model sessions {
+  session_id     Int      @id @default(autoincrement())
+  session_token  String   @dbHPBase.VarChar(32)
+  session_serial String   @dbHPBase.VarChar(32)
+  session_date   DateTime @dbHPBase.Date
+  session_userid String   @dbHPBase.VarChar(10)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model timesheet {
+  id                   Int               @id @default(autoincrement())
+  protocol             String            @dbHPBase.VarChar(255)
+  job                  Int
+  po_number            String            @dbHPBase.VarChar(255)
+  week_ending          DateTime          @dbHPBase.Date
+  nationality          String            @dbHPBase.VarChar(255)
+  status               timesheet_status? @default(CREATED)
+  file_for_approval    String?           @dbHPBase.VarChar(255)
+  reason               String?           @dbHPBase.Text
+  client               String            @dbHPBase.VarChar(255)
+  vessel               String            @dbHPBase.VarChar(255)
+  client_email         String?           @dbHPBase.VarChar(255)
+  adobe_id             String?           @dbHPBase.VarChar(255)
+  created_by           Int
+  created_at           DateTime?         @default(now()) @dbHPBase.Timestamp(0)
+  sent_for_approval_by Int?
+  sent_for_approval_at DateTime?         @dbHPBase.Timestamp(0)
+  approved_by          Int?
+  approved_at          DateTime?         @dbHPBase.Timestamp(0)
+}
+
+model timesheet_registry {
+  id                 Int                      @id @default(autoincrement())
+  timesheet_protocol String                   @dbHPBase.VarChar(255)
+  hp_registration    Int
+  name               String                   @dbHPBase.VarChar(255)
+  trade              String                   @dbHPBase.VarChar(255)
+  shift              timesheet_registry_shift @default(DAY)
+  day                DateTime                 @dbHPBase.Date
+  manhour            Int
+}
+
+model tokens {
+  id         Int      @id @default(autoincrement()) @dbHPBase.UnsignedInt
+  user_id    Int      @dbHPBase.UnsignedInt
+  token      String   @dbHPBase.VarChar(255)
+  expires_at DateTime @dbHPBase.DateTime(0)
+  created_at DateTime @dbHPBase.DateTime(0)
+
+  @@index([token(length: 191)], map: "token_index")
+  @@index([user_id], map: "user_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model users {
+  id              Int       @id @default(autoincrement())
+  username        String    @dbHPBase.VarChar(255)
+  password        String    @dbHPBase.VarChar(255)
+  name            String    @dbHPBase.VarChar(255)
+  display_name    String    @dbHPBase.VarChar(255)
+  id_perfil       BigInt
+  type_user       Int       @dbHPBase.TinyInt
+  is_admin        Boolean   @default(false)
+  admission_date  DateTime? @dbHPBase.Date
+  role            String?   @dbHPBase.VarChar(255)
+  department      Int?
+  hp_registration Int?      @unique(map: "hp_registration")
+  direct_manager  Int?
+
+  userAttributes  user_attributes?
+  createdDepartments user_departments[] @relation("DepartmentsCreatedBy")
+  createdOrganizations user_organizations[] @relation("OrganizationsCreatedBy")
+  createdLocalizations user_localizations[] @relation("LocalizationsCreatedBy")
+  createdRoles user_roles[] @relation("RolesCreatedBy")
+}
+
+model user_roles {
+  id      Int @id @default(autoincrement())
+  role    String @dbHPBase.VarChar(255)
+  created_at DateTime @default(now()) @dbHPBase.DateTime(0)
+  created_by Int
+
+  creator users @relation("RolesCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+  userAttributes user_attributes[] @relation("RoleAttributes")
+}
+
+model user_attributes {
+  id           Int            @id @default(autoincrement())
+  user_id      Int @unique
+  organization_id Int?
+  localization_id Int?
+  department_id Int?
+  role_id Int?
+  clearance    user_clearance @default(LOW)
+  
+  access_control user_access_control[] @relation("UserAccessControls")
+  user         users          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization user_organizations? @relation("OrganizationAttributes", fields: [organization_id], references: [id], onDelete: Cascade)
+  localization user_localizations? @relation("LocalizationAttributes", fields: [localization_id], references: [id], onDelete: Cascade)
+  department   user_departments?   @relation("DepartmentAttributes", fields: [department_id], references: [id], onDelete: Cascade)
+  role         user_roles?         @relation("RoleAttributes", fields: [role_id], references: [id], onDelete: Cascade)
+}
+
+model user_departments {
+  id         Int      @id @default(autoincrement())
+  department String   @dbHPBase.VarChar(255)
+  created_at DateTime @default(now()) @dbHPBase.DateTime(0)
+  created_by Int
+
+  creator    users    @relation("DepartmentsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+
+  user_attributes user_attributes[] @relation("DepartmentAttributes")
+}
+
+model user_organizations {
+  id           Int      @id @default(autoincrement())
+  organization String   @dbHPBase.VarChar(255)
+  created_at   DateTime @default(now()) @dbHPBase.DateTime(0)
+  created_by   Int
+
+  creator      users    @relation("OrganizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+
+  user_attributes user_attributes[] @relation("OrganizationAttributes")
+}
+
+model user_localizations {
+  id           Int      @id @default(autoincrement())
+  localization String   @dbHPBase.VarChar(255)
+  created_at   DateTime @default(now()) @dbHPBase.DateTime(0)
+  created_by   Int
+
+  creator      users    @relation("LocalizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+
+  user_attributes user_attributes[] @relation("LocalizationAttributes")
+}
+
+enum user_clearance {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model user_access_control_features {
+  id          Int      @id @default(autoincrement())
+  feature     String   @dbHPBase.VarChar(255)
+  description String?  @dbHPBase.VarChar(255)
+
+  user_access_control user_access_control[] @relation("FeatureAccessControls")
+}
+
+model user_access_control {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  feature_id  Int
+  action      user_access_control_action @default(READ)
+  start_at    DateTime @default(now()) @dbHPBase.DateTime(0)
+  end_at      DateTime? @dbHPBase.DateTime(0)
+
+  user_attributes user_attributes[] @relation("UserAccessControls")
+  user_access_control_features user_access_control_features @relation("FeatureAccessControls", fields: [feature_id], references: [id], onDelete: Cascade)
+}
+
+enum user_access_control_action {
+  READ
+  WRITE
+  EDIT
+  DELETE
+  ALL
+}
+
+model users_permissions {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  permission_id Int
+  start_at      DateTime  @default(now()) @dbHPBase.DateTime(0)
+  end_at        DateTime? @dbHPBase.DateTime(0)
+}
+
+model work_types {
+  id_worktype   Int     @id @default(autoincrement())
+  nome_worktype String? @dbHPBase.VarChar(50)
+}
+
+enum timesheet_registry_shift {
+  DAY
+  NIGHT
+}
+
+enum timesheet_status {
+  CREATED
+  PENDING
+  INACTIVE
+  DENIED
+  APPROVED
+}
+
+enum fabrication_monitoring_client_approval {
+  PENDING
+  APPROVED
+  DECLINED
+}
