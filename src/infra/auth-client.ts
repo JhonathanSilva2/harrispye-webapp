@@ -35,7 +35,10 @@ export default async function AuthClient<TData>(
         headers: {
             cookie,
             ...fetchOptions.headers,
-            "Content-Type": "application/json",
+            // Se o body for um FormData, o Content-Type não será definido, deixando o navegador definir corretamente o multipart/form-data com boundary
+            ...(fetchOptions.body instanceof FormData
+                ? {}
+                : { "Content-Type": "application/json" }),
         },
     };
 

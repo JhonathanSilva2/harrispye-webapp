@@ -28,10 +28,10 @@ export const DrawingDialog = ({
     triggerBtn,
     designs,
 }: DialogProps) => {
+    const [fileDialogOpen, setFileDialogOpen] = useState(false);
     if (!jobId) {
         return null;
     }
-    const [fileDialogOpen, setFileDialogOpen] = useState(false);
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>{triggerBtn}</DialogTrigger>
