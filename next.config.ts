@@ -34,6 +34,9 @@ const nextConfig: NextConfig = {
     // https://nextjs.org/docs/app/api-reference/config/next-config-js/reactStrictMode
     experimental: {
         authInterrupts: true,
+        serverActions: {
+            bodySizeLimit: "100mb",
+        },
     },
     env: {
         DATABASE_URL_HPBASE: process.env.DATABASE_URL_HPBASE,
