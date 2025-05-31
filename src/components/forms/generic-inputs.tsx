@@ -33,6 +33,7 @@ const GenericInput = <T extends FieldValues>({
     className,
     labelClassName,
     disabled,
+    accept,
     ...rest
 }: GenericInputProps<T>) => {
     const {

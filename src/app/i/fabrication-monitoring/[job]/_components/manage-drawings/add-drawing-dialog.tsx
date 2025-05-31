@@ -101,6 +101,7 @@ export const AddDrawingDialog = ({
                                 name="file"
                                 label="Drawing File"
                                 placeholder=""
+                                accept=".pdf"
                             />
                         </div>
                         <GenericInput

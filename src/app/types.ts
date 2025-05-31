@@ -74,6 +74,7 @@ export interface GenericInputProps<T extends FieldValues> {
     placeholder?: string;
     className?: string;
     labelClassName?: string;
+    accept?: string;
     disabled?: boolean;
 }
 

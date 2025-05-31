@@ -1,13 +1,7 @@
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-const ACCEPTED_FILE_TYPES = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-    "application/pdf",
-];
+const ACCEPTED_FILE_TYPES = ["application/pdf"];
 export const FabDrawingSchema = z.object({
     file: z
         .custom<File>(
@@ -20,7 +14,7 @@ export const FabDrawingSchema = z.object({
         )
         .refine(
             (file) => ACCEPTED_FILE_TYPES.includes(file.type),
-            "Apenas os formatos .jpg, .jpeg, .png, .webp e .pdf são suportados.",
+            "Apenas .pdf são suportados.",
         ),
     description: z.string().min(1, "A descrição é obrigatória."),
 });
