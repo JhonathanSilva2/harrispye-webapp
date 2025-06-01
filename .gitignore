@@ -48,9 +48,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-
-# public
-public/
 # storage
 storage/
 public/commercial_uploads/*

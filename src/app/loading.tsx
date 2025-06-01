@@ -4,7 +4,7 @@ const loading = () => {
     return (
         <div className="flex h-screen w-screen items-center justify-center">
             <FileStorageImage
-                src={`images/logo-icon.png`}
+                src={`images/vertical-logo.png`}
                 width={500}
                 height={500}
                 alt="logo"
