@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/client-hp-base"
+  provider      = "prisma-client-js"
+  output        = "./generated/client-hp-base"
   binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
@@ -80,16 +80,16 @@ model departments {
 }
 
 model fabrication_monitoring {
-  id                               Int                                    @id @default(autoincrement())
+  id                               Int                                     @id @default(autoincrement())
   fabrication_monitoring_design_id Int?
   id_fabrication_monitoring_jobs   Int
-  spec                             String?                                @dbHPBase.VarChar(255)
-  mass                             Decimal?                               @dbHPBase.Decimal(10, 2)
-  price_per_kg                     Decimal?                               @dbHPBase.Decimal(10, 2)
-  gross_spool_cost                 Decimal?                               @dbHPBase.Decimal(10, 2)
-  description                      String?                                @dbHPBase.VarChar(255)
-  drawing_ref                      String?                                @dbHPBase.VarChar(255)
-  spool_number                     String?                                @dbHPBase.VarChar(255)
+  spec                             String?                                 @dbHPBase.VarChar(255)
+  mass                             Decimal?                                @dbHPBase.Decimal(10, 2)
+  price_per_kg                     Decimal?                                @dbHPBase.Decimal(10, 2)
+  gross_spool_cost                 Decimal?                                @dbHPBase.Decimal(10, 2)
+  description                      String?                                 @dbHPBase.VarChar(255)
+  drawing_ref                      String?                                 @dbHPBase.VarChar(255)
+  spool_number                     String?                                 @dbHPBase.VarChar(255)
   materials_ordered                Int?
   materials_arrived                Int?
   fabrication_complete             Int?
@@ -99,12 +99,13 @@ model fabrication_monitoring {
   external_coating                 Int?
   packing                          Int?
   dispatch                         Int?
-  notes                            String?                                @dbHPBase.VarChar(255)
-  client_approval                  fabrication_monitoring_client_approval @default(PENDING)
+  notes                            String?                                 @dbHPBase.VarChar(255)
+  client_approval                  fabrication_monitoring_client_approval  @default(PENDING)
   updated_by                       Int?
-  updated_at                       DateTime?                              @dbHPBase.DateTime(0)
-  fabrication_monitoring_designs   fabrication_monitoring_designs?        @relation(fields: [fabrication_monitoring_design_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_designs")
-  fabrication_monitoring_jobs      fabrication_monitoring_jobs            @relation(fields: [id_fabrication_monitoring_jobs], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_jobs")
+  updated_at                       DateTime?                               @dbHPBase.DateTime(0)
+  manager_approval                 fabrication_monitoring_manager_approval @default(PENDING)
+  fabrication_monitoring_designs   fabrication_monitoring_designs?         @relation(fields: [fabrication_monitoring_design_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_designs")
+  fabrication_monitoring_jobs      fabrication_monitoring_jobs             @relation(fields: [id_fabrication_monitoring_jobs], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_jobs")
 
   @@index([fabrication_monitoring_design_id], map: "fk_fabrication_monitoring_designs")
   @@index([id_fabrication_monitoring_jobs], map: "fk_fabrication_monitoring_jobs")
@@ -124,7 +125,7 @@ model fabrication_monitoring_designs {
 
 model fabrication_monitoring_jobs {
   id                             Int                              @id @default(autoincrement())
-  hp                             String                           @unique  @dbHPBase.VarChar(255)
+  hp                             String                           @unique @dbHPBase.VarChar(255)
   mr_number                      String?                          @dbHPBase.VarChar(255)
   shutdown_id                    String?                          @dbHPBase.VarChar(255)
   client                         String                           @dbHPBase.VarChar(255)
@@ -358,39 +359,30 @@ model users {
   department      Int?
   hp_registration Int?      @unique(map: "hp_registration")
   direct_manager  Int?
-
-  userAttributes  user_attributes?
-  createdDepartments user_departments[] @relation("DepartmentsCreatedBy")
-  createdOrganizations user_organizations[] @relation("OrganizationsCreatedBy")
-  createdLocalizations user_localizations[] @relation("LocalizationsCreatedBy")
-  createdRoles user_roles[] @relation("RolesCreatedBy")
 }
 
 model user_roles {
-  id      Int @id @default(autoincrement())
-  role    String @dbHPBase.VarChar(255)
+  id         Int      @id @default(autoincrement())
+  role       String   @dbHPBase.VarChar(255)
   created_at DateTime @default(now()) @dbHPBase.DateTime(0)
   created_by Int
 
-  creator users @relation("RolesCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
-  userAttributes user_attributes[] @relation("RoleAttributes")
+  @@index([created_by], map: "user_roles_created_by_fkey")
 }
 
 model user_attributes {
-  id           Int            @id @default(autoincrement())
-  user_id      Int @unique
+  id              Int            @id @default(autoincrement())
+  user_id         Int            @unique
   organization_id Int?
   localization_id Int?
-  department_id Int?
-  role_id Int?
-  clearance    user_clearance @default(LOW)
-  
-  access_control user_access_control[] @relation("UserAccessControls")
-  user         users          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  organization user_organizations? @relation("OrganizationAttributes", fields: [organization_id], references: [id], onDelete: Cascade)
-  localization user_localizations? @relation("LocalizationAttributes", fields: [localization_id], references: [id], onDelete: Cascade)
-  department   user_departments?   @relation("DepartmentAttributes", fields: [department_id], references: [id], onDelete: Cascade)
-  role         user_roles?         @relation("RoleAttributes", fields: [role_id], references: [id], onDelete: Cascade)
+  department_id   Int?
+  role_id         Int?
+  clearance       user_clearance @default(LOW)
+
+  @@index([department_id], map: "user_attributes_department_id_fkey")
+  @@index([localization_id], map: "user_attributes_localization_id_fkey")
+  @@index([organization_id], map: "user_attributes_organization_id_fkey")
+  @@index([role_id], map: "user_attributes_role_id_fkey")
 }
 
 model user_departments {
@@ -399,9 +391,7 @@ model user_departments {
   created_at DateTime @default(now()) @dbHPBase.DateTime(0)
   created_by Int
 
-  creator    users    @relation("DepartmentsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
-
-  user_attributes user_attributes[] @relation("DepartmentAttributes")
+  @@index([created_by], map: "user_departments_created_by_fkey")
 }
 
 model user_organizations {
@@ -410,9 +400,7 @@ model user_organizations {
   created_at   DateTime @default(now()) @dbHPBase.DateTime(0)
   created_by   Int
 
-  creator      users    @relation("OrganizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
-
-  user_attributes user_attributes[] @relation("OrganizationAttributes")
+  @@index([created_by], map: "user_organizations_created_by_fkey")
 }
 
 model user_localizations {
@@ -421,43 +409,24 @@ model user_localizations {
   created_at   DateTime @default(now()) @dbHPBase.DateTime(0)
   created_by   Int
 
-  creator      users    @relation("LocalizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
-
-  user_attributes user_attributes[] @relation("LocalizationAttributes")
-}
-
-enum user_clearance {
-  HIGH
-  MEDIUM
-  LOW
+  @@index([created_by], map: "user_localizations_created_by_fkey")
 }
 
 model user_access_control_features {
-  id          Int      @id @default(autoincrement())
-  feature     String   @dbHPBase.VarChar(255)
-  description String?  @dbHPBase.VarChar(255)
-
-  user_access_control user_access_control[] @relation("FeatureAccessControls")
+  id          Int     @id @default(autoincrement())
+  feature     String  @dbHPBase.VarChar(255)
+  description String? @dbHPBase.VarChar(255)
 }
 
 model user_access_control {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  feature_id  Int
-  action      user_access_control_action @default(READ)
-  start_at    DateTime @default(now()) @dbHPBase.DateTime(0)
-  end_at      DateTime? @dbHPBase.DateTime(0)
+  id         Int                        @id @default(autoincrement())
+  user_id    Int
+  feature_id Int
+  action     user_access_control_action @default(READ)
+  start_at   DateTime                   @default(now()) @dbHPBase.DateTime(0)
+  end_at     DateTime?                  @dbHPBase.DateTime(0)
 
-  user_attributes user_attributes[] @relation("UserAccessControls")
-  user_access_control_features user_access_control_features @relation("FeatureAccessControls", fields: [feature_id], references: [id], onDelete: Cascade)
-}
-
-enum user_access_control_action {
-  READ
-  WRITE
-  EDIT
-  DELETE
-  ALL
+  @@index([feature_id], map: "user_access_control_feature_id_fkey")
 }
 
 model users_permissions {
@@ -471,6 +440,29 @@ model users_permissions {
 model work_types {
   id_worktype   Int     @id @default(autoincrement())
   nome_worktype String? @dbHPBase.VarChar(50)
+}
+
+model UserAccessControls {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_UserAccessControls_AB_unique")
+  @@index([B], map: "_UserAccessControls_B_index")
+  @@map("_UserAccessControls")
+}
+
+enum user_clearance {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum user_access_control_action {
+  READ
+  WRITE
+  EDIT
+  DELETE
+  ALL
 }
 
 enum timesheet_registry_shift {
@@ -487,6 +479,12 @@ enum timesheet_status {
 }
 
 enum fabrication_monitoring_client_approval {
+  PENDING
+  APPROVED
+  DECLINED
+}
+
+enum fabrication_monitoring_manager_approval {
   PENDING
   APPROVED
   DECLINED
