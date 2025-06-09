@@ -2,6 +2,8 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import path from "path";
 
+const isCI = process.env.CI === "true";
+
 const nextConfig: NextConfig = {
     webpack(config) {
         config.resolve.alias = {
@@ -81,7 +83,7 @@ export default withSentryConfig(nextConfig, {
     project: "harrispye-az-next",
 
     // Only print logs for uploading source maps in CI
-    silent: !process.env.CI,
+    silent: isCI,
 
     // For all available options, see:
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
