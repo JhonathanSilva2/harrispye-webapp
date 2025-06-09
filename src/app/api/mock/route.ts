@@ -1,4 +1,3 @@
-import { prismaBase } from "@/db/base-client";
 import { NextRequest, NextResponse } from "next/server";
 
 const mockTodos = [
@@ -30,12 +29,12 @@ const mockTodos = [
 ];
 
 export async function GET() {
-    const uac = await prismaBase.access_control.findMany();
-    return new NextResponse(JSON.stringify(uac), {
-        headers: {
-            "content-type": "application/json",
-        },
-    });
+    // const uac = await prismaBase.access_control.findMany();
+    // return new NextResponse(JSON.stringify(uac), {
+    //     headers: {
+    //         "content-type": "application/json",
+    //     },
+    // });
 }
 
 export async function POST(request: NextRequest) {
