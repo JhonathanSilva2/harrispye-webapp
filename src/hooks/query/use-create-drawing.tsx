@@ -7,7 +7,7 @@ import {
 import { toast } from "sonner";
 
 export function useCreateDrawing(
-    jobID: number,
+    jobID?: number,
     options?: UseMutationOptions<void, Error, FormData>,
 ) {
     const queryClient = useQueryClient();

@@ -61,6 +61,7 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
         hp,
         filters,
     });
+
     const initialPagination = {
         pageIndex: filters.page
             ? Number(filters.page) - 1

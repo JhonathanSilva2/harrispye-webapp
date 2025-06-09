@@ -10,8 +10,9 @@ import {
 import { PlusCircle } from "lucide-react";
 import { JSX, useState } from "react";
 import { fabrication_monitoring_designs } from "../../../../../../../prisma/generated/client-hp-base";
-import { AddDrawingDialog } from "./add-drawing-dialog";
 import { DrawingTable } from "./drawing-table";
+import { useCreateDrawing } from "@/hooks/query/use-create-drawing";
+import { UploadFileDialog } from "@/components/upload-file-dialog";
 
 interface DialogProps {
     jobId?: number;
@@ -29,9 +30,8 @@ export const DrawingDialog = ({
     designs,
 }: DialogProps) => {
     const [fileDialogOpen, setFileDialogOpen] = useState(false);
-    if (!jobId) {
-        return null;
-    }
+
+    const mutation = useCreateDrawing(jobId);
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>{triggerBtn}</DialogTrigger>
@@ -45,8 +45,8 @@ export const DrawingDialog = ({
                             </DialogDescription>
                         </div>
                     </DialogHeader>
-                    <AddDrawingDialog
-                        jobId={jobId}
+                    <UploadFileDialog
+                        createFile={mutation}
                         open={fileDialogOpen}
                         setOpen={setFileDialogOpen}
                         triggerBtn={
@@ -59,7 +59,10 @@ export const DrawingDialog = ({
                         }
                     />
                 </div>
-                <DrawingTable designs={designs ?? []} />
+
+                <div className="max-h-[65vh] overflow-y-auto px-4">
+                    <DrawingTable designs={designs ?? []} />
+                </div>
             </DialogContent>
         </Dialog>
     );

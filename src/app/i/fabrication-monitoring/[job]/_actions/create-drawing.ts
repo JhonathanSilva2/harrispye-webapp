@@ -6,7 +6,11 @@ import AuthClient from "@/infra/auth-client";
 import { clientEnv } from "@/lib/constants/config";
 import { headers } from "next/headers";
 
-export async function createDrawing(JobiD: number, paylod: FormData) {
+export async function createDrawing(
+    JobiD: number | undefined,
+    paylod: FormData,
+) {
+    if (!JobiD) return;
     const url = new URL(
         `${clientEnv.NEXT_PUBLIC_URL}/api/fabrication-monitoring/designs?jobId=${JobiD}`,
     );

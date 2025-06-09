@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { toast } from "sonner";
+import { UseMutationResult } from "@tanstack/react-query";
 
 import { useCreateDrawing } from "@/hooks/query/use-create-drawing";
 // Importe seu hook de mutação real aqui
@@ -26,23 +27,22 @@ import { JSX, useCallback, useState } from "react"; // Removido useEffect, useMe
 import { FormProvider, useForm } from "react-hook-form";
 
 interface DialogProps {
-    jobId: number; // jobId é necessário para a URL
     open: boolean;
     setOpen: (open: boolean) => void;
     triggerBtn?: JSX.Element;
     onFormSubmitSuccess?: () => void; // Callback opcional para sucesso
+    createFile: UseMutationResult<void, Error, FormData>;
 }
 
 // Simulação de um hook de mutação (substitua pelo seu)
 
-export const AddDrawingDialog = ({
-    jobId,
+export const UploadFileDialog = ({
     open,
     setOpen,
     triggerBtn,
     onFormSubmitSuccess,
+    createFile,
 }: DialogProps) => {
-    const mutation = useCreateDrawing(jobId);
     const methods = useForm<FabDrawingSchemaFormData>({
         defaultValues: {
             description: "",
@@ -65,7 +65,7 @@ export const AddDrawingDialog = ({
 
             try {
                 // Passa o payload e o jobId para a função de mutação
-                await mutation.mutateAsync(body);
+                await createFile.mutateAsync(body);
                 setOpen(false);
                 reset();
                 if (onFormSubmitSuccess) {
@@ -76,7 +76,7 @@ export const AddDrawingDialog = ({
                 toast.error("Fail");
             }
         },
-        [mutation, onFormSubmitSuccess, reset, setOpen],
+        [createFile, onFormSubmitSuccess, reset, setOpen],
     );
 
     const handleDialogClose = (isOpen: boolean) => {
@@ -126,10 +126,10 @@ export const AddDrawingDialog = ({
                             <Button
                                 type="button" // O botão do trigger não deve submeter o form diretamente
                                 className="w-full sm:w-auto" // Ajuste de largura para responsividade
-                                disabled={mutation.isPending}
+                                disabled={createFile.isPending}
                                 variant={"constructive"}
                             >
-                                {mutation.isPending ? (
+                                {createFile.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Sending...
