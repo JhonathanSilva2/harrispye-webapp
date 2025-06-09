@@ -12,8 +12,13 @@ import PDFViewer from "@/components/pdf-viewer";
 interface PdfModalProps {
     children: React.ReactNode;
     pdfUrl: string;
+    dialogTitle: string;
 }
-export default function PdfModal({ children, pdfUrl }: PdfModalProps) {
+export default function PdfViewDialog({
+    children,
+    pdfUrl,
+    dialogTitle,
+}: PdfModalProps) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -30,7 +35,7 @@ export default function PdfModal({ children, pdfUrl }: PdfModalProps) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-5xl p-4">
                     <DialogHeader>
-                        <DialogTitle>View Drawing</DialogTitle>
+                        <DialogTitle>{dialogTitle}</DialogTitle>
                     </DialogHeader>
                     <PDFViewer fileUrl={pdfUrl} />
                 </DialogContent>

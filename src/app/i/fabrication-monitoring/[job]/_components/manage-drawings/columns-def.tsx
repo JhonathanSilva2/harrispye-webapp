@@ -4,13 +4,12 @@ import { fabrication_monitoring_designs } from "../../../../../../../prisma/gene
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import PdfModal from "./pdf-dialog";
+import PdfViewDialog from "@/components/pdf-view-dialog";
 
 export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitoring_designs>[] =
     [
@@ -40,7 +39,12 @@ export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitori
                                 Actions
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <PdfModal pdfUrl={url}>Open Dialog</PdfModal>
+                            <PdfViewDialog
+                                dialogTitle="View Drawing"
+                                pdfUrl={url}
+                            >
+                                Open Dialog
+                            </PdfViewDialog>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
