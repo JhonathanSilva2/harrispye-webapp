@@ -1,5 +1,5 @@
-import { permissions } from "@/../prisma/generated/client-hp-base";
 import { TAccessControlAction } from "@/app/types";
+import { permissions } from "@prisma/client-hp-base";
 import { UserSession } from "next-auth";
 
 /**
@@ -9,19 +9,19 @@ import { UserSession } from "next-auth";
  * @returns `true` if the user session is defined, otherwise `false`.
  */
 const userValidation = (user: UserSession | undefined) => {
-	if (!user) return false;
-	return true;
+    if (!user) return false;
+    return true;
 };
 /**
  * @description Action is the operation that the user is trying to perform
  * It will be all the CRUD operations
  */
 export const ACTION: TAccessControlAction[] = [
-	"READ",
-	"WRITE",
-	"DELETE",
-	"EDIT",
-	"ALL",
+    "READ",
+    "WRITE",
+    "DELETE",
+    "EDIT",
+    "ALL",
 ];
 export type TResource = permissions["permission"];
 /**
@@ -35,24 +35,24 @@ export type TResource = permissions["permission"];
  *          on the resource, or `false` otherwise.
  */
 export function RBACPolicyEnforcementPoint(
-	user: UserSession | undefined,
-	action: TAccessControlAction,
-	resource: TResource,
+    user: UserSession | undefined,
+    action: TAccessControlAction,
+    resource: TResource,
 ) {
-	if (!userValidation(user)) return false;
-	if (user!.is_admin) return true;
-	const hasFeature = user!.userAccessControl?.find(
-		(accessControl) => accessControl.feature === resource,
-	);
-	if (!hasFeature) return false;
+    if (!userValidation(user)) return false;
+    if (user!.is_admin) return true;
+    const hasFeature = user!.userAccessControl?.find(
+        (accessControl) => accessControl.feature === resource,
+    );
+    if (!hasFeature) return false;
 
-	if (
-		(hasFeature && hasFeature.action === action) ||
-		(hasFeature && hasFeature.action === "ALL")
-	)
-		return true;
+    if (
+        (hasFeature && hasFeature.action === action) ||
+        (hasFeature && hasFeature.action === "ALL")
+    )
+        return true;
 
-	return false;
+    return false;
 }
 
 /**
@@ -66,23 +66,23 @@ export function RBACPolicyEnforcementPoint(
  *          or `false` otherwise.
  */
 export function ABACPolicyEnforcementPoint(
-	user: UserSession | undefined,
-	attribute: string,
-	value: string,
+    user: UserSession | undefined,
+    attribute: string,
+    value: string,
 ) {
-	if (!userValidation(user)) return false;
-	if (user!.is_admin) return true;
-	const userAttributes = user?.userAttributes as Record<
-		string,
-		string | number | boolean | null | undefined
-	>;
-	if (!userAttributes || typeof userAttributes !== "object") return false;
+    if (!userValidation(user)) return false;
+    if (user!.is_admin) return true;
+    const userAttributes = user?.userAttributes as Record<
+        string,
+        string | number | boolean | null | undefined
+    >;
+    if (!userAttributes || typeof userAttributes !== "object") return false;
 
-	// Check if the attribute exists in userAttributes and matches the value
-	if (attribute in userAttributes) {
-		const attributeValue = userAttributes?.[attribute];
-		return attributeValue === value;
-	}
+    // Check if the attribute exists in userAttributes and matches the value
+    if (attribute in userAttributes) {
+        const attributeValue = userAttributes?.[attribute];
+        return attributeValue === value;
+    }
 
-	return false;
+    return false;
 }

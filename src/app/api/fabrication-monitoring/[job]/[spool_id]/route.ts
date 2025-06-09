@@ -1,10 +1,10 @@
 import options from "@/app/api/auth/[...nextauth]/options";
 import { prismaBase } from "@/db/base-client";
 import { fabricationMonitoringUpdateSpoolSchema } from "@/schemas/fabrication-monitoring-spool";
+import { fabrication_monitoring } from "@prisma/client-hp-base";
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { fabrication_monitoring } from "../../../../../../prisma/generated/client-hp-base";
 
 export interface FabricationMonitoringSpoolFetchReturn {
     spool: fabrication_monitoring;

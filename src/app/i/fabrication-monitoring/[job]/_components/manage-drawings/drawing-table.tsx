@@ -2,9 +2,9 @@ import { DataTable } from "@/components/data-table";
 import { useLocalStateFilters } from "@/hooks/use-filters";
 import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
+import { fabrication_monitoring_designs } from "@prisma/client-hp-base";
 import { SortingState, Updater } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { fabrication_monitoring_designs } from "../../../../../../../prisma/generated/client-hp-base";
 import { fabricationMonitoringDrawingColumns } from "./columns-def";
 
 interface DrawingTable {

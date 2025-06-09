@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { fabrication_monitoring_designs } from "../../../../../../../prisma/generated/client-hp-base";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { fabrication_monitoring_designs } from "@prisma/client-hp-base";
+import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import PdfModal from "./pdf-dialog";
 

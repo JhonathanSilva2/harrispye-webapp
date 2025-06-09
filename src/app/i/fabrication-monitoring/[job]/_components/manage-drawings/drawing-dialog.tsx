@@ -7,9 +7,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { fabrication_monitoring_designs } from "@prisma/client-hp-base";
 import { PlusCircle } from "lucide-react";
 import { JSX, useState } from "react";
-import { fabrication_monitoring_designs } from "../../../../../../../prisma/generated/client-hp-base";
 import { AddDrawingDialog } from "./add-drawing-dialog";
 import { DrawingTable } from "./drawing-table";
 

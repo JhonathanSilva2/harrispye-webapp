@@ -2,11 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
+import { fabrication_monitoring } from "@prisma/client-hp-base";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import AutoSaveInput from "./auto-save-input";
 import ApprovalSelect from "./approval-select";
+import AutoSaveInput from "./auto-save-input";
 import DeleteSpoolButton from "./delete-spool-button";
 import { DrawingRefSelect } from "./drawing-ref-datalist";
 
