@@ -63,6 +63,7 @@ jobs:
                   app_location: "/" # your Next.js source
                   api_location: "" # your separated Azure Functions folder
                   output_location: ".next" # Next’s build output
+                  skip_api_build: true
                   github_id_token: ${{ steps.idtoken.outputs.result }}
 
     close_pull_request_job:
