@@ -61,24 +61,6 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
         hp,
         filters,
     });
-    const designs = [
-        {
-            id: 4,
-            fabrication_monitoring_jobs_id: 2,
-            filename:
-                "0f61ab2b897919cba9e5f49ab1d7085f061e029a0d80b31c3f23d54647181a7e.jpg",
-            display_name: "obaoba.jpg",
-            created_at: new Date("2025-04-01T14:45:49.000Z"),
-        },
-        {
-            id: 5,
-            fabrication_monitoring_jobs_id: 2,
-            filename:
-                "b34ebcd63fd12523cd49bee4aeaec09de6bba59ac4c113296a0a252f122e7f10.png",
-            display_name: "Captura de tela 2025-03-29 130358.png",
-            created_at: new Date("2025-04-01T14:46:04.000Z"),
-        },
-    ];
     const initialPagination = {
         pageIndex: filters.page
             ? Number(filters.page) - 1
