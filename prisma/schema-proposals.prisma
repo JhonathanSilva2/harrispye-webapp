@@ -1,7 +1,8 @@
 generator client {
-  provider = "prisma-client-js"
-  output = "./generated/client-proposals"
-  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  output          = "./generated/client-proposals"
+  previewFeatures = ["views"]
+  binaryTargets   = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
 datasource dbProposals {
@@ -10,75 +11,44 @@ datasource dbProposals {
 }
 
 model job {
-  id          Int      @id @default(autoincrement())
-  job_no      String?   @unique(map: "job_no") @dbProposals.VarChar(255)
-  erf_id      Int      @unique @dbProposals.Int
-  erf         erf      @relation(fields: [erf_id], references: [id])
-  budget      Json     @dbProposals.Json
-  delivery    Json     @dbProposals.Json
-  status      String?  @dbProposals.VarChar(255)
-  created_at  DateTime @default(now()) @dbProposals.Timestamp(0)
-  updated_at  DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  job_no     String?  @unique(map: "job_no") @dbProposals.VarChar(255)
+  erf_id     Int      @unique
+  budget     Json
+  delivery   Json
+  status     String?  @dbProposals.VarChar(255)
+  created_at DateTime @default(now()) @dbProposals.Timestamp(0)
+  updated_at DateTime @updatedAt
+  erf        erf      @relation(fields: [erf_id], references: [id])
 }
 
 model erf {
-  id                           Int      @id @default(autoincrement())
-  acronym_number               String?
-  received_date                DateTime
-  enquiry_source               Enquiry
-  description                  String
-  client_name                  String
-  division                     String
-  client_contact_name          String
-  client_email                 String
-  invoicing_address            String
-  avantis_station              AvantistStation 
-  avantis_services             AvantisServices
-  requester                    String
-  estimated_quote_date         DateTime
-  probability_award            ProbabilityAward  
-  expected_start_date          DateTime
-  estimated_quote_value        Float?
-  expected_duration            Int
-  comments                     String
-  general_operations_manager   String
-  client_interface             String
-  vessel_site                  String
-  job                          job?             
-  created_by                   String?
-  created_at                   DateTime @default(now())
-  updated_at                   DateTime @updatedAt
-}
-
-enum AvantisServices {
-  DRILLING
-  MARINE_BOILERS
-  MARINE_MAINTENANCE
-  MARINE_SHIPYARD
-  SUPPORT
-  PRODUCTION
-  SHUT_DOWN_MAINTENANCE
-}
-
-enum ProbabilityAward {
-  A
-  B
-  C
-}
-
-enum Enquiry {
-  EMAIL
-  VERBAL
-}
-
-enum AvantistStation {
-  UNITED_KINGDOM
-  SINGAPORE
-  UNITED_ARAB_EMIRATES
-  BRAZIL
-  BCS
-  AES
-  LCAM
+  id                         Int              @id @default(autoincrement())
+  received_date              DateTime
+  enquiry_source             Enquiry
+  description                String
+  client_name                String
+  division                   String
+  client_contact_name        String
+  client_email               String
+  invoicing_address          String
+  avantis_station            AvantistStation
+  requester                  String
+  estimated_quote_date       DateTime
+  probability_award          ProbabilityAward
+  estimated_quote_value      Float?
+  expected_duration          Int
+  comments                   String
+  general_operations_manager String
+  client_interface           String
+  created_at                 DateTime         @default(now())
+  updated_at                 DateTime         @updatedAt
+  acronym_number             String?
+  avantis_services           AvantisServices
+  created_by                 String?
+  expected_start_date        DateTime
+  vessel_site                String
+  job                        job?
 }
 
 model accounts {
@@ -169,7 +139,6 @@ model debtors {
   PROJECT_MANAGER     String?   @map("PROJECT MANAGER") @dbProposals.VarChar(255)
   P_O                 String?   @map("P.O") @dbProposals.VarChar(255)
   /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // % Float? @map("%") @dbProposals.Float
   INVOICE_VALUE       Decimal?  @map("INVOICE VALUE") @dbProposals.Decimal(10, 2)
   COFINS_3_           Decimal?  @map("COFINS 3%") @dbProposals.Decimal(10, 2)
   CSLL_1_             Decimal?  @map("CSLL 1%") @dbProposals.Decimal(10, 2)
@@ -417,6 +386,37 @@ model variation_order_approvals {
   @@index([auth_id], map: "fk_auth_id_var_order")
   @@index([declined_by], map: "fk_declined_by_var_order")
   @@index([variation_order_id], map: "fk_variation_order_id")
+}
+
+enum AvantisServices {
+  DRILLING
+  MARINE_BOILERS
+  MARINE_MAINTENANCE
+  MARINE_SHIPYARD
+  SUPPORT
+  PRODUCTION
+  SHUT_DOWN_MAINTENANCE
+}
+
+enum ProbabilityAward {
+  A
+  B
+  C
+}
+
+enum Enquiry {
+  EMAIL
+  VERBAL
+}
+
+enum AvantistStation {
+  UNITED_KINGDOM
+  SINGAPORE
+  UNITED_ARAB_EMIRATES
+  BRAZIL
+  BCS
+  AES
+  LCAM
 }
 
 enum service_type {

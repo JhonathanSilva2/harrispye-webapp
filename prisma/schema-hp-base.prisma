@@ -1,7 +1,8 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "./generated/client-hp-base"
-  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  output          = "./generated/client-hp-base"
+  previewFeatures = ["views"]
+  binaryTargets   = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
 datasource dbHPBase {
@@ -346,38 +347,51 @@ model tokens {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model users {
-  id              Int       @id @default(autoincrement())
-  username        String    @dbHPBase.VarChar(255)
-  password        String    @dbHPBase.VarChar(255)
-  name            String    @dbHPBase.VarChar(255)
-  display_name    String    @dbHPBase.VarChar(255)
-  id_perfil       BigInt
-  type_user       Int       @dbHPBase.TinyInt
-  is_admin        Boolean   @default(false)
-  admission_date  DateTime? @dbHPBase.Date
-  role            String?   @dbHPBase.VarChar(255)
-  department      Int?
-  hp_registration Int?      @unique(map: "hp_registration")
-  direct_manager  Int?
+  id                   Int                  @id @default(autoincrement())
+  username             String               @dbHPBase.VarChar(255)
+  password             String               @dbHPBase.VarChar(255)
+  name                 String               @dbHPBase.VarChar(255)
+  display_name         String               @dbHPBase.VarChar(255)
+  id_perfil            BigInt
+  type_user            Int                  @dbHPBase.TinyInt
+  is_admin             Boolean              @default(false)
+  admission_date       DateTime?            @dbHPBase.Date
+  role                 String?              @dbHPBase.VarChar(255)
+  department           Int?
+  hp_registration      Int?                 @unique(map: "hp_registration")
+  direct_manager       Int?
+  userAttributes       user_attributes?
+  createdDepartments   user_departments[]   @relation("DepartmentsCreatedBy")
+  createdLocalizations user_localizations[] @relation("LocalizationsCreatedBy")
+  createdOrganizations user_organizations[] @relation("OrganizationsCreatedBy")
+  createdRoles         user_roles[]         @relation("RolesCreatedBy")
 }
 
 model user_roles {
-  id         Int      @id @default(autoincrement())
-  role       String   @dbHPBase.VarChar(255)
-  created_at DateTime @default(now()) @dbHPBase.DateTime(0)
-  created_by Int
+  id             Int               @id @default(autoincrement())
+  role           String            @dbHPBase.VarChar(255)
+  created_at     DateTime          @default(now()) @dbHPBase.DateTime(0)
+  created_by     Int
+  userAttributes user_attributes[] @relation("RoleAttributes")
+  creator        users             @relation("RolesCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_roles_created_by_fkey")
 }
 
 model user_attributes {
-  id              Int            @id @default(autoincrement())
-  user_id         Int            @unique
-  organization_id Int?
-  localization_id Int?
-  department_id   Int?
-  role_id         Int?
-  clearance       user_clearance @default(LOW)
+  id                  Int                   @id @default(autoincrement())
+  user_id             Int                   @unique
+  clearance           user_clearance        @default(LOW)
+  department_id       Int?
+  localization_id     Int?
+  organization_id     Int?
+  role_id             Int?
+  department          user_departments?     @relation("DepartmentAttributes", fields: [department_id], references: [id], onDelete: Cascade)
+  localization        user_localizations?   @relation("LocalizationAttributes", fields: [localization_id], references: [id], onDelete: Cascade)
+  organization        user_organizations?   @relation("OrganizationAttributes", fields: [organization_id], references: [id], onDelete: Cascade)
+  role                user_roles?           @relation("RoleAttributes", fields: [role_id], references: [id], onDelete: Cascade)
+  user                users                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_access_control user_access_control[] @relation("useraccesscontrols")
 
   @@index([department_id], map: "user_attributes_department_id_fkey")
   @@index([localization_id], map: "user_attributes_localization_id_fkey")
@@ -386,45 +400,54 @@ model user_attributes {
 }
 
 model user_departments {
-  id         Int      @id @default(autoincrement())
-  department String   @dbHPBase.VarChar(255)
-  created_at DateTime @default(now()) @dbHPBase.DateTime(0)
-  created_by Int
+  id              Int               @id @default(autoincrement())
+  department      String            @dbHPBase.VarChar(255)
+  created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
+  created_by      Int
+  user_attributes user_attributes[] @relation("DepartmentAttributes")
+  creator         users             @relation("DepartmentsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_departments_created_by_fkey")
 }
 
 model user_organizations {
-  id           Int      @id @default(autoincrement())
-  organization String   @dbHPBase.VarChar(255)
-  created_at   DateTime @default(now()) @dbHPBase.DateTime(0)
-  created_by   Int
+  id              Int               @id @default(autoincrement())
+  organization    String            @dbHPBase.VarChar(255)
+  created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
+  created_by      Int
+  user_attributes user_attributes[] @relation("OrganizationAttributes")
+  creator         users             @relation("OrganizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_organizations_created_by_fkey")
 }
 
 model user_localizations {
-  id           Int      @id @default(autoincrement())
-  localization String   @dbHPBase.VarChar(255)
-  created_at   DateTime @default(now()) @dbHPBase.DateTime(0)
-  created_by   Int
+  id              Int               @id @default(autoincrement())
+  localization    String            @dbHPBase.VarChar(255)
+  created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
+  created_by      Int
+  user_attributes user_attributes[] @relation("LocalizationAttributes")
+  creator         users             @relation("LocalizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_localizations_created_by_fkey")
 }
 
 model user_access_control_features {
-  id          Int     @id @default(autoincrement())
-  feature     String  @dbHPBase.VarChar(255)
-  description String? @dbHPBase.VarChar(255)
+  id                  Int                   @id @default(autoincrement())
+  feature             String                @dbHPBase.VarChar(255)
+  description         String?               @dbHPBase.VarChar(255)
+  user_access_control user_access_control[] @relation("FeatureAccessControls")
 }
 
 model user_access_control {
-  id         Int                        @id @default(autoincrement())
-  user_id    Int
-  feature_id Int
-  action     user_access_control_action @default(READ)
-  start_at   DateTime                   @default(now()) @dbHPBase.DateTime(0)
-  end_at     DateTime?                  @dbHPBase.DateTime(0)
+  id                           Int                          @id @default(autoincrement())
+  user_id                      Int
+  feature_id                   Int
+  action                       user_access_control_action   @default(READ)
+  start_at                     DateTime                     @default(now()) @dbHPBase.DateTime(0)
+  end_at                       DateTime?                    @dbHPBase.DateTime(0)
+  user_access_control_features user_access_control_features @relation("FeatureAccessControls", fields: [feature_id], references: [id], onDelete: Cascade)
+  user_attributes              user_attributes[]            @relation("useraccesscontrols")
 
   @@index([feature_id], map: "user_access_control_feature_id_fkey")
 }
@@ -442,13 +465,19 @@ model work_types {
   nome_worktype String? @dbHPBase.VarChar(50)
 }
 
-model UserAccessControls {
-  A Int
-  B Int
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view access_control_attributes {
+  id           Int                                 @default(0)
+  user_id      Int
+  display_name String                              @dbHPBase.VarChar(255)
+  is_admin     Boolean                             @default(false)
+  department   String?                             @dbHPBase.VarChar(255)
+  localization String?                             @dbHPBase.VarChar(255)
+  organization String?                             @dbHPBase.VarChar(255)
+  role         String?                             @dbHPBase.VarChar(255)
+  clearance    access_control_attributes_clearance @default(LOW)
 
-  @@unique([A, B], map: "_UserAccessControls_AB_unique")
-  @@index([B], map: "_UserAccessControls_B_index")
-  @@map("_UserAccessControls")
+  @@ignore
 }
 
 enum user_clearance {
@@ -484,8 +513,8 @@ enum fabrication_monitoring_client_approval {
   DECLINED
 }
 
-enum fabrication_monitoring_manager_approval {
-  PENDING
-  APPROVED
-  DECLINED
+enum access_control_attributes_clearance {
+  HIGH
+  MEDIUM
+  LOW
 }
