@@ -62,9 +62,13 @@ jobs:
                   app_build_command: "npm run prisma-init && npm run build && npm prune --production"
                   app_location: "/" # your Next.js source
                   api_location: "" # your separated Azure Functions folder
-                  #   output_location: ".next" # Next’s build output
+                  output_location: ".next" # Next’s build output
                   skip_api_build: true
                   github_id_token: ${{ steps.idtoken.outputs.result }}
+            - name: Check build output
+              run: |
+                  ls -la .
+                  ls -la .next
 
     close_pull_request_job:
         if: github.event_name == 'pull_request' && github.event.action == 'closed'
