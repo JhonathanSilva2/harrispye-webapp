@@ -2,7 +2,7 @@ generator client {
   provider        = "prisma-client-js"
   output          = "../node_modules/@prisma/client-hp-base"
   previewFeatures = ["views"]
-  binaryTargets   = ["napi"]
+  binaryTargets   = ["native"]
 }
 
 datasource dbHPBase {
