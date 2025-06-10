@@ -9,7 +9,7 @@
         "prisma-pull": "npx prisma db pull --schema prisma/schema-hp-base.prisma & npx prisma db pull --schema prisma/schema-proposals.prisma",
         "prisma-push": "npx prisma db push --schema prisma/schema-hp-base.prisma & npx prisma db push --schema prisma/schema-proposals.prisma",
         "postinstall": "npm run prisma-init",
-        "postbuild": "echo '=== Prisma engines in standalone folder ===' && find .next/standalone -type f -name '*.so.node'",
+        "postbuild": "ts-node scripts/copy-prisma-binaries.ts",
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
@@ -121,7 +121,7 @@
         "prisma": "6.2.1",
         "tailwindcss": "3.4.1",
         "ts-jest": "29.3.0",
-        "ts-node": "10.9.2",
+        "ts-node": "^10.9.2",
         "typescript": "5"
     }
 }
