@@ -8,6 +8,7 @@
         "prisma-resolve": "npx prisma migrate resolve --schema prisma/schema-hp-base.prisma --applied init & npx prisma migrate resolve --schema prisma/schema-proposals.prisma --applied init",
         "prisma-pull": "npx prisma db pull --schema prisma/schema-hp-base.prisma & npx prisma db pull --schema prisma/schema-proposals.prisma",
         "prisma-push": "npx prisma db push --schema prisma/schema-hp-base.prisma & npx prisma db push --schema prisma/schema-proposals.prisma",
+        "postinstall": "npm run prisma-init",
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",

@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
             ...config.resolve.alias,
             "@": path.resolve(__dirname, "src"),
         };
+        config.module.rules.push({
+            test: /\.node$/,
+            use: {
+                loader: "file-loader",
+                options: {
+                    name: "[path][name].[ext]",
+                    outputPath: "server/chunks",
+                },
+            },
+        });
         return config;
     },
     output: "standalone",
