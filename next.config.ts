@@ -12,10 +12,10 @@ const nextConfig: NextConfig = {
         };
         if (isServer) {
             config.module.rules.push({
-                test: /\.node$/,
-                type: "asset/resource",
+                test: /\.node$/, // match .node and .so.node
+                type: "asset/resource", // emit as files
                 generator: {
-                    filename: "server/chunks/[name][ext]",
+                    filename: "server/chunks/[name][ext]", // into .next/standalone/server/chunks
                 },
             });
         }
