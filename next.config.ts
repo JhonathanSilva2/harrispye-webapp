@@ -5,21 +5,20 @@ import path from "path";
 const isCI = process.env.CI === "true";
 
 const nextConfig: NextConfig = {
-    webpack(config) {
+    webpack(config, { isServer }) {
         config.resolve.alias = {
             ...config.resolve.alias,
             "@": path.resolve(__dirname, "src"),
         };
-        config.module.rules.push({
-            test: /\.node$/,
-            use: {
-                loader: "file-loader",
-                options: {
-                    name: "[path][name].[ext]",
-                    outputPath: "server/chunks",
+        if (isServer) {
+            config.module.rules.push({
+                test: /\.node$/,
+                type: "asset/resource",
+                generator: {
+                    filename: "server/chunks/[name][ext]",
                 },
-            },
-        });
+            });
+        }
         return config;
     },
     output: "standalone",
