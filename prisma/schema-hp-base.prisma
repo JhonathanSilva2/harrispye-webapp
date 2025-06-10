@@ -2,7 +2,7 @@ generator client {
   provider        = "prisma-client-js"
   output          = "../node_modules/@prisma/client-hp-base"
   previewFeatures = ["views"]
-  binaryTargets   = ["native"]
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource dbHPBase {
