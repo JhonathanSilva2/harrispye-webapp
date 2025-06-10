@@ -1,14 +1,8 @@
-#!/usr/bin/env ts-node
+// scripts/copy-prisma-binaries.cjs
+const { copyFileSync, mkdirSync, existsSync } = require("fs");
+const { join, basename } = require("path");
 
-import { copyFileSync, existsSync, mkdirSync } from "fs";
-import { basename, join } from "path";
-
-type EngineConfig = {
-    pkg: string; // the package under node_modules
-    file: string; // the SO filename
-};
-
-const engines: EngineConfig[] = [
+const engines = [
     {
         pkg: "@prisma/client-hp-base",
         file: "query_engine-debian-openssl-3.0.x.so.node",
@@ -30,7 +24,5 @@ for (const { pkg, file } of engines) {
         continue;
     }
     copyFileSync(src, dst);
-    console.log(
-        `✔️  Copied ${pkg}/${file} → .next/standalone/server/chunks/${file}`,
-    );
+    console.log(`✔️  Copied ${pkg}/${file} → server/chunks/${file}`);
 }
