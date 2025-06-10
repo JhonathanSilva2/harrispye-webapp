@@ -70,7 +70,7 @@ jobs:
                       rm -rf $SOURCE_DIR/node_modules/@next/swc-* &&
                       rm -rf $SOURCE_DIR/.next/cache &&
                       node scripts/copy-prisma-binaries.cjs
-                  output_location: "" # Built app content directory - optional
+                  output_location: ".next/standalone" # Built app content directory - optional
                   github_id_token: ${{ steps.idtoken.outputs.result }}
                   ###### End of Repository/Build Configurations ######
 
