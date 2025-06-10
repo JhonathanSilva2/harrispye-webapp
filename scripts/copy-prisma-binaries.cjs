@@ -7,7 +7,7 @@ const pkgs = ["@prisma/client-hp-base", "@prisma/client-proposals"];
 
 console.log("🔍 CWD:", process.cwd());
 
-const outDir = join(process.cwd(), ".next/standalone/server/chunks");
+const outDir = join(process.cwd(), ".next/standalone/.next/server/chunks");
 console.log("→ Ensuring outDir:", outDir);
 mkdirSync(outDir, { recursive: true });
 
