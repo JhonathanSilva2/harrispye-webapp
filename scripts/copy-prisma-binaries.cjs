@@ -1,28 +1,38 @@
 // scripts/copy-prisma-binaries.cjs
-const { copyFileSync, mkdirSync, existsSync } = require("fs");
+const { copyFileSync, mkdirSync, existsSync, readdirSync } = require("fs");
 const { join, basename } = require("path");
 
-const engines = [
-    {
-        pkg: "@prisma/client-hp-base",
-        file: "query_engine-debian-openssl-3.0.x.so.node",
-    },
-    {
-        pkg: "@prisma/client-proposals",
-        file: "query_engine-debian-openssl-3.0.x.so.node",
-    },
-];
+// packages to inspect
+const pkgs = ["@prisma/client-hp-base", "@prisma/client-proposals"];
+
+console.log("🔍 CWD:", process.cwd());
 
 const outDir = join(process.cwd(), ".next/standalone/server/chunks");
+console.log("→ Ensuring outDir:", outDir);
 mkdirSync(outDir, { recursive: true });
 
-for (const { pkg, file } of engines) {
-    const src = join(process.cwd(), "node_modules", pkg, file);
-    const dst = join(outDir, basename(file));
-    if (!existsSync(src)) {
-        console.warn(`⚠️  Missing engine at ${src}`);
+for (const pkg of pkgs) {
+    const pkgDir = join(process.cwd(), "node_modules", pkg);
+    console.log(`\n📦 Inspecting ${pkgDir}`);
+
+    if (!existsSync(pkgDir)) {
+        console.warn(`  ⚠️  Package folder missing: ${pkgDir}`);
         continue;
     }
-    copyFileSync(src, dst);
-    console.log(`✔️  Copied ${pkg}/${file} → server/chunks/${file}`);
+
+    // list all .so.node files in the package folder
+    const engines = readdirSync(pkgDir).filter((f) => f.endsWith(".so.node"));
+    console.log("  Found engines:", engines);
+
+    if (engines.length === 0) {
+        console.warn(`  ⚠️  No .so.node files to copy in ${pkgDir}`);
+        continue;
+    }
+
+    for (const file of engines) {
+        const src = join(pkgDir, file);
+        const dst = join(outDir, basename(file));
+        copyFileSync(src, dst);
+        console.log(`  ✔️  Copied ${src} → ${dst}`);
+    }
 }
