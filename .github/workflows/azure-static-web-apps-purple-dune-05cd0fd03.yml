@@ -36,7 +36,6 @@ jobs:
                   result-encoding: string
             - name: Build and Deploy
               env:
-                  PRISMA_QUERY_ENGINE_LIBRARY: ${{ secrets.PRISMA_QUERY_ENGINE_LIBRARY }}
                   PRISMA_CLI_BINARY_TARGETS: "debian-openssl-3.0.x"
                   DATABASE_URL_HPBASE: ${{ secrets.DATABASE_URL_HPBASE }}
                   DATABASE_URL_PROPOSALS: ${{ secrets.DATABASE_URL_PROPOSALS }}
