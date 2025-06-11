@@ -12,8 +12,6 @@
         "postbuild": "echo '--- files in standalone ---' && find .next/standalone -maxdepth 3 | sed 's/^/  /' && node scripts/copy-prisma-binaries.cjs",
         "dev": "next dev --turbopack",
         "build": "next build",
-        "install:clean": "rm -rf node_modules && npm install --omit=dev",
-        "build:prod": "npm install && npm run build && npm run install:clean",
         "start": "next start",
         "test": "jest",
         "test:watch": "jest --watch",
