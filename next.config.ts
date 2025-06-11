@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
         }
         return config;
     },
+    output: "standalone",
     productionBrowserSourceMaps: false,
     logging: {
         fetches: {
