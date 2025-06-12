@@ -3,7 +3,7 @@ generator client {
   output          = "../node_modules/@prisma/client-proposals"
   previewFeatures = ["views"]
   engineType    = "node-api"
-  binaryTargets   = ["native"]
+  binaryTargets   = ["rhel-openssl-3.0.x"]
 }
 
 datasource dbProposals {
