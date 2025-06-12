@@ -5,7 +5,7 @@ import {
     Enquiry,
     Prisma,
     ProbabilityAward,
-} from "@prisma/client-proposals";
+} from "@/../prisma/generated/client-proposals";
 export function toErfCreateInput(
     data: EnquiryRequestFormData,
 ): Prisma.erfCreateInput {

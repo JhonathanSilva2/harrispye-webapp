@@ -31,5 +31,5 @@
         "src/app/maintenance",
         "scripts/copy-prisma-binaries.cjs"
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "prisma/generated/**/*"]
 }

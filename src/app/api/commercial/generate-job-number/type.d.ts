@@ -1,5 +1,8 @@
 import { AutobudgetOuterStateType } from "@/app/i/commercial/auto-budget/types";
-import { AvantisServices, AvantistStation } from "@prisma/client-proposals";
+import {
+    AvantisServices,
+    AvantistStation,
+} from "@/../prisma/generated/client-proposals";
 
 export type CostingData = {
     erfData: EnquiryRequestFormData;
