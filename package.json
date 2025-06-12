@@ -9,6 +9,7 @@
         "prisma-pull": "npx prisma db pull --schema prisma/schema-hp-base.prisma & npx prisma db pull --schema prisma/schema-proposals.prisma",
         "prisma-push": "npx prisma db push --schema prisma/schema-hp-base.prisma & npx prisma db push --schema prisma/schema-proposals.prisma",
         "postinstall": "npm run prisma-init",
+        "postbuild": "echo '--- files in standalone ---' && find .next/standalone -maxdepth 3 | sed 's/^/  /' && node scripts/copy-prisma-binaries.cjs",
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
