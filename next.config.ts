@@ -24,10 +24,8 @@ const nextConfig: NextConfig = {
     output: "standalone",
     outputFileTracingIncludes: {
         // key '/**' means “for all pages & API routes”
-        "/**": [
-            "./node_modules/.prisma/client/**/*",
-            "./node_modules/@prisma/client/runtime/**/*",
-        ],
+        "**/node_modules/.prisma/client/**": ["**/*"],
+        "**/node_modules/@prisma/client/**": ["**/*"],
     },
     productionBrowserSourceMaps: false,
     logging: {
