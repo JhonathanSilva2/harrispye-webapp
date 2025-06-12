@@ -11,13 +11,7 @@ const nextConfig: NextConfig = {
             "@": path.resolve(__dirname, "src"),
         };
         if (isServer) {
-            config.module.rules.push({
-                test: /\.node$/, // match .node and .so.node
-                type: "asset/resource", // emit as files
-                generator: {
-                    filename: "server/chunks/[name][ext]", // into .next/standalone/server/chunks
-                },
-            });
+            config.cache = false;
         }
         return config;
     },
