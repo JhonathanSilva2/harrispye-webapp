@@ -1,6 +1,6 @@
 /* eslint-disable no-var */
 
-import { PrismaClient } from "@/../prisma/generated/client-hp-base";
+import { PrismaClient } from "@prisma/client";
 
 let prismaBase: PrismaClient;
 

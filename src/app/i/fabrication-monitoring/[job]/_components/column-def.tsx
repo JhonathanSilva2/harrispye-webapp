@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
+import { fabrication_monitoring } from "@prisma/client";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import ApprovalSelect from "./approval-select";

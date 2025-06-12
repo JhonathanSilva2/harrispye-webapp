@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
 import { formatMoney } from "@/utils/format-currency";
 import { formatPercentage } from "@/utils/format-percentage";
-import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
+import { fabrication_monitoring } from "@prisma/client";
 import { Row, Table } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react"; // Ícone de loading
 import { useCallback, useState } from "react";

@@ -1,4 +1,4 @@
-import { $Enums } from "@/../prisma/generated/client-hp-base";
+import { $Enums } from "@prisma/client";
 
 export type UserAccessControl = {
     feature: string;

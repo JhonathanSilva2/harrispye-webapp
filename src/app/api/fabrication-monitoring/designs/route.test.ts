@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 import { default as path, default as pathModule } from "path";
 import { GET, POST } from "./route";
 
-jest.mock("@/../prisma/generated/client-hp-base", () => ({
+jest.mock("@prisma/client", () => ({
     PrismaClient: jest.fn().mockImplementation(() => ({
         fabrication_monitoring_designs: {
             create: jest.fn().mockResolvedValue({
