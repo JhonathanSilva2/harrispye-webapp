@@ -21,11 +21,6 @@ const nextConfig: NextConfig = {
         }
         return config;
     },
-    output: "standalone",
-    outputFileTracingIncludes: {
-        // match your custom client output
-        "**/prisma/generated/**/*": ["**/*"],
-    },
     productionBrowserSourceMaps: false,
     logging: {
         fetches: {
