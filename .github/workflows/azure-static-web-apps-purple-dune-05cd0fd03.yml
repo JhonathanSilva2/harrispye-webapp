@@ -28,7 +28,7 @@ jobs:
               run: |
                   yarn config set registry https://registry.npmjs.org/
                   yarn config set progress false
-                  yarn install @actions/core@1.6.0 @actions/http-client --loglevel verbose --prefer-offline --no-audit --no-fund
+                  yarn add @actions/core@1.6.0 @actions/http-client --loglevel verbose --prefer-offline --no-audit --no-fund
             - name: Get Id Token
               uses: actions/github-script@v6
               id: idtoken
