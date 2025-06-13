@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: "https",
-                hostname: "avantisstorage147852369.blob.core.windows.net",
+                hostname: "brdev22.blob.core.windows.net",
             },
             {
                 protocol: "https",
