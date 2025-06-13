@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
         }
         return config;
     },
+    outputFileTracing: true,
     productionBrowserSourceMaps: false,
     logging: {
         fetches: {
