@@ -2,6 +2,9 @@
 const { rmSync } = require("fs");
 const { join } = require("path");
 
+const nextDir = join(process.cwd(), ".next");
+const cacheDir = join(process.cwd(), ".next", "cache");
+
 function getFolderSize(dir) {
     let total = 0;
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -11,7 +14,6 @@ function getFolderSize(dir) {
     return total;
 }
 
-const cacheDir = join(process.cwd(), ".next", "cache");
 try {
     rmSync(cacheDir, { recursive: true, force: true });
     console.log("✅ .next/cache deleted");
