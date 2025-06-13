@@ -6,15 +6,25 @@ const isCI = process.env.CI === "true";
 
 const nextConfig: NextConfig = {
     webpack(config, { isServer }) {
+        /**
+         * Lets you import with import Foo from "@/components/Foo" instead of long relative paths.
+         */
         config.resolve.alias = {
             ...config.resolve.alias,
             "@": path.resolve(__dirname, "src"),
         };
+        /**
+         * Tells Webpack to emit any .node (binary addon) files as separate assets under /_next/static/chunks/,
+         * so your server bundle can load them at runtime.
+         */
         config.module.rules.push({
             test: /\.node$/,
             type: "asset/resource",
             generator: { filename: "static/chunks/[name][ext]" },
         });
+        /**
+         * Disable cache on the server build
+         */
         if (isServer) {
             config.cache = false;
         }
