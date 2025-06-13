@@ -3,7 +3,7 @@ const { copyFileSync, mkdirSync, existsSync, readdirSync } = require("fs");
 const { join, basename } = require("path");
 
 // packages to inspect
-const pkgs = ["@prisma/client"];
+const pkgs = [".prisma/client"];
 
 console.log("🔍 CWD:", process.cwd());
 
