@@ -1,11 +1,14 @@
 // delete-next-cache.cjs
-const { rmSync } = require("fs");
+const { rmSync, readdirSync, statSync, existsSync } = require("fs");
 const { join } = require("path");
 
 const nextDir = join(process.cwd(), ".next");
 const cacheDir = join(process.cwd(), ".next", "cache");
 
 function getFolderSize(dir) {
+    if (!existsSync(dir)) {
+        return 0;
+    }
     let total = 0;
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
         const res = join(dir, entry.name);
