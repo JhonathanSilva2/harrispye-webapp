@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
             ...config.resolve.alias,
             "@": path.resolve(__dirname, "src"),
         };
+        config.module.rules.push({
+            test: /\.node$/,
+            type: "asset/resource",
+            generator: { filename: "static/chunks/[name][ext]" },
+        });
         if (isServer) {
             config.cache = false;
         }
