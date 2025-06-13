@@ -7,7 +7,7 @@ const pkgs = [".prisma/client"];
 
 console.log("🔍 CWD:", process.cwd());
 
-const outDir = join(process.cwd(), ".next/standalone/server/chunks");
+const outDir = join(process.cwd(), ".next/standalone/.next/server/chunks");
 console.log("→ Ensuring outDir:", outDir);
 mkdirSync(outDir, { recursive: true });
 
@@ -34,5 +34,16 @@ for (const pkg of pkgs) {
         const dst = join(outDir, basename(file));
         copyFileSync(src, dst);
         console.log(`  ✔️  Copied ${src} → ${dst}`);
+
+        // copy to @prisma/client as well
+        const clientDst = join(
+            process.cwd(),
+            "node_modules",
+            "@prisma",
+            "client",
+            basename(file),
+        );
+        copyFileSync(src, clientDst);
+        console.log(`  ✔️  Copied ${src} → ${clientDst}`);
     }
 }
