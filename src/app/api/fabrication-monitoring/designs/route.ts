@@ -3,7 +3,7 @@ import { prismaBase } from "@/db/base-client";
 import { serverEnv } from "@/lib/constants/config";
 import { getApiPagination, ValidSort } from "@/lib/pagination";
 import { toWindowsEncodedFilename } from "@/utils/win-encode-filename";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/../prisma/generated/client-hp-base";
 import assert from "assert";
 import crypto from "crypto";
 import { existsSync, mkdirSync, writeFileSync } from "fs";

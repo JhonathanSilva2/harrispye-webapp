@@ -1,4 +1,4 @@
-import { $Enums, Prisma } from "@prisma/client";
+import { $Enums, Prisma } from "@/../prisma/generated/client-hp-base";
 import { User } from "next-auth";
 import { NextResponse } from "next/server";
 import { FieldValues, Path } from "react-hook-form";

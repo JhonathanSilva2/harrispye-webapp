@@ -2,7 +2,10 @@ import { TPayload } from "@/app/types";
 import { prismaBase } from "@/db/base-client";
 import { getApiPagination, ValidSort } from "@/lib/pagination";
 import { fabricationMonitoringJobCreateSchema } from "@/schemas/fabrication-monitoring-jobs";
-import { fabrication_monitoring_jobs, Prisma } from "@prisma/client";
+import {
+    fabrication_monitoring_jobs,
+    Prisma,
+} from "@/../prisma/generated/client-hp-base";
 import assert from "assert";
 import _ from "lodash";
 import { NextRequest, NextResponse } from "next/server";

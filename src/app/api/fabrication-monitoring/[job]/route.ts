@@ -8,7 +8,7 @@ import {
     fabrication_monitoring_designs,
     fabrication_monitoring_jobs,
     Prisma,
-} from "@prisma/client";
+} from "@/../prisma/generated/client-hp-base";
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";

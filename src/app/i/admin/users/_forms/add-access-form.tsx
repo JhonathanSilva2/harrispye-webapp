@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { AccessControlForm } from "@/schemas/access-control";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { user_access_control_action } from "@prisma/client";
+import { user_access_control_action } from "@/../prisma/generated/client-hp-base";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

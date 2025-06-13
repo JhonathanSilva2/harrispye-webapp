@@ -1,4 +1,4 @@
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@/../prisma/generated/client-hp-base";
 
 export interface FetchUserAccessControl {
     id: number;
