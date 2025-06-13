@@ -67,11 +67,10 @@ jobs:
                   # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
                   app_build_command: "npm ci && npm run build"
                   app_location: "/" # App source code path
-                  skip_api_build: true
                   api_build_command: >
                       rm -rf $SOURCE_DIR/node_modules/@next/swc-* &&
                       rm -rf $SOURCE_DIR/.next/cache
-                  output_location: ".next" # Built app content directory - optional
+                  output_location: ".next/standalone" # Built app content directory - optional
                   github_id_token: ${{ steps.idtoken.outputs.result }}
                   ###### End of Repository/Build Configurations ######
 

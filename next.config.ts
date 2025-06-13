@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
         }
         return config;
     },
-    outputFileTracing: true,
+    output: "standalone",
     productionBrowserSourceMaps: false,
     logging: {
         fetches: {

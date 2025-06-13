@@ -3,7 +3,7 @@ const { copyFileSync, mkdirSync, existsSync, readdirSync } = require("fs");
 const { join, basename } = require("path");
 
 // packages to inspect
-const pkgs = ["client-hp-base", "client-proposals"];
+const pkgs = ["@prisma/client-hp-base", "@prisma/client-proposals"];
 
 console.log("🔍 CWD:", process.cwd());
 
@@ -12,7 +12,7 @@ console.log("→ Ensuring outDir:", outDir);
 mkdirSync(outDir, { recursive: true });
 
 for (const pkg of pkgs) {
-    const pkgDir = join(process.cwd(), "prisma/generated", pkg);
+    const pkgDir = join(process.cwd(), "node_modules", pkg);
     console.log(`\n📦 Inspecting ${pkgDir}`);
 
     if (!existsSync(pkgDir)) {

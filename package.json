@@ -9,7 +9,7 @@
         "prisma-pull": "npx prisma db pull --schema prisma/schema-hp-base.prisma & npx prisma db pull --schema prisma/schema-proposals.prisma",
         "prisma-push": "npx prisma db push --schema prisma/schema-hp-base.prisma & npx prisma db push --schema prisma/schema-proposals.prisma",
         "postinstall": "npm run prisma-init",
-        "postbuild": "node scripts/delete-next-cache.cjs",
+        "postbuild": "node scripts/copy-prisma-binaries.cjs && node scripts/delete-next-cache.cjs",
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
