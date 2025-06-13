@@ -41,11 +41,6 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: "http",
-                port: "3000",
-                hostname: "localhost",
-            },
-            {
                 protocol: "https",
                 hostname: "brdev22.blob.core.windows.net",
             },
