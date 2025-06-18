@@ -6,36 +6,40 @@ import { CirclePlus, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface AddSpoolButtonProps {
-	job: string;
+    job: string;
+    canWrite: boolean;
 }
 
-export default function AddSpoolButton({ job }: AddSpoolButtonProps) {
-	const queryClient = useQueryClient();
-	const [isLoading, setIsLoading] = useState(false); // Controle de estado para loading
-	const [error, setError] = useState<string | null>(null); // Controle de erro
+export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
+    const queryClient = useQueryClient();
+    const [isLoading, setIsLoading] = useState(false); // Controle de estado para loading
+    const [error, setError] = useState<string | null>(null); // Controle de erro
 
-	const handleSpool = async () => {
-		try {
-			setIsLoading(true);
-			const response = await fetchSpool(job);
-			queryClient.invalidateQueries({ queryKey: ["fab-mon-spools"] });
-		} catch (error) {
-			console.error("Erro ao criar spool:", error);
-			setError("Ocorreu um erro ao criar o spool.");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+    const handleSpool = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetchSpool(job);
+            queryClient.invalidateQueries({ queryKey: ["fab-mon-spools"] });
+        } catch (error) {
+            console.error("Erro ao criar spool:", error);
+            setError("Ocorreu um erro ao criar o spool.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-	return (
-		<Button
-			className="mx-2 my-3 hover:bg-green-800"
-			variant={"outline"}
-			onClick={handleSpool}
-			disabled={isLoading}
-		>
-			{isLoading ? <Loader2 className="animate-spin" /> : <CirclePlus />}{" "}
-			Spool
-		</Button>
-	);
+    const isDisabled = !canWrite || isLoading;
+
+    return (
+        <Button
+            className="mx-2 my-3 hover:bg-green-800"
+            variant={"outline"}
+            onClick={handleSpool}
+            disabled={isDisabled}
+            data-cy="addSpool"
+        >
+            {isLoading ? <Loader2 className="animate-spin" /> : <CirclePlus />}{" "}
+            Spool
+        </Button>
+    );
 }

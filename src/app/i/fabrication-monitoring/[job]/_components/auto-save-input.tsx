@@ -8,6 +8,7 @@ import { fabrication_monitoring } from "@prisma/client-hp-base";
 import { Row, Table } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react"; // Ícone de loading
 import { useCallback, useState } from "react";
+import { PermissionValue } from "../_permissions/types";
 
 interface AutoSaveInputProps<TData> {
     name: string;
@@ -15,6 +16,7 @@ interface AutoSaveInputProps<TData> {
     row: Row<fabrication_monitoring>;
     table: Table<TData>;
     onlyIntegers?: boolean;
+    permission: PermissionValue;
 }
 
 export default function AutoSaveInput<TData>({
@@ -23,6 +25,7 @@ export default function AutoSaveInput<TData>({
     row,
     table,
     onlyIntegers,
+    permission,
 }: AutoSaveInputProps<TData>) {
     const formatValue = (currentValue: string | number, typeValue: string) => {
         switch (typeValue) {
@@ -91,28 +94,36 @@ export default function AutoSaveInput<TData>({
         }
     };
 
-    return isEditing ? (
-        <div className="relative w-full">
-            <Input
-                name={name}
-                type={type === "text" ? type : "number"}
-                value={value}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                placeholder={type === "text" ? "Type here..." : ""}
-                className={`w-full rounded border p-2 transition-all ${
-                    mutation.isPending ? "cursor-not-allowed opacity-70" : ""
-                }`}
-                disabled={mutation.isPending}
-            />
-            {mutation.isPending && (
-                <Loader2
-                    className="absolute right-2 top-2 animate-spin text-primary"
-                    size={20}
+    if (permission) {
+        const canEdit = permission !== "READ";
+        return isEditing && canEdit ? (
+            <div className="relative w-full">
+                <Input
+                    data-cy={`spool-column-${name}`}
+                    name={name}
+                    type={type === "text" ? type : "number"}
+                    value={value}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={type === "text" ? "Type here..." : ""}
+                    className={`w-full rounded border p-2 transition-all ${
+                        mutation.isPending
+                            ? "cursor-not-allowed opacity-70"
+                            : ""
+                    }`}
+                    disabled={mutation.isPending}
                 />
-            )}
-        </div>
-    ) : (
-        <>{formatValue(value, type)}</>
-    );
+                {mutation.isPending && (
+                    <Loader2
+                        className="absolute right-2 top-2 animate-spin text-primary"
+                        size={20}
+                    />
+                )}
+            </div>
+        ) : (
+            <div data-cy={`spool-column-${name}-readOnly`}>
+                {formatValue(value, type)}
+            </div>
+        );
+    }
 }

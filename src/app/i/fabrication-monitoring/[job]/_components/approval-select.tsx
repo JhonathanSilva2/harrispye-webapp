@@ -9,17 +9,19 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { Row, Table } from "@tanstack/react-table";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
+import { fabrication_monitoring } from "prisma/generated/client-hp-base";
+import { PermissionValue } from "../_permissions/types";
 
 type ApprovalStatus = "APPROVED" | "DECLINED" | "PENDING";
 
-interface ApprovalSelectProps {
+interface ApprovalSelectProps<TData> {
     status: ApprovalStatus;
-    isEditing: boolean;
-    spoolID: string;
-    hp: string;
     select_name: "client_approval" | "manager_approval";
+    row: Row<fabrication_monitoring>;
+    table: Table<TData>;
+    permission: PermissionValue;
 }
 
 const statusColors: Record<ApprovalStatus, string> = {
@@ -34,13 +36,16 @@ const statusIcons: Record<ApprovalStatus, JSX.Element> = {
     PENDING: <Clock className="w-full" />,
 };
 
-const ClientApprovalSelect = ({
+export default function ClientApprovalSelect<TData>({
     status,
-    isEditing,
-    spoolID,
-    hp,
     select_name,
-}: ApprovalSelectProps) => {
+    row,
+    table,
+    permission,
+}: ApprovalSelectProps<TData>) {
+    const hp = table.options.meta!.hp ?? "";
+    const spoolID = String(row.original.id);
+    const isEditing = table.options.meta!.isEditing ?? "";
     const [selectedStatus, setSelectedStatus] =
         useState<ApprovalStatus>(status);
     const mutation = useUpdateSpool(hp, spoolID);
@@ -58,13 +63,18 @@ const ClientApprovalSelect = ({
         },
         [mutation, select_name],
     );
-    return isEditing && status === "PENDING" ? (
+    const canEdit = permission !== "READ";
+
+    return canEdit && isEditing && status === "PENDING" ? (
         <Select
             onValueChange={handleChange}
             value={selectedStatus}
             disabled={mutation.isPending}
         >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger
+                className="w-[180px]"
+                data-cy={`spool-column-${select_name}`}
+            >
                 <SelectValue placeholder={selectedStatus} />
             </SelectTrigger>
             <SelectContent>
@@ -80,12 +90,13 @@ const ClientApprovalSelect = ({
             </SelectContent>
         </Select>
     ) : (
-        <div className="flex items-center justify-center gap-1">
+        <div
+            className="flex items-center justify-center gap-1"
+            data-cy={`spool-column-${select_name}-readOnly`}
+        >
             <Badge className={`rounded-full ${statusColors[status]}`}>
                 {statusIcons[status]}
             </Badge>
         </div>
     );
-};
-
-export default ClientApprovalSelect;
+}
