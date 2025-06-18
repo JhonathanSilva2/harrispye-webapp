@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES2017",
+        "types": ["jest", "node"],
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
         "skipLibCheck": true,
@@ -29,7 +30,9 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "src/app/maintenance",
-        "scripts/copy-prisma-binaries.cjs"
+        "scripts/copy-prisma-binaries.cjs",
+        "src/**/*",
+        "tests/jest/**/*"
     ],
     "exclude": ["node_modules"]
 }
