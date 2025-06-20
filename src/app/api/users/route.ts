@@ -4,7 +4,7 @@ import getUserFullProfile from "@/infra/get-user-full-profile";
 import { serverEnv } from "@/lib/constants/config";
 import { getApiPagination, ValidSort } from "@/lib/pagination";
 import { userSchema } from "@/schemas/users";
-import { Prisma } from "@prisma/client-hp-base";
+import { Prisma } from "@/../prisma/generated/client-hp-base";
 import assert from "assert";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";

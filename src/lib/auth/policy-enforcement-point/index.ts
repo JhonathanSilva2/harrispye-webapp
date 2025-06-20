@@ -1,5 +1,5 @@
 import { TAccessControlAction } from "@/app/types";
-import { permissions } from "@prisma/client-hp-base";
+import { permissions } from "@/../prisma/generated/client-hp-base";
 import { UserSession } from "next-auth";
 
 /**

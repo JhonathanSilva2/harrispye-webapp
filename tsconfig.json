@@ -34,5 +34,5 @@
         "src/**/*",
         "tests/jest/**/*"
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "prisma/generated/**/*"]
 }

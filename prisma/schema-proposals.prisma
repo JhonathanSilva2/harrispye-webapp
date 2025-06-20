@@ -1,8 +1,8 @@
 generator client {
   provider        = "prisma-client-js"
-  output          = "../node_modules/@prisma/client-proposals"
+  output          = "generated/client-proposals"
   previewFeatures = ["views"]
-  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource dbProposals {

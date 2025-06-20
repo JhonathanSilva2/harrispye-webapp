@@ -1,6 +1,6 @@
 /* eslint-disable no-var */
 
-import { PrismaClient } from "@prisma/client-proposals";
+import { PrismaClient } from "@/../prisma/generated/client-proposals";
 
 let prismaProposals: PrismaClient;
 

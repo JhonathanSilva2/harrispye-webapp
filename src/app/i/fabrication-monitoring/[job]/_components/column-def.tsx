@@ -1,7 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { fabrication_monitoring } from "@prisma/client-hp-base";
+import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import ApprovalSelect from "./approval-select";
 import AutoSaveInput from "./auto-save-input";

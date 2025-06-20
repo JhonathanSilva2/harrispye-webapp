@@ -20,7 +20,7 @@ import {
 import { useDrawing } from "@/hooks/query/use-drawings";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
 import { cn } from "@/lib/utils";
-import { fabrication_monitoring } from "@prisma/client-hp-base";
+import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import { Row, Table } from "@tanstack/react-table";
 import { useCallback } from "react";
 import { PermissionValue } from "../_permissions/types";

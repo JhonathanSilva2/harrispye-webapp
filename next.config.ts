@@ -6,18 +6,27 @@ const isCI = process.env.CI === "true";
 
 const nextConfig: NextConfig = {
     webpack(config, { isServer }) {
+        /**
+         * Lets you import with import Foo from "@/components/Foo" instead of long relative paths.
+         */
         config.resolve.alias = {
             ...config.resolve.alias,
             "@": path.resolve(__dirname, "src"),
         };
+        /**
+         * Tells Webpack to emit any .node (binary addon) files as separate assets under /_next/static/chunks/,
+         * so your server bundle can load them at runtime.
+         */
+        config.module.rules.push({
+            test: /\.node$/,
+            type: "asset/resource",
+            generator: { filename: "static/chunks/[name][ext]" },
+        });
+        /**
+         * Disable cache on the server build
+         */
         if (isServer) {
-            config.module.rules.push({
-                test: /\.node$/, // match .node and .so.node
-                type: "asset/resource", // emit as files
-                generator: {
-                    filename: "server/chunks/[name][ext]", // into .next/standalone/server/chunks
-                },
-            });
+            config.cache = false;
         }
         return config;
     },
@@ -32,13 +41,8 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: "http",
-                port: "3000",
-                hostname: "localhost",
-            },
-            {
                 protocol: "https",
-                hostname: "avantisstorage147852369.blob.core.windows.net",
+                hostname: "brdev22.blob.core.windows.net",
             },
             {
                 protocol: "https",
