@@ -23,15 +23,18 @@ import { cn } from "@/lib/utils";
 import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import { Row, Table } from "@tanstack/react-table";
 import { useCallback } from "react";
+import { PermissionValue } from "../_permissions/types";
 
 interface DrawingRefSelectProps<TData> {
     row: Row<fabrication_monitoring>;
     table: Table<TData>;
+    permission: PermissionValue;
 }
 
 export function DrawingRefSelect<TData>({
     row,
     table,
+    permission,
 }: DrawingRefSelectProps<TData>) {
     const jobID = row.original.id_fabrication_monitoring_jobs ?? "";
     const spoolID = String(row.original.id); // Supondo que o ID seja "id"
@@ -64,62 +67,73 @@ export function DrawingRefSelect<TData>({
         },
         [mutation],
     );
+    if (permission) {
+        const canEdit = permission !== "READ";
 
-    return !isEditing ? (
-        <div className="truncate text-green-300">{value}</div>
-    ) : (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-full justify-between"
-                >
-                    {value ? (
-                        <span className="truncate">{value}</span>
-                    ) : (
-                        "Select drawing..."
-                    )}
-                    <ChevronsUpDown className="opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[250px] p-0">
-                <Command>
-                    <CommandInput placeholder="Search drawing..." />
-                    <CommandList>
-                        {mutation.isPending ? (
-                            <CommandItem disabled>Carregando...</CommandItem>
-                        ) : drawings.length === 0 ? (
-                            <CommandEmpty>
-                                Nenhum drawing encontrado.
-                            </CommandEmpty>
+        return isEditing && canEdit ? (
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-full justify-between"
+                        data-cy="spool-column-drawing_ref"
+                    >
+                        {value ? (
+                            <span className="truncate">{value}</span>
                         ) : (
-                            <CommandGroup>
-                                {drawings.map((drawing) => (
-                                    <CommandItem
-                                        key={drawing.value}
-                                        value={drawing.value}
-                                        onSelect={() =>
-                                            handleSelect(drawing.value)
-                                        }
-                                    >
-                                        {drawing.label}
-                                        <Check
-                                            className={cn(
-                                                "ml-auto",
-                                                value === drawing.value
-                                                    ? "opacity-100"
-                                                    : "opacity-0",
-                                            )}
-                                        />
-                                    </CommandItem>
-                                ))}
-                            </CommandGroup>
+                            "Select drawing..."
                         )}
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    );
+                        <ChevronsUpDown className="opacity-50" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[250px] p-0">
+                    <Command>
+                        <CommandInput placeholder="Search drawing..." />
+                        <CommandList>
+                            {mutation.isPending ? (
+                                <CommandItem disabled>
+                                    Carregando...
+                                </CommandItem>
+                            ) : drawings.length === 0 ? (
+                                <CommandEmpty>
+                                    Nenhum drawing encontrado.
+                                </CommandEmpty>
+                            ) : (
+                                <CommandGroup>
+                                    {drawings.map((drawing) => (
+                                        <CommandItem
+                                            key={drawing.value}
+                                            value={drawing.value}
+                                            onSelect={() =>
+                                                handleSelect(drawing.value)
+                                            }
+                                        >
+                                            {drawing.label}
+                                            <Check
+                                                className={cn(
+                                                    "ml-auto",
+                                                    value === drawing.value
+                                                        ? "opacity-100"
+                                                        : "opacity-0",
+                                                )}
+                                            />
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            )}
+                        </CommandList>
+                    </Command>
+                </PopoverContent>
+            </Popover>
+        ) : (
+            <div
+                data-cy="spool-column-drawing_ref-readOnly"
+                className="truncate text-green-300"
+            >
+                {value}
+            </div>
+        );
+    }
 }

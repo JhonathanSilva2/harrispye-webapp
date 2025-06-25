@@ -1,6 +1,5 @@
 "use client";
 
-import { TPayload } from "@/app/types";
 import {
     Table,
     TableBody,
@@ -30,32 +29,7 @@ import { JSX, useMemo, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { AdvancedFilter } from "./advanced-filter";
 import Pagination from "./pagination";
-import { Searchable } from "./types";
-
-interface DataTableProps<T> {
-    searchables?: Searchable[];
-    data?: TPayload<T[]>;
-    columns: ColumnDef<T>[];
-    pagination: PaginationState;
-    paginationOptions: Pick<
-        PaginationOptions,
-        "onPaginationChange" | "rowCount"
-    >;
-    filters: Record<string, string | number>;
-    resetFilters: () => void;
-    setFilters: (
-        partialFilters: Partial<Record<string, string | number>>,
-    ) => void;
-    sorting: SortingState;
-    onSortingChange: OnChangeFn<SortingState>;
-    isPending: boolean;
-    isError: boolean;
-    headerClassName?: string;
-    headerComponent?: JSX.Element;
-    titleClassName?: string;
-    title?: string;
-    meta?: TableOptions<T>["meta"];
-}
+import { DataTableProps, Searchable } from "./types";
 
 /**
  * DataTable component for displaying and managing tabular data with advanced filtering, sorting, and pagination.
@@ -107,6 +81,7 @@ export function DataTable<T>({
     titleClassName,
     title,
     meta,
+    unpermittedColumns,
 }: DataTableProps<T>): JSX.Element {
     const loader = useMemo(() => {
         const loader = [];
@@ -128,6 +103,9 @@ export function DataTable<T>({
         manualSorting: true,
         onSortingChange,
         rowCount: data?.rowCount,
+        initialState: {
+            columnVisibility: unpermittedColumns,
+        },
         onRowSelectionChange: setRowSelection,
         meta,
 

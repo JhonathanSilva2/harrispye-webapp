@@ -1,9 +1,9 @@
 import { TAccessControlAction } from "@/app/types"; // Verify this path and type definition
 import { Session } from "next-auth";
 import {
-	ABACPolicyEnforcementPoint,
-	RBACPolicyEnforcementPoint,
-	TResource,
+    ABACPolicyEnforcementPoint,
+    RBACPolicyEnforcementPoint,
+    TResource,
 } from "../policy-enforcement-point"; // Ensure this path and exports are correct
 
 /**
@@ -18,11 +18,11 @@ import {
  *          whether the action is allowed or denied.
  */
 export function RBACPolicyDecisionPoint(
-	session: Session,
-	action: TAccessControlAction,
-	resource: TResource,
+    session: Session,
+    action: TAccessControlAction,
+    resource: TResource,
 ) {
-	return RBACPolicyEnforcementPoint(session?.user, action, resource);
+    return RBACPolicyEnforcementPoint(session?.user, action, resource);
 }
 
 /**
@@ -37,11 +37,11 @@ export function RBACPolicyDecisionPoint(
  *          whether the access is allowed or denied.
  */
 export function ABACPolicyDecisionPoint(
-	session: Session,
-	attribute: string,
-	value: string,
+    session: Session,
+    attribute: string,
+    value: string,
 ) {
-	return ABACPolicyEnforcementPoint(session?.user, attribute, value);
+    return ABACPolicyEnforcementPoint(session?.user, attribute, value);
 }
 
 /**
@@ -68,31 +68,53 @@ export function ABACPolicyDecisionPoint(
  * @returns A boolean indicating whether access is granted.
  */
 class AccessControl {
-	_session: Session;
-	constructor(session: Session) {
-		if (!session)
-			throw new Error(
-				"Session is required to initialize the AccessControl object.",
-			);
-		this._session = session;
-	}
-	isAdmin() {
-		return this._session.user.is_admin;
-	}
-	hasRoleAccess(action: TAccessControlAction, resource: TResource) {
-		return RBACPolicyDecisionPoint(
-			this._session as Session,
-			action,
-			resource,
-		);
-	}
-	hasAttributeAccess(attribute: string, value: string) {
-		return ABACPolicyDecisionPoint(
-			this._session as Session,
-			attribute,
-			value,
-		);
-	}
+    _session: Session;
+    _actions = {
+        READ: "READ",
+        WRITE: "WRITE",
+        EDIT: "EDIT",
+        DELETE: "DELETE",
+    };
+    constructor(session: Session) {
+        if (!session)
+            throw new Error(
+                "Session is required to initialize the AccessControl object.",
+            );
+        this._session = session;
+    }
+    isAdmin() {
+        return this._session.user.is_admin;
+    }
+    checkAccessControlActions(resource: TResource) {
+        const actionsResponse: Record<string, boolean> = {};
+        for (const action of Object.values(this._actions)) {
+            if (this.hasRoleAccess(action as TAccessControlAction, resource)) {
+                actionsResponse[action] = true;
+            } else {
+                actionsResponse[action] = false;
+            }
+        }
+        return actionsResponse;
+    }
+    isSomeAccess(resource: TResource) {
+        const actions = this.checkAccessControlActions(resource);
+        return Object.values(actions).some((value) => value);
+    }
+
+    hasRoleAccess(action: TAccessControlAction, resource: TResource) {
+        return RBACPolicyDecisionPoint(
+            this._session as Session,
+            action,
+            resource,
+        );
+    }
+    hasAttributeAccess(attribute: string, value: string) {
+        return ABACPolicyDecisionPoint(
+            this._session as Session,
+            attribute,
+            value,
+        );
+    }
 }
 
 export default AccessControl;

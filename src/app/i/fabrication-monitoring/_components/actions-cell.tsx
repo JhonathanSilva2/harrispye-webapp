@@ -2,13 +2,13 @@ import { FabricationMonitoringFetchReturn } from "@/app/api/fabrication-monitori
 import { AlertDialogComponent } from "@/components/alert";
 import { Button } from "@/components/ui/button";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { clientEnv } from "@/lib/constants/config";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,79 +18,109 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deleteJob } from "../[job]/_actions/delete-job";
 import { EditDialog } from "./edit-dialog";
+import { useAccessControl } from "@/hooks/use-access-control";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const ActionsCell: React.FC<{
-	row: Row<FabricationMonitoringFetchReturn>;
+    row: Row<FabricationMonitoringFetchReturn>;
 }> = ({ row }) => {
-	const router = useRouter();
-	const [isOpen, setIsOpen] = useState(false);
-	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-	const queryClient = useQueryClient();
+    const router = useRouter();
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const queryClient = useQueryClient();
+    const { accessControl, loading } = useAccessControl();
+    const actionsPermissions = accessControl?.checkAccessControlActions(
+        "fabrication-monitoring",
+    );
+    const canRead = accessControl?.isSomeAccess("fabrication-monitoring");
+    if (loading) {
+        return (
+            <Skeleton
+                className="h-full w-full"
+                data-cy="actionHpMenu-skeleton"
+            />
+        );
+    }
+    return (
+        <>
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        className="h-6"
+                        variant="ghost"
+                        data-cy="actionHpMenu"
+                    >
+                        <MoreHorizontal />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel className="text-center">
+                        {row.getValue("hp")}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        {((actionsPermissions?.EDIT ||
+                            actionsPermissions?.ALL) ??
+                            false) && (
+                            <DropdownMenuItem
+                                data-cy="editHp"
+                                onSelect={(e) => {
+                                    e.preventDefault();
+                                    setIsEditDialogOpen(true);
+                                }}
+                            >
+                                <Edit2 />
+                                <span>Edit</span>
+                            </DropdownMenuItem>
+                        )}
+                        {(canRead ?? false) && (
+                            <DropdownMenuItem
+                                data-cy="accessFabricationProject"
+                                onClick={() =>
+                                    router.push(
+                                        `${clientEnv.NEXT_PUBLIC_URL}/i/fabrication-monitoring/${row.getValue(
+                                            "hp",
+                                        )}`,
+                                    )
+                                }
+                            >
+                                <Send />
+                                <span>Summary</span>
+                            </DropdownMenuItem>
+                        )}
 
-	return (
-		<>
-			<DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-				<DropdownMenuTrigger asChild>
-					<Button className="h-6" variant="ghost">
-						<MoreHorizontal />
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent className="w-56">
-					<DropdownMenuLabel className="text-center">
-						{row.getValue("hp")}
-					</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuGroup>
-						<DropdownMenuItem
-							onClick={() =>
-								router.push(
-									`${clientEnv.NEXT_PUBLIC_URL}/i/fabrication-monitoring/${row.getValue(
-										"hp",
-									)}`,
-								)
-							}
-						>
-							<Send />
-							<span>Summary</span>
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onSelect={(e) => {
-								e.preventDefault();
-								setIsEditDialogOpen(true);
-							}}
-						>
-							<Edit2 />
-							<span>Edit</span>
-						</DropdownMenuItem>
-						<AlertDialogComponent
-							onConfirm={async () => {
-								await deleteJob(row.getValue("hp"));
-								queryClient.invalidateQueries({
-									queryKey: ["fab-mon-jobs"],
-								});
-								setIsOpen(false);
-							}}
-							triggerBtn={
-								<DropdownMenuItem
-									onSelect={(e) => e.preventDefault()}
-								>
-									<Trash2 />
-									<span>Delete</span>
-								</DropdownMenuItem>
-							}
-						/>
-					</DropdownMenuGroup>
-				</DropdownMenuContent>
-			</DropdownMenu>
+                        {(actionsPermissions?.DELETE ?? false) && (
+                            <AlertDialogComponent
+                                onConfirm={async () => {
+                                    await deleteJob(row.getValue("hp"));
+                                    queryClient.invalidateQueries({
+                                        queryKey: ["fab-mon-jobs"],
+                                    });
+                                    setIsOpen(false);
+                                }}
+                                triggerBtn={
+                                    <DropdownMenuItem
+                                        data-cy="deleteHp"
+                                        onSelect={(e) => e.preventDefault()}
+                                    >
+                                        <Trash2 />
+                                        <span>Delete</span>
+                                    </DropdownMenuItem>
+                                }
+                            />
+                        )}
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
 
-			{isEditDialogOpen && (
-				<EditDialog
-					mode="edit"
-					hp={row.getValue("hp")}
-					open={isEditDialogOpen}
-					setOpen={setIsEditDialogOpen}
-				/>
-			)}
-		</>
-	);
+            {isEditDialogOpen && (
+                <EditDialog
+                    mode="edit"
+                    hp={row.getValue("hp")}
+                    open={isEditDialogOpen}
+                    setOpen={setIsEditDialogOpen}
+                />
+            )}
+        </>
+    );
 };
