@@ -157,6 +157,7 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
               ),
           ) as Record<string, false>)
         : {};
+
     const columns = useMemo(() => fabricationMonitoringColumns, []);
     return (
         <div>

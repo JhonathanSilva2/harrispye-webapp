@@ -168,8 +168,8 @@ const FabMonFeaturesPermission = {
         DEFAULT: false,
     },
     summary: {
-        CLIENT_APPROVER: { view: false, edit: false, export: false },
-        CLIENT_GUEST: { view: false, edit: false, export: false },
+        CLIENT_APPROVER: false,
+        CLIENT_GUEST: false,
         OPERATION_MANAGER: { view: true, edit: false, export: false },
         MANAGER: { view: true, edit: true, export: true },
         OPERATOR: { view: true, edit: false, export: false },

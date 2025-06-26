@@ -55,3 +55,14 @@ public/commercial_uploads/*
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# cypress artifacts
+/cypress/videos/
+/cypress/screenshots/
+/cypress/downloads/
+.cypress_cache/
+
+# code‐coverage outputs
+/coverage/
+/.nyc_output/
+/cypress-coverage/
