@@ -1,8 +1,10 @@
 generator client {
-  provider        = "prisma-client-js"
-  output          = "generated/client-proposals"
-  previewFeatures = ["views"]
-  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  provider                = "prisma-client-js"
+  output                  = "generated/client-proposals"
+  previewFeatures         = ["views"]
+  binaryTargets           = ["native", "debian-openssl-3.0.x"]
+  interactiveTransactions = "true"
+  extendedIndexes         = "true"
 }
 
 datasource dbProposals {
@@ -12,7 +14,7 @@ datasource dbProposals {
 
 model job {
   id         Int      @id @default(autoincrement())
-  job_no     String?  @unique(map: "job_no") @dbProposals.VarChar(255)
+  job_no     String?  @unique(map: "job_no")
   erf_id     Int      @unique
   budget     Json
   delivery   Json

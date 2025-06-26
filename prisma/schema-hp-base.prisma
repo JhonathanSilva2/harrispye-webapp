@@ -1,8 +1,10 @@
 generator client {
-  provider        = "prisma-client-js"
-  output          = "generated/client-hp-base"
-  previewFeatures = ["views"]
-  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  provider                = "prisma-client-js"
+  output                  = "generated/client-hp-base"
+  previewFeatures         = ["views"]
+  binaryTargets           = ["native", "debian-openssl-3.0.x"]
+  extendedIndexes         = "true"
+  interactiveTransactions = "true"
 }
 
 datasource dbHPBase {
@@ -23,6 +25,7 @@ model adobe {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model adobe_pdf_data {
+  my_row_id        BigInt   @id @dbHPBase.UnsignedBigInt
   hash             String   @dbHPBase.VarChar(255)
   vessel           String   @dbHPBase.VarChar(255)
   job              String   @dbHPBase.VarChar(255)
@@ -169,9 +172,10 @@ model finances {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model finances_comment {
-  hp       String   @dbHPBase.VarChar(255)
-  date     DateTime @dbHPBase.Date
-  comments String?  @dbHPBase.MediumText
+  my_row_id BigInt   @id @dbHPBase.UnsignedBigInt
+  hp        String   @dbHPBase.VarChar(255)
+  date      DateTime @dbHPBase.Date
+  comments  String?  @dbHPBase.MediumText
 
   @@ignore
 }
@@ -279,6 +283,7 @@ model requisicao_ferias {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model respostas {
+  my_row_id     BigInt   @id @dbHPBase.UnsignedBigInt
   id_pedido     Int?
   id_fornecedor String?  @dbHPBase.VarChar(1000)
   data_hora     DateTime @default(now()) @dbHPBase.DateTime(0)
@@ -360,6 +365,7 @@ model users {
   department           Int?
   hp_registration      Int?                 @unique(map: "hp_registration")
   direct_manager       Int?
+  ativo                Boolean?             @default(true)
   userAttributes       user_attributes?
   createdDepartments   user_departments[]   @relation("DepartmentsCreatedBy")
   createdLocalizations user_localizations[] @relation("LocalizationsCreatedBy")
@@ -465,21 +471,6 @@ model work_types {
   nome_worktype String? @dbHPBase.VarChar(50)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view access_control_attributes {
-  id           Int                                 @default(0)
-  user_id      Int
-  display_name String                              @dbHPBase.VarChar(255)
-  is_admin     Boolean                             @default(false)
-  department   String?                             @dbHPBase.VarChar(255)
-  localization String?                             @dbHPBase.VarChar(255)
-  organization String?                             @dbHPBase.VarChar(255)
-  role         String?                             @dbHPBase.VarChar(255)
-  clearance    access_control_attributes_clearance @default(LOW)
-
-  @@ignore
-}
-
 enum user_clearance {
   HIGH
   MEDIUM
@@ -517,10 +508,4 @@ enum fabrication_monitoring_manager_approval {
   PENDING
   APPROVED
   DECLINED
-}
-
-enum access_control_attributes_clearance {
-  HIGH
-  MEDIUM
-  LOW
 }
