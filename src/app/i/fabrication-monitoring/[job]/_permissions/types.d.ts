@@ -32,5 +32,6 @@ export interface UserRole {
     operationManager: ProfilePermissions;
     manager: ProfilePermissions;
     operator: ProfilePermissions;
+    admin: ProfilePermissions;
     default: ProfilePermissions;
 }

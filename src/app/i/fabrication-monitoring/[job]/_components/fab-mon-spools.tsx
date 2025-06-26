@@ -81,15 +81,20 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
         "Can Write:",
         canwrite,
     );
-    const columnPermissions = Permissions.FabMonSpoolsPermission;
-    const canSeeGraphs = Permissions.getFeaturePermission(
-        Permissions.FabMonFeaturesPermission.graph,
-        role,
-    );
-    const canViewSummary = Permissions.getFeaturePermission(
-        Permissions.FabMonFeaturesPermission.summary,
-        role,
-    );
+    const isAdmin = accessControl?.isAdmin();
+    const columnPermissions = isAdmin || Permissions.FabMonSpoolsPermission;
+    const canSeeGraphs =
+        isAdmin ||
+        Permissions.getFeaturePermission(
+            Permissions.FabMonFeaturesPermission.graph,
+            role,
+        );
+    const canViewSummary =
+        isAdmin ||
+        Permissions.getFeaturePermission(
+            Permissions.FabMonFeaturesPermission.summary,
+            role,
+        );
 
     const { filters, resetFilters, setFilters } = useFilters();
 
@@ -152,6 +157,7 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
               ),
           ) as Record<string, false>)
         : {};
+
     const columns = useMemo(() => fabricationMonitoringColumns, []);
     return (
         <div>

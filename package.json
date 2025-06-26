@@ -15,6 +15,7 @@
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
+        "cy:open": "npx cypress open",
         "test": "jest",
         "test:watch": "jest --watch",
         "coverage": "jest --coverage",

@@ -146,7 +146,7 @@ describe("Verificar permissões por role no Fabrication Monitoring", () => {
                 );
 
                 const canEditSpool = Permissions.getFeaturePermission(
-                    Permissions.FabMonFeaturesPermission.EditSpool,
+                    Permissions.FabMonFeaturesPermission.editSpool,
                     user.role,
                 );
 
