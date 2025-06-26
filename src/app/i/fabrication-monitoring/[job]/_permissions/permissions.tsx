@@ -113,6 +113,28 @@ const FabMonSpoolsPermission: UserRole = {
         notes: "UPDATE",
         _actions: "READ",
     },
+    admin: {
+        drawing_ref: "ALL",
+        spool_number: "ALL",
+        description: "ALL",
+        client_approval: "ALL",
+        manager_approval: "ALL",
+        spec: "ALL",
+        mass: "ALL",
+        price_per_kg: "ALL",
+        gross_spool_cost: "ALL",
+        materials_ordered: "ALL",
+        materials_arrived: "ALL",
+        fabrication_complete: "ALL",
+        ndt_complete: "ALL",
+        pressure_test: "ALL",
+        internal_coating: "ALL",
+        external_coating: "ALL",
+        packing: "ALL",
+        dispatch: "ALL",
+        notes: "ALL",
+        _actions: "ALL",
+    },
     default: {
         drawing_ref: false,
         spool_number: false,
@@ -146,8 +168,8 @@ const FabMonFeaturesPermission = {
         DEFAULT: false,
     },
     summary: {
-        CLIENT_APPROVER: false,
-        CLIENT_GUEST: false,
+        CLIENT_APPROVER: { view: false, edit: false, export: false },
+        CLIENT_GUEST: { view: false, edit: false, export: false },
         OPERATION_MANAGER: { view: true, edit: false, export: false },
         MANAGER: { view: true, edit: true, export: true },
         OPERATOR: { view: true, edit: false, export: false },
@@ -161,7 +183,7 @@ const FabMonFeaturesPermission = {
         OPERATOR: false,
         DEFAULT: false,
     },
-    EditSpool: {
+    editSpool: {
         CLIENT_APPROVER: true,
         CLIENT_GUEST: false,
         OPERATION_MANAGER: true,
@@ -190,8 +212,12 @@ export const Permissions = {
     },
     getPermissionPayload(accessControl: AccessControl | null) {
         if (!accessControl) return;
-        const role = accessControl._session.user.userAttributes?.role?.role;
+        const role = !accessControl.isAdmin()
+            ? accessControl._session.user.userAttributes?.role?.role
+            : "ADMIN";
         switch (role) {
+            case "ADMIN":
+                return FabMonSpoolsPermission["admin"];
             case "CLIENT_APPROVER":
                 return FabMonSpoolsPermission["clientApprover"];
             case "CLIENT_GUEST":

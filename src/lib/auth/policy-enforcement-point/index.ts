@@ -40,7 +40,7 @@ export function RBACPolicyEnforcementPoint(
     resource: TResource,
 ) {
     if (!userValidation(user)) return false;
-    if (user!.is_admin) return true;
+    if (user!!.is_admin) return true;
     const hasFeature = user!.userAccessControl?.find(
         (accessControl) => accessControl.feature === resource,
     );
@@ -71,7 +71,7 @@ export function ABACPolicyEnforcementPoint(
     value: string,
 ) {
     if (!userValidation(user)) return false;
-    if (user!.is_admin) return true;
+    if (user!!.is_admin) return true;
     const userAttributes = user?.userAttributes as Record<
         string,
         string | number | boolean | null | undefined
