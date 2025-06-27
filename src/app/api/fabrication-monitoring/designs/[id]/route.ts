@@ -38,9 +38,6 @@ export async function GET(
             );
         }
 
-        console.log(
-            `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings/${design.filename}`,
-        );
         const fetchFile = await fetch(
             `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings/${design.filename}`,
         );

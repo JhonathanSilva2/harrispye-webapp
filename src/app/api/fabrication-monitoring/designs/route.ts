@@ -170,7 +170,6 @@ export async function POST(request: NextRequest) {
             },
         );
 
-        console.log("CREATED FILENAME: ", filename);
         if (!fetchCreateFile.ok) {
             return NextResponse.json(
                 { error: "Failed to create file in storage" },
