@@ -42,14 +42,14 @@ export async function GET(
             `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings/${design.filename}`,
         );
 
-        const file = await fetchFile.arrayBuffer();
-
-        if (!file) {
+        if (!fetchFile.ok) {
             return NextResponse.json(
                 { error: "File not found" },
                 { status: 404 },
             );
         }
+
+        const file = await fetchFile.arrayBuffer();
 
         const headers = new Headers();
         headers.set("Content-Type", "application/octet-stream");

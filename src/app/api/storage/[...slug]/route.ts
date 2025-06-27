@@ -125,7 +125,6 @@ export async function POST(
             process.env.AZURE_STORAGE_CONNECTION_STRING!,
         );
         const containerClient = blobServiceClient.getContainerClient(container);
-        console.log(request);
         const formData = await request.formData();
         const file = formData.get("file");
         if (!file) {
@@ -135,7 +134,10 @@ export async function POST(
             throw new Error("Invalid file type");
         }
         const uploadedFilename = (file as File).name || "upload";
-        const filename = `${pathToFile.join("/")}/${uploadedFilename}`;
+        const filename =
+            pathToFile.length > 0
+                ? `${pathToFile.join("/")}/${uploadedFilename}`
+                : uploadedFilename;
 
         // Create a BlockBlobClient for the new file
         const blockBlobClient = containerClient.getBlockBlobClient(filename);
