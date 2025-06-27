@@ -160,11 +160,23 @@ export async function POST(request: NextRequest) {
             data: createdDesign,
         });
 
-        const filePath = path.join(serverEnv.STORAGE_PATH, filename);
-        const dir = path.dirname(filePath);
-        if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+        const formdata = new FormData();
+        formdata.append("file", parsedFile, filename);
+        const fetchCreateFile = await fetch(
+            `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings`,
+            {
+                method: "POST",
+                body: formdata,
+            },
+        );
 
-        writeFileSync(filePath, buffer);
+        console.log("CREATED FILENAME: ", filename);
+        if (!fetchCreateFile.ok) {
+            return NextResponse.json(
+                { error: "Failed to create file in storage" },
+                { status: 500 },
+            );
+        }
 
         return NextResponse.json(
             {
