@@ -59,7 +59,9 @@ export const DrawingDialog = ({
                         }
                     />
                 </div>
-                <DrawingTable designs={designs ?? []} />
+                <div className="max-h-[90vh] overflow-y-auto">
+                    <DrawingTable designs={designs ?? []} />
+                </div>
             </DialogContent>
         </Dialog>
     );
