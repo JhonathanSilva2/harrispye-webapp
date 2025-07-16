@@ -97,7 +97,7 @@ export default function AutoSaveInput<TData>({
     if (permission) {
         const canEdit = permission !== "READ";
         return isEditing && canEdit ? (
-            <div className="relative w-full">
+            <div className="w-full">
                 <Input
                     data-cy={`spool-column-${name}`}
                     name={name}
