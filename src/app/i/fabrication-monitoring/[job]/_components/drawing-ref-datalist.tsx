@@ -130,7 +130,7 @@ export function DrawingRefSelect<TData>({
         ) : (
             <div
                 data-cy="spool-column-drawing_ref-readOnly"
-                className="text-green-300"
+                className="font-medium text-green-800 dark:font-normal dark:text-green-400"
             >
                 {value}
             </div>
