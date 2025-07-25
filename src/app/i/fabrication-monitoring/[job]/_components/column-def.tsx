@@ -239,9 +239,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
         },
         {
             accessorKey: "gross_spool_cost",
-            header: () => (
-                <span style={{ fontWeight: 800 }}>header: Spool Cost</span>
-            ),
+            header: () => <span style={{ fontWeight: 800 }}>Spool Cost</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
