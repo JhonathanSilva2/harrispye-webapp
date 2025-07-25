@@ -53,7 +53,7 @@ export function DrawingRefSelect<TData>({
             })) ?? []
         );
     }, [data]);
-    const url = `/api/fabrication-monitoring/designs/${row.original.id}`;
+    const url = `/api/fabrication-monitoring/designs/${row.original.fabrication_monitoring_design_id}`;
     const mutation = useUpdateSpool(job, spoolID);
     const handleSelect = useCallback(
         async (selectedValue: string) => {
@@ -132,7 +132,6 @@ export function DrawingRefSelect<TData>({
             <div
                 data-cy="spool-column-drawing_ref-readOnly"
                 className="cursor-pointer font-medium text-green-800 dark:font-normal dark:text-green-400"
-
             >
                 <PdfModal pdfUrl={url}>{value}</PdfModal>
             </div>
