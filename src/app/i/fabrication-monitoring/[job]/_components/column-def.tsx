@@ -110,7 +110,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[200px] border-y ",
+                className: "min-w-[200px] border-y",
             },
         },
         {
