@@ -18,14 +18,15 @@ export default function PdfModal({ children, pdfUrl }: PdfModalProps) {
 
     return (
         <>
-            <DropdownMenuItem
+            <div
+                className="mx-auto"
                 onClick={(event) => {
                     event.preventDefault(); // Evita fechar o dropdown
                     setOpen(true);
                 }}
             >
                 {children}
-            </DropdownMenuItem>
+            </div>
 
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-5xl p-4">

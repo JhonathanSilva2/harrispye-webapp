@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
@@ -39,7 +40,9 @@ export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitori
                                 Actions
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <PdfModal pdfUrl={url}>Open Dialog</PdfModal>
+                            <DropdownMenuItem>
+                                <PdfModal pdfUrl={url}>Open Dialog</PdfModal>
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
