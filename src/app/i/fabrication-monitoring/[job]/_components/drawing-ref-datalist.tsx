@@ -82,7 +82,7 @@ export function DrawingRefSelect<TData>({
                         data-cy="spool-column-drawing_ref"
                     >
                         {value ? (
-                            <span className="truncate">{value}</span>
+                            <span className="">{value}</span>
                         ) : (
                             "Select drawing..."
                         )}
@@ -132,6 +132,7 @@ export function DrawingRefSelect<TData>({
             <div
                 data-cy="spool-column-drawing_ref-readOnly"
                 className="cursor-pointer font-medium text-green-800 dark:font-normal dark:text-green-400"
+
             >
                 <PdfModal pdfUrl={url}>{value}</PdfModal>
             </div>

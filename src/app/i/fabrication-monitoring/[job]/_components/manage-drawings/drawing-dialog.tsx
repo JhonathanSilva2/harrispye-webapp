@@ -35,7 +35,7 @@ export const DrawingDialog = ({
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>{triggerBtn}</DialogTrigger>
-            <DialogContent className="max-h-[90vh] sm:max-w-[800px]">
+            <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-[800px]">
                 <div className="flex items-center justify-between">
                     <DialogHeader>
                         <DialogTitle className="mb-3">Drawings</DialogTitle>
@@ -59,7 +59,7 @@ export const DrawingDialog = ({
                         }
                     />
                 </div>
-                <div className="max-h-[90vh] overflow-y-auto">
+                <div className="min-h-0 flex-1 overflow-y-auto">
                     <DrawingTable designs={designs ?? []} />
                 </div>
             </DialogContent>
