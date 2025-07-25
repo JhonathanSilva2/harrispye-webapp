@@ -24,6 +24,7 @@ import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import { Row, Table } from "@tanstack/react-table";
 import { useCallback } from "react";
 import { PermissionValue } from "../_permissions/types";
+import PdfModal from "./manage-drawings/pdf-dialog";
 
 interface DrawingRefSelectProps<TData> {
     row: Row<fabrication_monitoring>;
@@ -52,7 +53,7 @@ export function DrawingRefSelect<TData>({
             })) ?? []
         );
     }, [data]);
-
+    const url = `/api/fabrication-monitoring/designs/${row.original.id}`;
     const mutation = useUpdateSpool(job, spoolID);
     const handleSelect = useCallback(
         async (selectedValue: string) => {
@@ -130,9 +131,10 @@ export function DrawingRefSelect<TData>({
         ) : (
             <div
                 data-cy="spool-column-drawing_ref-readOnly"
-                className="font-medium text-green-800 dark:font-normal dark:text-green-400"
+                className="cursor-pointer font-medium text-green-800 dark:font-normal dark:text-green-400"
+
             >
-                {value}
+                <PdfModal pdfUrl={url}>{value}</PdfModal>
             </div>
         );
     }
