@@ -45,7 +45,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
         },
         {
             accessorKey: "drawing_ref",
-            header: "Drawing Ref",
+            header: () => <span style={{ fontWeight: 800 }}>Drawing Ref</span>,
             cell: ({ row, table }) => (
                 <DrawingRefSelect
                     permission={
@@ -59,6 +59,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     table={table}
                 />
             ),
+
             meta: {
                 className:
                     "bg-background sticky left-[60px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors",
@@ -66,7 +67,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
         },
         {
             accessorKey: "spool_number",
-            header: "Spool Number",
+            header: () => <span style={{ fontWeight: 800 }}>Spool Number</span>,
             cell: ({ row, table }) => {
                 return (
                     <AutoSaveInput
@@ -87,12 +88,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
 
             meta: {
                 className:
-                    "bg-background sticky left-[240px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors",
+                    "bg-background sticky left-[240px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors ",
             },
         },
         {
             accessorKey: "description",
-            header: "Description",
+            header: () => <span style={{ fontWeight: 800 }}>Description</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -109,12 +110,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[200px]",
+                className: "min-w-[200px] border-y",
             },
         },
         {
             accessorKey: "client_approval",
-            header: "Client Approval",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Client Approval</span>
+            ),
             cell: ({ row, table }) => {
                 const status = row.getValue("client_approval") as
                     | "APPROVED"
@@ -137,10 +140,15 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     />
                 );
             },
+            meta: {
+                className: "border-y",
+            },
         },
         {
             accessorKey: "manager_approval",
-            header: "Manager Approval",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Manager Approval</span>
+            ),
             cell: ({ row, table }) => {
                 const status = row.getValue("manager_approval") as
                     | "APPROVED"
@@ -163,10 +171,13 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     />
                 );
             },
+            meta: {
+                className: "border-y",
+            },
         },
         {
             accessorKey: "spec",
-            header: "Spec",
+            header: () => <span style={{ fontWeight: 800 }}>Spec</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -181,12 +192,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "mass",
-            header: "Mass",
+            header: () => <span style={{ fontWeight: 800 }}>Mass</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -201,12 +212,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "price_per_kg",
-            header: "Price per KG",
+            header: () => <span style={{ fontWeight: 800 }}>Price per KG</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -223,12 +234,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "gross_spool_cost",
-            header: "Gross Spool Cost",
+            header: () => <span style={{ fontWeight: 800 }}>Spool Cost</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -245,12 +256,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "materials_ordered",
-            header: "Materials Ordered",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Materials Ordered</span>
+            ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -267,12 +280,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "materials_arrived",
-            header: "Materials Arrived",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Materials Arrived</span>
+            ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -289,12 +304,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "fabrication_complete",
-            header: "Fabrication Complete",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Fabrication Complete</span>
+            ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -311,12 +328,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "ndt_complete",
-            header: "NDT Complete",
+            header: () => <span style={{ fontWeight: 800 }}>NDT Complete</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -333,12 +350,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "pressure_test",
-            header: "Pressure Test",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Pressure Test</span>
+            ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -355,12 +374,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "internal_coating",
-            header: "Internal Coating",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Internal Coating</span>
+            ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -377,12 +398,14 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "external_coating",
-            header: "External Coating",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>External Coating</span>
+            ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -399,12 +422,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "packing",
-            header: "Packing",
+            header: () => <span style={{ fontWeight: 800 }}>Packing</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -419,12 +442,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "dispatch",
-            header: "Dispatch",
+            header: () => <span style={{ fontWeight: 800 }}>Dispatch</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -439,12 +462,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "notes",
-            header: "Notes",
+            header: () => <span style={{ fontWeight: 800 }}>Notes</span>,
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
@@ -459,12 +482,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 />
             ),
             meta: {
-                className: "min-w-[180px]",
+                className: "min-w-[180px] border-y",
             },
         },
         {
             accessorKey: "_actions",
-            header: "Actions",
+            header: () => <span style={{ fontWeight: 800 }}>Actions</span>,
             cell: ({ table, row }) => {
                 return (
                     <Actions
@@ -479,6 +502,9 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                         }
                     />
                 );
+            },
+            meta: {
+                className: "border-y",
             },
             enableSorting: false,
         },
