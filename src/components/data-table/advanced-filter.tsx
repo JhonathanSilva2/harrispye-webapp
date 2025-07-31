@@ -2,126 +2,158 @@
 
 import { Button } from "@/components/ui/button";
 import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Filter, FilterX, X } from "lucide-react";
 import { DatePicker } from "../forms/date-picker-generic";
 import { Input } from "../ui/input";
 import { AdvancedFilterProps } from "./types";
+import { useRef, useState } from "react";
 
 export function AdvancedFilter({
-	className,
-	searchables,
-	filters,
-	resetFilters,
-	setFilters,
+    className,
+    searchables,
+    filters,
+    resetFilters,
+    setFilters,
 }: AdvancedFilterProps) {
-	const handleInputChange = (key: string, value: string) => {
-		setFilters({
-			...filters,
-			[key]: value,
-		});
-	};
+    const [localFilters, setLocalFilters] = useState(filters);
+    const debounceTimeouts = useRef<Record<string, NodeJS.Timeout>>({});
 
-	const ButtonClearFilter = ({ filterKey }: { filterKey: string }) => (
-		<Button
-			variant={"ghost"}
-			onClick={() => handleInputChange(filterKey, "")}
-		>
-			<X />
-		</Button>
-	);
+    // Local filters -> handleLocalFilters -> onChange
+    const handleLocalFilters = (key: string, value: string) => {
+        setLocalFilters((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
 
-	return (
-		<Drawer>
-			<DrawerTrigger asChild>
-				<Button variant="outline" className={`${className}`}>
-					<Filter />
-				</Button>
-			</DrawerTrigger>
-			<DrawerContent>
-				<div className="mx-auto w-full max-w-sm">
-					<DrawerHeader>
-						<DrawerTitle>Advanced Search</DrawerTitle>
-						<DrawerDescription>
-							Filter your search results
-						</DrawerDescription>
-					</DrawerHeader>
+        // Limpa o timeout anterior se existir
+        if (debounceTimeouts.current[key]) {
+            clearTimeout(debounceTimeouts.current[key]);
+        }
 
-					<div className="flex flex-col gap-2 p-4">
-						{searchables?.map((searchable) =>
-							searchable.type === "date" ? (
-								<div className="flex" key={searchable.key}>
-									<DatePicker
-										placeholder={searchable.title}
-										// Use a controlled prop "selected" instead of "initialSelect"
-										value={
-											filters[searchable.key]
-												? new Date(
-														filters[searchable.key],
-													)
-												: undefined
-										}
-										onChange={(date) =>
-											handleInputChange(
-												searchable.key,
-												date.toString(),
-											)
-										}
-									/>
-									<ButtonClearFilter
-										filterKey={searchable.key}
-									/>
-								</div>
-							) : (
-								<div className="flex" key={searchable.key}>
-									<Input
-										type={searchable.type}
-										placeholder={searchable.title}
-										value={filters[searchable.key] ?? ""}
-										onChange={(e) =>
-											handleInputChange(
-												searchable.key,
-												e.target.value,
-											)
-										}
-									/>
-									<ButtonClearFilter
-										filterKey={searchable.key}
-									/>
-								</div>
-							),
-						) || null}
-					</div>
+        // Define um novo timeout
+        debounceTimeouts.current[key] = setTimeout(() => {
+            handleInputChange(key, value);
+        }, 1500); // tempo de espera em ms
+    };
 
-					<DrawerFooter>
-						<div className="flex w-full">
-							<DrawerClose asChild>
-								<Button variant="ghost" className="flex-grow">
-									Close
-								</Button>
-							</DrawerClose>
-							<DrawerClose asChild>
-								<Button
-									variant="outline"
-									className="flex-grow"
-									onClick={resetFilters}
-								>
-									<FilterX />
-									Clear All Filters
-								</Button>
-							</DrawerClose>
-						</div>
-					</DrawerFooter>
-				</div>
-			</DrawerContent>
-		</Drawer>
-	);
+    // Filters -> handleInputChange -> onBBlur
+
+    const handleInputChange = (key: string, value: string) => {
+        setFilters({
+            ...localFilters,
+            [key]: value,
+        });
+    };
+
+    const handleClearInput = (key: string) => {
+        const updated = { ...localFilters, [key]: "" };
+        setLocalFilters(updated);
+        setFilters(updated);
+    };
+
+    const ButtonClearFilter = ({ filterKey }: { filterKey: string }) => (
+        <Button variant={"ghost"} onClick={() => handleClearInput(filterKey)}>
+            <X />
+        </Button>
+    );
+
+    return (
+        <Drawer>
+            <DrawerTrigger asChild>
+                <Button variant="outline" className={`${className}`}>
+                    <Filter />
+                </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+                <div className="mx-auto w-full max-w-sm">
+                    <DrawerHeader>
+                        <DrawerTitle>Advanced Search</DrawerTitle>
+                        <DrawerDescription>
+                            Filter your search results
+                        </DrawerDescription>
+                    </DrawerHeader>
+
+                    <div className="flex flex-col gap-2 p-4">
+                        {searchables?.map((searchable) =>
+                            searchable.type === "date" ? (
+                                <div className="flex" key={searchable.key}>
+                                    <DatePicker
+                                        placeholder={searchable.title}
+                                        // Use a controlled prop "selected" instead of "initialSelect"
+                                        value={
+                                            filters[searchable.key]
+                                                ? new Date(
+                                                      filters[searchable.key],
+                                                  )
+                                                : undefined
+                                        }
+                                        onChange={(date) =>
+                                            handleInputChange(
+                                                searchable.key,
+                                                date.toString(),
+                                            )
+                                        }
+                                    />
+                                    <ButtonClearFilter
+                                        filterKey={searchable.key}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="flex" key={searchable.key}>
+                                    <Input
+                                        type={searchable.type}
+                                        placeholder={searchable.title}
+                                        value={
+                                            localFilters[searchable.key] ?? ""
+                                        }
+                                        onChange={(e) =>
+                                            handleLocalFilters(
+                                                searchable.key,
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    <ButtonClearFilter
+                                        filterKey={searchable.key}
+                                    />
+                                </div>
+                            ),
+                        ) || null}
+                    </div>
+
+                    <DrawerFooter>
+                        <div className="flex w-full">
+                            <DrawerClose asChild>
+                                <Button variant="ghost" className="flex-grow">
+                                    Close
+                                </Button>
+                            </DrawerClose>
+                            <DrawerClose asChild>
+                                <Button
+                                    variant="outline"
+                                    className="flex-grow"
+                                    onClick={() => {
+                                        setLocalFilters({});
+                                        setFilters({});
+                                    }}
+                                >
+                                    <FilterX />
+                                    Clear All Filters
+                                </Button>
+                            </DrawerClose>
+                        </div>
+                    </DrawerFooter>
+                </div>
+            </DrawerContent>
+        </Drawer>
+    );
 }
