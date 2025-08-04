@@ -213,7 +213,7 @@ export const Permissions = {
     getPermissionPayload(accessControl: AccessControl | null) {
         if (!accessControl) return;
         const role = !accessControl.isAdmin()
-            ? accessControl._session.user.userAttributes?.role?.role
+            ? accessControl.getRole()
             : "ADMIN";
         switch (role) {
             case "ADMIN":

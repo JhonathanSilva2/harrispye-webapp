@@ -115,6 +115,9 @@ class AccessControl {
             value,
         );
     }
+    getRole() {
+        return this._session.user.role || "guest";
+    }
 }
 
 export default AccessControl;

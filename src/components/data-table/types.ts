@@ -58,8 +58,9 @@ export interface HeaderCellProps<DataType> {
 
 export type Searchable = {
     key: string;
-    type: "text" | "number" | "date";
+    type: "text" | "number" | "date" | "select";
     title: string;
+    options?: { value: string; label: string }[];
 };
 
 export interface TFiltersHook {

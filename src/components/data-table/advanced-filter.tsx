@@ -16,6 +16,13 @@ import { DatePicker } from "../forms/date-picker-generic";
 import { Input } from "../ui/input";
 import { AdvancedFilterProps } from "./types";
 import { useRef, useState } from "react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select";
 
 export function AdvancedFilter({
     className,
@@ -83,51 +90,117 @@ export function AdvancedFilter({
                     </DrawerHeader>
 
                     <div className="flex flex-col gap-2 p-4">
-                        {searchables?.map((searchable) =>
-                            searchable.type === "date" ? (
-                                <div className="flex" key={searchable.key}>
-                                    <DatePicker
-                                        placeholder={searchable.title}
-                                        // Use a controlled prop "selected" instead of "initialSelect"
-                                        value={
-                                            filters[searchable.key]
-                                                ? new Date(
-                                                      filters[searchable.key],
-                                                  )
-                                                : undefined
-                                        }
-                                        onChange={(date) =>
-                                            handleInputChange(
-                                                searchable.key,
-                                                date.toString(),
-                                            )
-                                        }
-                                    />
-                                    <ButtonClearFilter
-                                        filterKey={searchable.key}
-                                    />
-                                </div>
-                            ) : (
-                                <div className="flex" key={searchable.key}>
-                                    <Input
-                                        type={searchable.type}
-                                        placeholder={searchable.title}
-                                        value={
-                                            localFilters[searchable.key] ?? ""
-                                        }
-                                        onChange={(e) =>
-                                            handleLocalFilters(
-                                                searchable.key,
-                                                e.target.value,
-                                            )
-                                        }
-                                    />
-                                    <ButtonClearFilter
-                                        filterKey={searchable.key}
-                                    />
-                                </div>
-                            ),
-                        ) || null}
+                        {searchables?.map((searchable) => {
+                            switch (searchable.type) {
+                                case "date":
+                                    return (
+                                        <div
+                                            className="flex"
+                                            key={searchable.key}
+                                        >
+                                            <DatePicker
+                                                placeholder={searchable.title}
+                                                // Use a controlled prop "selected" instead of "initialSelect"
+                                                value={
+                                                    filters[searchable.key]
+                                                        ? new Date(
+                                                              filters[
+                                                                  searchable.key
+                                                              ],
+                                                          )
+                                                        : undefined
+                                                }
+                                                onChange={(date) =>
+                                                    handleInputChange(
+                                                        searchable.key,
+                                                        date.toString(),
+                                                    )
+                                                }
+                                            />
+                                            <ButtonClearFilter
+                                                filterKey={searchable.key}
+                                            />
+                                        </div>
+                                    );
+                                case "text":
+                                case "number":
+                                    return (
+                                        <div
+                                            className="flex"
+                                            key={searchable.key}
+                                        >
+                                            <Input
+                                                type={searchable.type}
+                                                placeholder={searchable.title}
+                                                value={
+                                                    localFilters[
+                                                        searchable.key
+                                                    ] ?? ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleLocalFilters(
+                                                        searchable.key,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <ButtonClearFilter
+                                                filterKey={searchable.key}
+                                            />
+                                        </div>
+                                    );
+                                case "select":
+                                    return (
+                                        <div
+                                            className="flex"
+                                            key={searchable.key}
+                                        >
+                                            <Select
+                                                value={
+                                                    localFilters[
+                                                        searchable.key
+                                                    ].toString() ?? ""
+                                                }
+                                                onValueChange={(e) =>
+                                                    handleLocalFilters(
+                                                        searchable.key,
+                                                        e,
+                                                    )
+                                                }
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue
+                                                        placeholder={
+                                                            searchable.title
+                                                        }
+                                                    />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {searchable.options?.map(
+                                                        (option) => (
+                                                            <SelectItem
+                                                                key={
+                                                                    option.value
+                                                                }
+                                                                value={
+                                                                    option.value
+                                                                }
+                                                            >
+                                                                {option.label}
+                                                            </SelectItem>
+                                                        ),
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                            <ButtonClearFilter
+                                                filterKey={searchable.key}
+                                            />
+                                        </div>
+                                    );
+                                default:
+                                    return null;
+                            }
+                        }) || null}
                     </div>
 
                     <DrawerFooter>

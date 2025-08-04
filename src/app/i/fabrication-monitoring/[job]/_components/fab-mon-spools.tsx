@@ -2,27 +2,17 @@
 
 import { DataTable } from "@/components/data-table";
 import { Searchable } from "@/components/data-table/types";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useFabMon } from "@/hooks/query/use-fab-mon";
 import { useFilters } from "@/hooks/use-filters";
 import { PaginationConstants } from "@/lib/constants/pagination";
-import { formatMoney } from "@/utils/format-currency";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
-import { format } from "date-fns";
 import _ from "lodash";
 import { useMemo, useState } from "react";
-import { EditDialog } from "../../_components/edit-dialog";
-import { ChartLegend } from "./chart-legend";
 import { fabricationMonitoringColumns } from "./column-def";
-import JobCharts from "./job-charts";
-import { DrawingDialog } from "./manage-drawings/drawing-dialog";
-import { PieChartApprovals } from "./pie-chart-approval";
-import { SummaryCard } from "./summary-card";
 import TableHeader from "./table-header";
 import { useAccessControl } from "@/hooks/use-access-control";
-import AccessControl from "@/lib/auth/policy-decision-point";
 import { Permissions } from "../_permissions/permissions";
 import SummarySpools from "./sumary-spools";
 import ChartSpools from "./chart-spools";
@@ -30,31 +20,94 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const advancedSearch: Searchable[] = [
     {
-        key: "hp",
+        key: "drawing_ref",
         type: "text",
-        title: "HP",
+        title: "Drawing Ref",
     },
     {
-        key: "po_number",
+        key: "spool_number",
         type: "text",
-        title: "PO Number",
+        title: "Spool Number",
     },
     {
-        key: "client",
+        key: "description",
         type: "text",
-        title: "Client",
+        title: "Description",
     },
     {
-        key: "expected_delivery_date",
-        type: "date",
-        title: "Expected Delivery",
+        key: "client_approval",
+        type: "select",
+        options: [
+            {
+                value: "PENDING",
+                label: "Pending",
+            },
+            {
+                value: "APPROVED",
+                label: "Approved",
+            },
+            {
+                value: "DECLINED",
+                label: "Declined",
+            },
+        ],
+        title: "Client Approval",
+    },
+    {
+        key: "manager_approval",
+        type: "select",
+        options: [
+            {
+                value: "PENDING",
+                label: "Pending",
+            },
+            {
+                value: "APPROVED",
+                label: "Approved",
+            },
+            {
+                value: "DECLINED",
+                label: "Declined",
+            },
+        ],
+        title: "Manager Approval",
+    },
+    {
+        key: "spec",
+        type: "text",
+        title: "SPEC",
+    },
+    {
+        key: "mass",
+        type: "number",
+        title: "Mass",
+    },
+    {
+        key: "price_per_kg",
+        type: "number",
+        title: "Price Per Kg",
+    },
+    {
+        key: "gross_spool_cost",
+        type: "number",
+        title: "Spool Cost",
+    },
+    {
+        key: "dispatch",
+        type: "number",
+        title: "Dispatch",
+    },
+    {
+        key: "notes",
+        type: "text",
+        title: "Notes",
     },
 ];
 
 const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
     const [isEditing, setIsEditing] = useState(false);
     const { accessControl, loading } = useAccessControl();
-    const role = accessControl?._session.user.userAttributes?.role?.role;
+    const role = accessControl?.getRole();
     // verificar se ele tem permissão de ALL
 
     const userAccessControlAction =
@@ -75,12 +128,6 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
             "ALL",
             "fabrication-monitoring-spool-table",
         );
-    console.log(
-        "User Access Control Action:",
-        accessControl,
-        "Can Write:",
-        canwrite,
-    );
     const isAdmin = accessControl?.isAdmin();
     const columnPermissions = isAdmin || Permissions.FabMonSpoolsPermission;
     const canSeeGraphs =
