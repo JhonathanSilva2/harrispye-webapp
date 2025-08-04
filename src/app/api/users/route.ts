@@ -53,7 +53,7 @@ export async function GET(
                 type_user: true,
             },
             include: {
-                userAttributes: true,
+                user_attributes: true,
             },
         });
 
