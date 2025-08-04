@@ -100,7 +100,7 @@ export interface UserProfile
         };
         include: { user_attributes: true };
     }> {}
-export type UserAttributes = UserFullProfile["user_attributes"];
+export type UserAttributes = UserFullProfile["userAttributes"];
 export interface UserFullProfile
     extends Prisma.usersGetPayload<{
         omit: {
@@ -133,25 +133,25 @@ export interface UserFullProfile
             localization_id: true;
             department_id: true;
             role_id: true;
-            department: {
+            user_departments: {
                 select: {
                     id: true;
                     department: true;
                 };
             };
-            localization: {
+            user_localizations: {
                 select: {
                     id: true;
                     localization: true;
                 };
             };
-            organization: {
+            user_organizations: {
                 select: {
                     id: true;
                     organization: true;
                 };
             };
-            role: {
+            user_roles: {
                 select: {
                     id: true;
                     role: true;

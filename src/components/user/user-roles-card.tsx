@@ -61,25 +61,25 @@ export function UserRolesCard({
                                     <TableRow>
                                         <TableCell>Localization: </TableCell>
                                         <TableCell>
-                                            {attributes.localization?.localization.toUpperCase()}
+                                            {attributes.user_localizations?.localization.toUpperCase()}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell>Organization: </TableCell>
                                         <TableCell>
-                                            {attributes.organization?.organization.toUpperCase()}
+                                            {attributes.user_organizations?.organization.toUpperCase()}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell>Department: </TableCell>
                                         <TableCell>
-                                            {attributes.department?.department.toUpperCase()}
+                                            {attributes.user_departments?.department.toUpperCase()}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell>Role: </TableCell>
                                         <TableCell>
-                                            {attributes.role?.role.toUpperCase()}
+                                            {attributes.user_roles?.role.toUpperCase()}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
