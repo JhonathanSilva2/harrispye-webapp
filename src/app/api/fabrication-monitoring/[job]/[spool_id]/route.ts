@@ -123,14 +123,10 @@ export async function DELETE(
         if (!spoolToDelete) {
             return new NextResponse("Spool not found", { status: 404 });
         }
-        await prismaBase.$transaction([
-            prismaBase.fabrication_monitoring.deleteMany({
-                where: { id: spoolToDelete.id },
-            }),
-            prismaBase.fabrication_monitoring_log.deleteMany({
-                where: { fabrication_monitoring_jobs_id: spoolToDelete.id },
-            }),
-        ]);
+
+        await prismaBase.fabrication_monitoring.delete({
+            where: { id: spoolToDelete.id },
+        });
 
         // Retorna sucesso
         return new NextResponse(
@@ -139,6 +135,7 @@ export async function DELETE(
         );
     } catch (err) {
         assert(err instanceof Error);
+        console.log(err.message);
         return new NextResponse(err.message, { status: 500 });
     }
 }
