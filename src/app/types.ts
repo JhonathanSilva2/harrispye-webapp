@@ -98,9 +98,9 @@ export interface UserProfile
             id_perfil: true;
             type_user: true;
         };
-        include: { userAttributes: true };
+        include: { user_attributes: true };
     }> {}
-export type UserAttributes = UserFullProfile["userAttributes"];
+export type UserAttributes = UserFullProfile["user_attributes"];
 export interface UserFullProfile
     extends Prisma.usersGetPayload<{
         omit: {
@@ -109,7 +109,7 @@ export interface UserFullProfile
             type_user: true;
             department: true;
         };
-        include: { userAttributes: true };
+        include: { user_attributes: true };
     }> {
     manager: Prisma.usersGetPayload<{
         select: {

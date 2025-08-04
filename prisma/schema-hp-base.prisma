@@ -352,34 +352,34 @@ model tokens {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model users {
-  id                   Int                  @id @default(autoincrement())
-  username             String               @dbHPBase.VarChar(255)
-  password             String               @dbHPBase.VarChar(255)
-  name                 String               @dbHPBase.VarChar(255)
-  display_name         String               @dbHPBase.VarChar(255)
-  id_perfil            BigInt
-  type_user            Int                  @dbHPBase.TinyInt
-  is_admin             Boolean              @default(false)
-  admission_date       DateTime?            @dbHPBase.Date
-  role                 String?              @dbHPBase.VarChar(255)
-  department           Int?
-  hp_registration      Int?                 @unique(map: "hp_registration")
-  direct_manager       Int?
-  ativo                Boolean?             @default(true)
-  userAttributes       user_attributes?
-  createdDepartments   user_departments[]   @relation("DepartmentsCreatedBy")
-  createdLocalizations user_localizations[] @relation("LocalizationsCreatedBy")
-  createdOrganizations user_organizations[] @relation("OrganizationsCreatedBy")
-  createdRoles         user_roles[]         @relation("RolesCreatedBy")
+  id                 Int                  @id @default(autoincrement())
+  username           String               @dbHPBase.VarChar(255)
+  password           String               @dbHPBase.VarChar(255)
+  name               String               @dbHPBase.VarChar(255)
+  display_name       String               @dbHPBase.VarChar(255)
+  id_perfil          BigInt
+  type_user          Int                  @dbHPBase.TinyInt
+  is_admin           Boolean              @default(false)
+  admission_date     DateTime?            @dbHPBase.Date
+  role               String?              @dbHPBase.VarChar(255)
+  department         Int?
+  hp_registration    Int?                 @unique(map: "hp_registration")
+  direct_manager     Int?
+  ativo              Boolean?             @default(true)
+  user_attributes    user_attributes?
+  user_departments   user_departments[]
+  user_localizations user_localizations[]
+  user_organizations user_organizations[]
+  user_roles         user_roles[]
 }
 
 model user_roles {
-  id             Int               @id @default(autoincrement())
-  role           String            @dbHPBase.VarChar(255)
-  created_at     DateTime          @default(now()) @dbHPBase.DateTime(0)
-  created_by     Int
-  userAttributes user_attributes[] @relation("RoleAttributes")
-  creator        users             @relation("RolesCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+  id              Int               @id @default(autoincrement())
+  role            String            @dbHPBase.VarChar(255)
+  created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
+  created_by      Int
+  user_attributes user_attributes[]
+  users           users             @relation(fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_roles_created_by_fkey")
 }
@@ -392,11 +392,11 @@ model user_attributes {
   localization_id     Int?
   organization_id     Int?
   role_id             Int?
-  department          user_departments?     @relation("DepartmentAttributes", fields: [department_id], references: [id], onDelete: Cascade)
-  localization        user_localizations?   @relation("LocalizationAttributes", fields: [localization_id], references: [id], onDelete: Cascade)
-  organization        user_organizations?   @relation("OrganizationAttributes", fields: [organization_id], references: [id], onDelete: Cascade)
-  role                user_roles?           @relation("RoleAttributes", fields: [role_id], references: [id], onDelete: Cascade)
-  user                users                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_departments    user_departments?     @relation(fields: [department_id], references: [id], onDelete: Cascade)
+  user_localizations  user_localizations?   @relation(fields: [localization_id], references: [id], onDelete: Cascade)
+  user_organizations  user_organizations?   @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  user_roles          user_roles?           @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  users               users                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_access_control user_access_control[] @relation("useraccesscontrols")
 
   @@index([department_id], map: "user_attributes_department_id_fkey")
@@ -410,8 +410,8 @@ model user_departments {
   department      String            @dbHPBase.VarChar(255)
   created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
   created_by      Int
-  user_attributes user_attributes[] @relation("DepartmentAttributes")
-  creator         users             @relation("DepartmentsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+  user_attributes user_attributes[]
+  users           users             @relation(fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_departments_created_by_fkey")
 }
@@ -421,8 +421,8 @@ model user_organizations {
   organization    String            @dbHPBase.VarChar(255)
   created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
   created_by      Int
-  user_attributes user_attributes[] @relation("OrganizationAttributes")
-  creator         users             @relation("OrganizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+  user_attributes user_attributes[]
+  users           users             @relation(fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_organizations_created_by_fkey")
 }
@@ -432,8 +432,8 @@ model user_localizations {
   localization    String            @dbHPBase.VarChar(255)
   created_at      DateTime          @default(now()) @dbHPBase.DateTime(0)
   created_by      Int
-  user_attributes user_attributes[] @relation("LocalizationAttributes")
-  creator         users             @relation("LocalizationsCreatedBy", fields: [created_by], references: [id], onDelete: Cascade)
+  user_attributes user_attributes[]
+  users           users             @relation(fields: [created_by], references: [id], onDelete: Cascade)
 
   @@index([created_by], map: "user_localizations_created_by_fkey")
 }
@@ -442,7 +442,7 @@ model user_access_control_features {
   id                  Int                   @id @default(autoincrement())
   feature             String                @dbHPBase.VarChar(255)
   description         String?               @dbHPBase.VarChar(255)
-  user_access_control user_access_control[] @relation("FeatureAccessControls")
+  user_access_control user_access_control[]
 }
 
 model user_access_control {
@@ -452,7 +452,7 @@ model user_access_control {
   action                       user_access_control_action   @default(READ)
   start_at                     DateTime                     @default(now()) @dbHPBase.DateTime(0)
   end_at                       DateTime?                    @dbHPBase.DateTime(0)
-  user_access_control_features user_access_control_features @relation("FeatureAccessControls", fields: [feature_id], references: [id], onDelete: Cascade)
+  user_access_control_features user_access_control_features @relation(fields: [feature_id], references: [id], onDelete: Cascade)
   user_attributes              user_attributes[]            @relation("useraccesscontrols")
 
   @@index([feature_id], map: "user_access_control_feature_id_fkey")

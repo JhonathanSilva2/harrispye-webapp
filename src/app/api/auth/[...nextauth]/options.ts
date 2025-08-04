@@ -28,7 +28,7 @@ const options: NextAuthOptions = {
                         type_user: true,
                     },
                     include: {
-                        userAttributes: true,
+                        user_attributes: true,
                     },
                 });
 
