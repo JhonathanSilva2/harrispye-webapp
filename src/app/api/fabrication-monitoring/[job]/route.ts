@@ -158,24 +158,6 @@ export async function GET(
             return new NextResponse("Job not found", { status: 404 });
         }
 
-        const test = await prismaBase.fabrication_monitoring.findMany({
-            where: {
-                id_fabrication_monitoring_jobs: job!.id,
-                AND: [
-                    {
-                        client_approval: {
-                            equals: "APPROVED",
-                        },
-                    },
-                ],
-            },
-            skip: 40,
-            take: 10,
-            orderBy: {},
-        });
-
-        console.log(test);
-
         const spools = await prismaBase.fabrication_monitoring.findMany({
             where: {
                 id_fabrication_monitoring_jobs: job!.id,
