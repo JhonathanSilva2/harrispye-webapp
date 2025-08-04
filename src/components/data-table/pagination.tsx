@@ -90,7 +90,7 @@ const Pagination = ({
                     type="number"
                     min={1}
                     className="w-[50px] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    defaultValue={pageInput}
+                    value={pageInput}
                     onChange={handlePageInputChange}
                 />
                 <Button

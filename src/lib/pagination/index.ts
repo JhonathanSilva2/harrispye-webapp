@@ -122,19 +122,6 @@ export function getApiPagination<TWhere>(
               }
             : {};
 
-    console.log(
-        JSON.stringify(
-            {
-                ...paginationProps,
-                where,
-                skip,
-                take: pageSize,
-                orderBy,
-            },
-            null,
-            4,
-        ),
-    );
     return {
         ...paginationProps,
         where,
