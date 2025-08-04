@@ -258,7 +258,8 @@ export function DataTable<T>({
                 previousPage={table.previousPage}
                 nextPage={table.nextPage}
                 lastPage={table.lastPage}
-                tableState={table.getState().pagination.pageIndex}
+                setPage={table.setPageIndex}
+                pageIndex={table.getState().pagination.pageIndex}
             />
         </div>
     );
