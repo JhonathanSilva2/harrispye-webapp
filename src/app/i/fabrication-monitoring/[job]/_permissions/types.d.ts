@@ -15,6 +15,7 @@ export interface ProfilePermissions {
     materials_ordered: PermissionValue;
     materials_arrived: PermissionValue;
     fabrication_complete: PermissionValue;
+    scan_3d: PermissionValue;
     ndt_complete: PermissionValue;
     pressure_test: PermissionValue;
     external_coating: PermissionValue;

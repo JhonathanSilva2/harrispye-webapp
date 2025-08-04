@@ -332,6 +332,26 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             },
         },
         {
+            accessorKey: "scan_3d",
+            header: () => <span style={{ fontWeight: 800 }}>3D Scan</span>,
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="percentage"
+                    name={"scan_3d"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions["scan_3d"]
+                            : false
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+        },
+        {
             accessorKey: "ndt_complete",
             header: () => <span style={{ fontWeight: 800 }}>NDT Complete</span>,
             cell: ({ row, table }) => (
