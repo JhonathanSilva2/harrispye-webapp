@@ -91,6 +91,7 @@ export function AdvancedFilter({
 
                     <div className="flex flex-col gap-2 p-4">
                         {searchables?.map((searchable) => {
+                            const filterValue = localFilters[searchable.key];
                             switch (searchable.type) {
                                 case "date":
                                     return (
@@ -102,9 +103,9 @@ export function AdvancedFilter({
                                                 placeholder={searchable.title}
                                                 // Use a controlled prop "selected" instead of "initialSelect"
                                                 value={
-                                                    filters[searchable.key]
+                                                    localFilters[searchable.key]
                                                         ? new Date(
-                                                              filters[
+                                                              localFilters[
                                                                   searchable.key
                                                               ],
                                                           )
@@ -132,11 +133,7 @@ export function AdvancedFilter({
                                             <Input
                                                 type={searchable.type}
                                                 placeholder={searchable.title}
-                                                value={
-                                                    localFilters[
-                                                        searchable.key
-                                                    ] ?? ""
-                                                }
+                                                value={filterValue ?? ""}
                                                 onChange={(e) =>
                                                     handleLocalFilters(
                                                         searchable.key,
@@ -157,9 +154,10 @@ export function AdvancedFilter({
                                         >
                                             <Select
                                                 value={
-                                                    localFilters[
-                                                        searchable.key
-                                                    ].toString() ?? ""
+                                                    typeof filterValue ===
+                                                    "number"
+                                                        ? filterValue.toString()
+                                                        : (filterValue ?? "")
                                                 }
                                                 onValueChange={(e) =>
                                                     handleLocalFilters(

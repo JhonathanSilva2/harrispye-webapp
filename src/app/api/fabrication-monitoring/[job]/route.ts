@@ -47,9 +47,99 @@ export async function GET(
             return new NextResponse("Job not found", { status: 404 });
         }
         const urlObj = new URL(request.url);
-        const validSort: ValidSort[] = [];
+        const validSort: ValidSort[] = [
+            {
+                key: "drawing_ref",
+                type: "string",
+            },
+            {
+                key: "spool_number",
+                type: "string",
+            },
+            {
+                key: "description",
+                type: "string",
+            },
+            {
+                key: "client_approval",
+                type: "enum",
+            },
+            {
+                key: "manager_approval",
+                type: "enum",
+            },
+            {
+                key: "spec",
+                type: "string",
+            },
+            {
+                key: "mass",
+                type: "number",
+            },
+            {
+                key: "price_per_kg",
+                type: "number",
+            },
+            {
+                key: "gross_spool_cost",
+                type: "number",
+            },
+            {
+                key: "dispatch",
+                type: "number",
+            },
+            {
+                key: "notes",
+                type: "string",
+            },
+        ];
 
-        const advancedFilterKeys: ValidSort[] = [];
+        const advancedFilterKeys: ValidSort[] = [
+            {
+                key: "drawing_ref",
+                type: "string",
+            },
+            {
+                key: "spool_number",
+                type: "string",
+            },
+            {
+                key: "description",
+                type: "string",
+            },
+            {
+                key: "client_approval",
+                type: "enum",
+            },
+            {
+                key: "manager_approval",
+                type: "enum",
+            },
+            {
+                key: "spec",
+                type: "string",
+            },
+            {
+                key: "mass",
+                type: "number",
+            },
+            {
+                key: "price_per_kg",
+                type: "number",
+            },
+            {
+                key: "gross_spool_cost",
+                type: "number",
+            },
+            {
+                key: "dispatch",
+                type: "number",
+            },
+            {
+                key: "notes",
+                type: "string",
+            },
+        ];
 
         const { page, pageSize, where, skip, take, orderBy } =
             getApiPagination<Prisma.fabrication_monitoringWhereInput>(
@@ -67,6 +157,24 @@ export async function GET(
         if (!job) {
             return new NextResponse("Job not found", { status: 404 });
         }
+
+        const test = await prismaBase.fabrication_monitoring.findMany({
+            where: {
+                id_fabrication_monitoring_jobs: job!.id,
+                AND: [
+                    {
+                        client_approval: {
+                            equals: "APPROVED",
+                        },
+                    },
+                ],
+            },
+            skip: 40,
+            take: 10,
+            orderBy: {},
+        });
+
+        console.log(test);
 
         const spools = await prismaBase.fabrication_monitoring.findMany({
             where: {
