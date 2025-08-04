@@ -25,8 +25,8 @@ export default function DeleteSpoolButton({
             const response = await deleteSpool(job, spoolID);
             queryClient.invalidateQueries({ queryKey: ["fab-mon-spools"] });
         } catch (error) {
-            console.error("Erro ao deletar spool:", error);
-            setError("Ocorreu um erro ao deletar o spool.");
+            console.error("Error when trying to delete spool:", error);
+            setError("Error when trying to delete.");
         } finally {
             setIsLoading(false);
         }
