@@ -134,7 +134,7 @@ export async function DELETE(
 
         // Retorna sucesso
         return new NextResponse(
-            JSON.stringify({ message: "Job deleted successfully" }),
+            JSON.stringify({ message: "Spool deleted successfully" }),
             { status: 200 },
         );
     } catch (err) {
