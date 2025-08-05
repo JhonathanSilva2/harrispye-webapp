@@ -7,7 +7,7 @@ import {
 import { toast } from "sonner";
 
 export function useCreateDrawing(
-    jobID: number,
+    jobId: number,
     options?: UseMutationOptions<void, Error, FormData>,
 ) {
     const queryClient = useQueryClient();
@@ -15,7 +15,7 @@ export function useCreateDrawing(
         ...options,
         mutationFn: async (data) => {
             try {
-                await createDrawing(jobID, data);
+                await createDrawing(jobId, data);
             } catch (error) {
                 throw new Error("Failed to create Drawings, please try again");
             }

@@ -22,7 +22,7 @@ import {
 } from "@/schemas/fabrication-monitoring-drawing"; // Ajuste o caminho se necessário
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { JSX, useCallback, useState } from "react"; // Removido useEffect, useMemo, useCallback se não usados
+import { JSX, useCallback } from "react"; // Removido useEffect, useMemo, useCallback se não usados
 import { FormProvider, useForm } from "react-hook-form";
 
 interface DialogProps {
@@ -72,8 +72,8 @@ export const AddDrawingDialog = ({
                     onFormSubmitSuccess();
                 }
             } catch (error: unknown) {
-                console.error("Erro na submissão:", error);
-                toast.error("Fail");
+                console.error("Error when trying to submit file:", error);
+                toast.error("Error when trying to submit file");
             }
         },
         [mutation, onFormSubmitSuccess, reset, setOpen],

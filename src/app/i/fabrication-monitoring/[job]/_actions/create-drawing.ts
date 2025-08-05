@@ -4,15 +4,14 @@ import { POST } from "@/app/api/fabrication-monitoring/[job]/route";
 import { ReturnTypeFromAPICall } from "@/app/types";
 import AuthClient from "@/infra/auth-client";
 import { clientEnv } from "@/lib/constants/config";
-import { headers } from "next/headers";
 
-export async function createDrawing(JobiD: number, paylod: FormData) {
+export async function createDrawing(jobId: number, data: FormData) {
     const url = new URL(
-        `${clientEnv.NEXT_PUBLIC_URL}/api/fabrication-monitoring/designs?jobId=${JobiD}`,
+        `${clientEnv.NEXT_PUBLIC_URL}/api/fabrication-monitoring/designs?jobId=${jobId}`,
     );
     const fetchOptions = {
         method: "POST",
-        body: paylod,
+        body: data,
     };
 
     return await AuthClient<ReturnTypeFromAPICall<typeof POST>>(
