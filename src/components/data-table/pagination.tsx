@@ -1,6 +1,6 @@
+import { ChevronFirst, ChevronLast } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
-import { ChevronFirst, ChevronLast } from "lucide-react";
 import { Input } from "../ui/input";
 
 interface PaginationProps {
@@ -85,20 +85,24 @@ const Pagination = ({
                 )}
             </div>
             <div className="flex items-center justify-center gap-1">
-                <p>Page: </p>
-                <Input
-                    type="number"
-                    min={1}
-                    className="w-[50px] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    value={pageInput}
-                    onChange={handlePageInputChange}
-                />
-                <Button
-                    variant="outline"
-                    onClick={() => setPage(pageInput - 1)}
-                >
-                    Go!
-                </Button>
+                {getCanPreviousPage() && (
+                    <>
+                        <p>Page: </p>
+                        <Input
+                            type="number"
+                            min={1}
+                            className="w-[50px] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            value={pageInput}
+                            onChange={handlePageInputChange}
+                        />
+                        <Button
+                            variant="outline"
+                            onClick={() => setPage(pageInput - 1)}
+                        >
+                            Go!
+                        </Button>
+                    </>
+                )}
             </div>
         </div>
     );
