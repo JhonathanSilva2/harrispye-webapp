@@ -1,14 +1,14 @@
-import options from "@/app/api/auth/[...nextauth]/options";
-import { TPayload } from "@/app/types";
-import { prismaBase } from "@/db/base-client";
-import { getApiPagination, ValidSort } from "@/lib/pagination";
-import { fabricationMonitoringJobUpdateSchema } from "@/schemas/fabrication-monitoring-jobs";
 import {
     fabrication_monitoring,
     fabrication_monitoring_designs,
     fabrication_monitoring_jobs,
     Prisma,
 } from "@/../prisma/generated/client-hp-base";
+import options from "@/app/api/auth/[...nextauth]/options";
+import { TPayload } from "@/app/types";
+import { prismaBase } from "@/db/base-client";
+import { getApiPagination, ValidSort } from "@/lib/pagination";
+import { fabricationMonitoringJobUpdateSchema } from "@/schemas/fabrication-monitoring-jobs";
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -171,6 +171,17 @@ export async function GET(
             orderBy,
         });
 
+        const spoolsRowCount =
+            await prismaBase.fabrication_monitoring.aggregate({
+                where: {
+                    id_fabrication_monitoring_jobs: job!.id,
+                    ...where,
+                },
+                _count: {
+                    id: true,
+                },
+            });
+
         // pegar o total de spools gross cost e mass
         const summary = await prismaBase.fabrication_monitoring.aggregate({
             _sum: {
@@ -267,7 +278,7 @@ export async function GET(
             data,
             page,
             pageSize,
-            rowCount: summary._count.id,
+            rowCount: spoolsRowCount._count.id,
         };
 
         return new NextResponse(JSON.stringify(payload, null, 4), {
