@@ -85,7 +85,7 @@ const Pagination = ({
                 )}
             </div>
             <div className="flex items-center justify-center gap-1">
-                {getCanPreviousPage() && (
+                {getCanNextPage() || getCanPreviousPage() ? (
                     <>
                         <p>Page: </p>
                         <Input
@@ -102,7 +102,7 @@ const Pagination = ({
                             Go!
                         </Button>
                     </>
-                )}
+                ) : null}
             </div>
         </div>
     );
