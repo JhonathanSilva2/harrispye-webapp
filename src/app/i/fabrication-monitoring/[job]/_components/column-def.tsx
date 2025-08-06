@@ -45,7 +45,11 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
         },
         {
             accessorKey: "drawing_ref",
-            header: () => <span style={{ fontWeight: 800 }}>Drawing Ref</span>,
+            header: () => (
+                <span className="pl-5" style={{ fontWeight: 800 }}>
+                    Drawing Ref
+                </span>
+            ),
             cell: ({ row, table }) => (
                 <DrawingRefSelect
                     permission={
@@ -62,7 +66,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
 
             meta: {
                 className:
-                    "bg-background sticky left-[60px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors",
+                    "bg-background sticky left-[60px] min-w-[230px] max-w-[230px] group-hover/row:bg-muted border-y transition-colors",
             },
         },
         {
@@ -88,7 +92,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
 
             meta: {
                 className:
-                    "bg-background sticky left-[240px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors ",
+                    "bg-background sticky left-[290px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors ",
             },
         },
         {

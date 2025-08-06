@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, FileUp, icons } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -129,11 +129,22 @@ export function DrawingRefSelect<TData>({
                 </PopoverContent>
             </Popover>
         ) : (
-            <div
-                data-cy="spool-column-drawing_ref-readOnly"
-                className="cursor-pointer font-medium text-green-800 dark:font-normal dark:text-green-400"
-            >
-                <PdfModal pdfUrl={url}>{value}</PdfModal>
+            <div className="">
+                <PdfModal pdfUrl={url}>
+                    <div
+                        data-cy="spool-column-drawing_ref-readOnly"
+                        className="cursor-pointer font-medium text-primary"
+                    >
+                        <Button
+                            variant={"link"}
+                            size={"icon"}
+                            className="my-1 underline"
+                        >
+                            <FileUp />
+                            <span className="">{value}</span>
+                        </Button>
+                    </div>
+                </PdfModal>
             </div>
         );
     }
