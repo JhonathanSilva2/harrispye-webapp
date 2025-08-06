@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Trash, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { deleteSpool } from "../../_actions/delete-spool";
+import { toast } from "sonner";
 
 interface AddSpoolButtonProps {
     job: string;
@@ -24,9 +25,11 @@ export default function DeleteSpoolButton({
             setIsLoading(true);
             const response = await deleteSpool(job, spoolID);
             queryClient.invalidateQueries({ queryKey: ["fab-mon-spools"] });
+            toast.success("Spool deleted successfully!");
         } catch (error) {
             console.error("Error when trying to delete spool:", error);
             setError("Error when trying to delete.");
+            toast.error("Ocurred an error while deleting the spool.");
         } finally {
             setIsLoading(false);
         }

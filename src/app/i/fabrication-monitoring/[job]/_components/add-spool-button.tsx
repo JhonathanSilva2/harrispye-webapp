@@ -4,6 +4,7 @@ import { fetchSpool } from "@/app/i/fabrication-monitoring/_actions/fetch-spool"
 import { Button } from "@/components/ui/button";
 import { CirclePlus, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface AddSpoolButtonProps {
     job: string;
@@ -20,9 +21,11 @@ export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
             setIsLoading(true);
             const response = await fetchSpool(job);
             queryClient.invalidateQueries({ queryKey: ["fab-mon-spools"] });
+            toast.success("spool created successfully!");
         } catch (error) {
             console.error("Erro ao criar spool:", error);
-            setError("Ocorreu um erro ao criar o spool.");
+            setError("Ocurred an error while creating the spool.");
+            toast.error("Ocurred an error while creating the spool.");
         } finally {
             setIsLoading(false);
         }
