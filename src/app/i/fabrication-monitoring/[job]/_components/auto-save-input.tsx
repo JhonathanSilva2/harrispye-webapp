@@ -28,7 +28,6 @@ export default function AutoSaveInput<TData>({
     permission,
 }: AutoSaveInputProps<TData>) {
     const formatValue = (currentValue: string | number, typeValue: string) => {
-        console.log("formatValue", currentValue, typeValue, name);
         switch (typeValue) {
             case "text":
                 return currentValue || "";
