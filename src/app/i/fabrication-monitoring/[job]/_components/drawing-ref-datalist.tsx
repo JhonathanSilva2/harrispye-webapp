@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronsUpDown, FileUp, icons } from "lucide-react";
+import { Check, ChevronsUpDown, FileUp } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
