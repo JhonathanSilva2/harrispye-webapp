@@ -10,22 +10,22 @@ export async function middleware(request: NextRequest) {
     if (maintenanceResponse) return maintenanceResponse;
 
     // Allow GET requests to /api/storage without authentication
-    // if (!pathname.startsWith("/api/storage")) {
-    if (pathname.startsWith("/api") || pathname.startsWith("/i")) {
-        const token = await getToken({
-            req: request,
-            secret: serverEnv.NEXTAUTH_SECRET,
-        });
-        const pageAuthResponse = await PageAuthMiddleware(
-            request,
-            pathname,
-            token,
-        );
-        if (pageAuthResponse) return pageAuthResponse;
-        const apiAuthResponse = await ApiAuthMiddleware(pathname, token);
-        if (apiAuthResponse) return apiAuthResponse;
+    if (!pathname.startsWith("/api/storage")) {
+        if (pathname.startsWith("/api") || pathname.startsWith("/i")) {
+            const token = await getToken({
+                req: request,
+                secret: serverEnv.NEXTAUTH_SECRET,
+            });
+            const pageAuthResponse = await PageAuthMiddleware(
+                request,
+                pathname,
+                token,
+            );
+            if (pageAuthResponse) return pageAuthResponse;
+            const apiAuthResponse = await ApiAuthMiddleware(pathname, token);
+            if (apiAuthResponse) return apiAuthResponse;
+        }
     }
-    // }
 
     return NextResponse.next();
 }
