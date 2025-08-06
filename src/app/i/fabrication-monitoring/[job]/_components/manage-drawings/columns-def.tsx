@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { fabrication_monitoring_designs } from "@/../prisma/generated/client-hp-base";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { FileText, MoreHorizontal, Trash2 } from "lucide-react";
 import PdfModal from "./pdf-dialog";
+import { Separator } from "@/components/ui/separator";
+import DeleteDrawingButton from "./delete-drawing-button";
 
 export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitoring_designs>[] =
     [
@@ -40,9 +42,15 @@ export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitori
                                 Actions
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <PdfModal pdfUrl={url}>Open Dialog</PdfModal>
+                            <DropdownMenuItem className="cursor-pointer">
+                                <FileText />
+                                <PdfModal pdfUrl={url}>Open</PdfModal>
                             </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DeleteDrawingButton
+                                url={url}
+                                drawingId={row.original.id}
+                            />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
