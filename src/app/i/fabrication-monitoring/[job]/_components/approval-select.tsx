@@ -13,6 +13,7 @@ import { Row, Table } from "@tanstack/react-table";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
 import { fabrication_monitoring } from "prisma/generated/client-hp-base";
 import { PermissionValue } from "../_permissions/types";
+import { toast } from "sonner";
 
 type ApprovalStatus = "APPROVED" | "DECLINED" | "PENDING";
 
@@ -56,7 +57,9 @@ export default function ClientApprovalSelect<TData>({
             body[select_name] = newStatus;
             try {
                 mutation.mutateAsync(body);
+                toast.success(`Status ${newStatus} successfully!`);
             } catch (error) {
+                toast.error("Failed to update status, please try again.");
                 console.error("Erro ao salvar os dados:", error);
             } finally {
             }
