@@ -53,28 +53,16 @@ export const ActionsCell: React.FC<{
                         <MoreHorizontal />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
+                <DropdownMenuContent className="w-36">
                     <DropdownMenuLabel className="text-center">
                         {row.getValue("hp")}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        {((actionsPermissions?.EDIT ||
-                            actionsPermissions?.ALL) ??
-                            false) && (
-                            <DropdownMenuItem
-                                data-cy="editHp"
-                                onSelect={(e) => {
-                                    e.preventDefault();
-                                    setIsEditDialogOpen(true);
-                                }}
-                            >
-                                <Edit2 />
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                        )}
+                        {/* SUMMARY */}
                         {(canRead ?? false) && (
                             <DropdownMenuItem
+                                className="gap-x-5 text-center"
                                 data-cy="accessFabricationProject"
                                 onClick={() =>
                                     router.push(
@@ -88,7 +76,24 @@ export const ActionsCell: React.FC<{
                                 <span>Summary</span>
                             </DropdownMenuItem>
                         )}
+                        {/* EDIT */}
+                        {((actionsPermissions?.EDIT ||
+                            actionsPermissions?.ALL) ??
+                            false) && (
+                            <DropdownMenuItem
+                                className="gap-x-5 text-center"
+                                data-cy="editHp"
+                                onSelect={(e) => {
+                                    e.preventDefault();
+                                    setIsEditDialogOpen(true);
+                                }}
+                            >
+                                <Edit2 />
+                                <span>Edit</span>
+                            </DropdownMenuItem>
+                        )}
 
+                        {/* DELETE */}
                         {(actionsPermissions?.DELETE ?? false) && (
                             <AlertDialogComponent
                                 onConfirm={async () => {
@@ -100,11 +105,14 @@ export const ActionsCell: React.FC<{
                                 }}
                                 triggerBtn={
                                     <DropdownMenuItem
+                                        className="gap-x-5 text-center"
                                         data-cy="deleteHp"
                                         onSelect={(e) => e.preventDefault()}
                                     >
-                                        <Trash2 />
-                                        <span>Delete</span>
+                                        <Trash2 className="text-red-500" />
+                                        <span className="text-red-500">
+                                            Delete
+                                        </span>
                                     </DropdownMenuItem>
                                 }
                             />
