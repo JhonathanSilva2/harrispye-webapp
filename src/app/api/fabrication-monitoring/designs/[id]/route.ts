@@ -122,17 +122,6 @@ export async function DELETE(
                 },
             });
 
-            const updateDesign = await tx.fabrication_monitoring_designs.update(
-                {
-                    where: {
-                        id: parsedId,
-                    },
-                    data: {
-                        id: undefined, // This will effectively delete the design
-                    },
-                },
-            );
-
             const deletedDesign =
                 await tx.fabrication_monitoring_designs.delete({
                     where: {
