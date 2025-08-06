@@ -32,9 +32,9 @@ const statusColors: Record<ApprovalStatus, string> = {
 };
 
 const statusIcons: Record<ApprovalStatus, JSX.Element> = {
-    APPROVED: <CheckCircle className="w-full" />,
-    DECLINED: <XCircle className="w-full" />,
-    PENDING: <Clock className="w-full" />,
+    APPROVED: <CheckCircle size={16} />,
+    DECLINED: <XCircle size={16} />,
+    PENDING: <Clock size={16} />,
 };
 
 export default function ClientApprovalSelect<TData>({
@@ -94,10 +94,12 @@ export default function ClientApprovalSelect<TData>({
         </Select>
     ) : (
         <div
-            className="flex items-center justify-center gap-1"
+            className="flex h-full items-center justify-center"
             data-cy={`spool-column-${select_name}-readOnly`}
         >
-            <Badge className={`rounded-full ${statusColors[status]}`}>
+            <Badge
+                className={` ${statusColors[status]} h-7 w-full justify-center`}
+            >
                 {statusIcons[status]}
             </Badge>
         </div>
