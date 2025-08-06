@@ -216,9 +216,9 @@ export async function DELETE(
         return NextResponse.json({ message: "File deleted successfully" });
     } catch (error) {
         assert(error instanceof Error);
-        console.error("Upload failed:", error);
+        console.error("Delete failed:", error);
         return NextResponse.json(
-            { message: "Upload failed", error: error.message },
+            { message: "Delete failed", error: error.message },
             {
                 status: 500,
             },
