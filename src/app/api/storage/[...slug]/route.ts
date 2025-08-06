@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import options from "../../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth/next";
+import { storageDeleteSchema } from "@/schemas/storage";
 
 /**
  *
@@ -149,6 +150,70 @@ export async function POST(
         const url = blockBlobClient.url;
 
         return NextResponse.json({ url });
+    } catch (error) {
+        assert(error instanceof Error);
+        console.error("Upload failed:", error);
+        return NextResponse.json(
+            { message: "Upload failed", error: error.message },
+            {
+                status: 500,
+            },
+        );
+    }
+}
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: Promise<{ slug: string[] }> },
+) {
+    try {
+        // const session = await getServerSession(options);
+        // if (!session) {
+        //     return NextResponse.json(
+        //         { error: "Unauthorized" },
+        //         { status: 401 },
+        //     );
+        // }
+
+        const [container, ...pathToFile] = (await params).slug;
+
+        if (pathToFile.length === 0) {
+            return NextResponse.json(
+                { error: "Filename is required" },
+                { status: 400 },
+            );
+        }
+
+        const receivedFilename = pathToFile.pop()!;
+
+        const validation = storageDeleteSchema.safeParse({
+            filename: receivedFilename,
+        });
+
+        if (!validation.success) {
+            return NextResponse.json(
+                { error: validation.error.message },
+                { status: 400 },
+            );
+        }
+
+        const filename = validation.data.filename;
+
+        const blobServiceClient = BlobServiceClient.fromConnectionString(
+            process.env.AZURE_STORAGE_CONNECTION_STRING!,
+        );
+        const containerClient = blobServiceClient.getContainerClient(container);
+        const fullPathFilename =
+            pathToFile.length > 0
+                ? `${pathToFile.join("/")}/${filename}`
+                : filename;
+
+        // Create a BlockBlobClient for the new file
+        const blockBlobClient =
+            containerClient.getBlockBlobClient(fullPathFilename);
+
+        await blockBlobClient.deleteIfExists();
+        return NextResponse.json({ message: "File deleted successfully" });
     } catch (error) {
         assert(error instanceof Error);
         console.error("Upload failed:", error);

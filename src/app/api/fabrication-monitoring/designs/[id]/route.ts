@@ -1,7 +1,10 @@
+import options from "@/app/api/auth/[...nextauth]/options";
 import { prismaBase } from "@/db/base-client";
+import AuthClient from "@/infra/auth-client";
 import { serverEnv } from "@/lib/constants/config";
 import assert from "assert";
 import { readFileSync } from "fs";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -72,6 +75,13 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> },
 ) {
     try {
+        const session = await getServerSession(options);
+        if (!session) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 },
+            );
+        }
         const { id } = await params;
         if (!id) {
             return NextResponse.json(
@@ -101,15 +111,54 @@ export async function DELETE(
             );
         }
 
-        await prismaBase.fabrication_monitoring_designs.delete({
-            where: {
-                id: parsedId,
-            },
+        const deleteDrawing = await prismaBase.$transaction(async (tx) => {
+            const deleteRelations = await tx.fabrication_monitoring.updateMany({
+                where: {
+                    fabrication_monitoring_design_id: parsedId,
+                },
+                data: {
+                    fabrication_monitoring_design_id: undefined,
+                    updated_by: session.user.hp_registration,
+                },
+            });
+
+            const updateDesign = await tx.fabrication_monitoring_designs.update(
+                {
+                    where: {
+                        id: parsedId,
+                    },
+                    data: {
+                        id: undefined, // This will effectively delete the design
+                    },
+                },
+            );
+
+            const deletedDesign =
+                await tx.fabrication_monitoring_designs.delete({
+                    where: {
+                        id: parsedId,
+                    },
+                });
+
+            const deleteFileStorageResponse = await AuthClient(
+                `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings/${design.filename}`,
+                {
+                    method: "DELETE",
+                },
+            );
+
+            if (!deleteFileStorageResponse.ok) {
+                throw new Error(
+                    deleteFileStorageResponse.message ||
+                        "Failed to delete file from storage",
+                );
+            }
         });
 
         return NextResponse.json({ message: "Design deleted" });
     } catch (err) {
         assert(err instanceof Error);
+        console.error("Error deleting design:", err.message);
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
