@@ -24,8 +24,8 @@ export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
             toast.success("spool created successfully!");
         } catch (error) {
             console.error("Erro ao criar spool:", error);
-            setError("Ocurred an error while creating the spool.");
-            toast.error("Ocurred an error while creating the spool.");
+            setError("Occurred an error while creating the spool.");
+            toast.error("Occurred an error while creating the spool.");
         } finally {
             setIsLoading(false);
         }
