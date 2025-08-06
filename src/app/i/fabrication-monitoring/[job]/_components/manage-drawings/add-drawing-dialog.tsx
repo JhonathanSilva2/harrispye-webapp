@@ -72,8 +72,7 @@ export const AddDrawingDialog = ({
                     onFormSubmitSuccess();
                 }
             } catch (error: unknown) {
-                console.error("Error when trying to submit file:", error);
-                toast.error("Error when trying to submit file");
+                console.error("Error when trying to submit file: ", error);
             }
         },
         [mutation, onFormSubmitSuccess, reset, setOpen],

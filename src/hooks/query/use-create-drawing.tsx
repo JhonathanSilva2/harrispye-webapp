@@ -14,10 +14,9 @@ export function useCreateDrawing(
     return useMutation<void, Error, FormData>({
         ...options,
         mutationFn: async (data) => {
-            try {
-                await createDrawing(jobId, data);
-            } catch (error) {
-                throw new Error("Failed to create Drawings, please try again");
+            const createDrawingReturn = await createDrawing(jobId, data);
+            if (!createDrawingReturn.ok) {
+                throw new Error(createDrawingReturn.message || "Unknown error");
             }
         },
 

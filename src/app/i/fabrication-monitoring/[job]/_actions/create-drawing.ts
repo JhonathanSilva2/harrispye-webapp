@@ -1,6 +1,6 @@
 "use server";
 
-import { POST } from "@/app/api/fabrication-monitoring/[job]/route";
+import { POST } from "@/app/api/fabrication-monitoring/designs/route";
 import { ReturnTypeFromAPICall } from "@/app/types";
 import AuthClient from "@/infra/auth-client";
 import { clientEnv } from "@/lib/constants/config";
