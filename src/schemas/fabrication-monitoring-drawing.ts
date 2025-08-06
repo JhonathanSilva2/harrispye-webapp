@@ -13,7 +13,6 @@ export const FabDrawingSchema = z.object({
             (file) => ACCEPTED_FILE_TYPES.includes(file.type),
             "Only .pdf file types are supported.",
         ),
-    description: z.string().min(1, "Description is required."),
 });
 
 export type FabDrawingSchemaFormData = z.infer<typeof FabDrawingSchema>;

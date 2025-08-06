@@ -44,9 +44,6 @@ export const AddDrawingDialog = ({
 }: DialogProps) => {
     const mutation = useCreateDrawing(jobId);
     const methods = useForm<FabDrawingSchemaFormData>({
-        defaultValues: {
-            description: "",
-        },
         resolver: zodResolver(FabDrawingSchema),
     });
 
@@ -61,7 +58,6 @@ export const AddDrawingDialog = ({
         async (data: FabDrawingSchemaFormData) => {
             const body = new FormData();
             body.append("file", data.file, data.file.name);
-            body.append("description", data.description);
 
             try {
                 // Passa o payload e o jobId para a função de mutação
@@ -103,12 +99,6 @@ export const AddDrawingDialog = ({
                                 accept=".pdf"
                             />
                         </div>
-                        <GenericInput
-                            type="text"
-                            name="description"
-                            label="Drawing Description"
-                            placeholder="Enter a brief description..."
-                        />
                     </form>
                 </FormProvider>
                 <DialogFooter>
