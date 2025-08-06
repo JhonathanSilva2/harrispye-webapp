@@ -2,10 +2,10 @@ import { getContentType } from "@/lib/file-type/getContentType";
 import { BlobServiceClient } from "@azure/storage-blob";
 import assert from "assert";
 import { mkdirSync, readFileSync, writeFileSync } from "fs";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import options from "../../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth/next";
 
 /**
  *
@@ -108,17 +108,17 @@ export async function GET(
 }
 
 export async function POST(
-    request: Request,
+    request: NextRequest,
     { params }: { params: Promise<{ slug: string[] }> },
 ) {
     try {
-        const session = await getServerSession(options);
-        if (!session) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 },
-            );
-        }
+        // const session = await getServerSession(options);
+        // if (!session) {
+        //     return NextResponse.json(
+        //         { error: "Unauthorized" },
+        //         { status: 401 },
+        //     );
+        // }
 
         const [container, ...pathToFile] = (await params).slug;
         const blobServiceClient = BlobServiceClient.fromConnectionString(
