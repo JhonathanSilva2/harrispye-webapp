@@ -156,21 +156,39 @@ export async function POST(request: NextRequest) {
             display_name: parsedFile.name,
         };
 
-        const design = await prismaBase.fabrication_monitoring_designs.create({
-            data: createdDesign,
+        const transaction = await prismaBase.$transaction(async (tx) => {
+            try {
+                const design = await tx.fabrication_monitoring_designs.create({
+                    data: createdDesign,
+                });
+
+                const formdata = new FormData();
+                formdata.append("file", parsedFile, filename);
+                const fetchCreateFile = await fetch(
+                    `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings`,
+                    {
+                        method: "POST",
+                        body: formdata,
+                    },
+                );
+
+                if (!fetchCreateFile.ok) {
+                    const body = await fetchCreateFile.json();
+                    throw new Error(
+                        "Failed to upload file to storage: " + body.error,
+                    );
+                }
+
+                return {
+                    ok: true,
+                };
+            } catch (err) {
+                assert(err instanceof Error);
+                throw new Error(err.message);
+            }
         });
 
-        const formdata = new FormData();
-        formdata.append("file", parsedFile, filename);
-        const fetchCreateFile = await fetch(
-            `${serverEnv.NEXT_PUBLIC_URL}/api/storage/fabrication-monitoring/drawings`,
-            {
-                method: "POST",
-                body: formdata,
-            },
-        );
-
-        if (!fetchCreateFile.ok) {
+        if (!transaction.ok) {
             return NextResponse.json(
                 { error: "Failed to create file in storage" },
                 { status: 500 },
