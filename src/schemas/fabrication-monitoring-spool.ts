@@ -49,27 +49,31 @@ export const fabricationMonitoringUpdateSpoolSchema = z
         fabrication_complete: z
             .number()
             .int()
-            .min(0, "Fabrication Complete Arrived must be at least 0")
+            .min(0, "Fabrication Complete must be at least 0"),
+        scan_3d: z
+            .number()
+            .int()
+            .min(0, "3D Scan must be at least 0")
             .optional(),
         ndt_complete: z
             .number()
             .int()
-            .min(0, "NDT Arrived must be at least 0")
+            .min(0, "NDT must be at least 0")
             .optional(),
         pressure_test: z
             .number()
             .int()
-            .min(0, "Pressure Test  must be at least 0")
+            .min(0, "Pressure Test must be at least 0")
             .optional(),
         internal_coating: z
             .number()
             .int()
-            .min(0, "Internal Coating  must be at least 0")
+            .min(0, "Internal Coating must be at least 0")
             .optional(),
         external_coating: z
             .number()
             .int()
-            .min(0, "External Coating  must be at least 0")
+            .min(0, "External Coating must be at least 0")
             .optional(),
         packing: z
             .number()

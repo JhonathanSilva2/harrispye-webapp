@@ -79,6 +79,7 @@ export async function PATCH(
                 materials_ordered: newBody.materials_ordered,
                 materials_arrived: newBody.materials_arrived,
                 fabrication_complete: newBody.fabrication_complete,
+                scan_3d: newBody.scan_3d,
                 ndt_complete: newBody.ndt_complete,
                 pressure_test: newBody.pressure_test,
                 internal_coating: newBody.internal_coating, // Corrigido aqui
