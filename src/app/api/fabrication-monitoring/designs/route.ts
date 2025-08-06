@@ -188,13 +188,6 @@ export async function POST(request: NextRequest) {
             }
         });
 
-        if (!transaction.ok) {
-            return NextResponse.json(
-                { error: "Failed to create file in storage" },
-                { status: 500 },
-            );
-        }
-
         return NextResponse.json(
             {
                 message: "File received successfully",
