@@ -29,7 +29,7 @@ export default function DeleteSpoolButton({
         } catch (error) {
             console.error("Error when trying to delete spool:", error);
             setError("Error when trying to delete.");
-            toast.error("Ocurred an error while deleting the spool.");
+            toast.error("Occurred an error while deleting the spool.");
         } finally {
             setIsLoading(false);
         }
