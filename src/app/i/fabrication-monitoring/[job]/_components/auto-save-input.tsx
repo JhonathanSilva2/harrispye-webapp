@@ -28,11 +28,14 @@ export default function AutoSaveInput<TData>({
     permission,
 }: AutoSaveInputProps<TData>) {
     const formatValue = (currentValue: string | number, typeValue: string) => {
+        console.log("formatValue", currentValue, typeValue, name);
         switch (typeValue) {
             case "text":
                 return currentValue || "";
 
             case "number":
+                if (name === "mass")
+                    return Number(currentValue) + " kg" || 0 + " kg";
                 return Number(currentValue) || 0;
 
             case "currency":
