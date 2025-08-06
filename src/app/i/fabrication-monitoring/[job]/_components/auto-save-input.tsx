@@ -35,7 +35,9 @@ export default function AutoSaveInput<TData>({
 
             case "number":
                 if (name === "mass")
-                    return Number(currentValue) + " kg" || 0 + " kg";
+                    return (
+                        formatMoney(Number(currentValue)) + " kg" || 0 + " kg"
+                    );
                 return Number(currentValue) || 0;
 
             case "currency":
