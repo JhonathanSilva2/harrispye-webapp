@@ -90,6 +90,9 @@ export type Filters<T> = Partial<T & PaginationParams & SortParams>;
 export interface FetchJobProps extends FetchPagePaginationProps {
     hp: string;
 }
+export interface FetchJobLogProps extends FetchPagePaginationProps {
+    jobId: number;
+}
 // eslint-disable-next-line
 export interface UserProfile
     extends Prisma.usersGetPayload<{
