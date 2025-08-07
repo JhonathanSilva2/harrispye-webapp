@@ -20,7 +20,7 @@ export default function EditTableToggle({
 
     return (
         <Button
-            className={`mx-2 my-3 ${isEditing ? "bg-accent text-white" : ""}`}
+            className={`${isEditing ? "bg-accent text-white" : ""}`}
             size="icon"
             variant="outline"
             onClick={handleToggle}

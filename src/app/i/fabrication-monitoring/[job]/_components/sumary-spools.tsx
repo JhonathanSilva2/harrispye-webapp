@@ -26,20 +26,6 @@ export default function SummarySpools({ data, loading, hp }: SummaryCardProps) {
                 <div className="flex justify-between text-center">
                     <h2 className="text-lg font-semibold">Summary</h2>
                     <div className="flex gap-2">
-                        <EditDialog
-                            mode="edit"
-                            hp={hp}
-                            triggerBtn={
-                                <Button
-                                    variant="outline"
-                                    className="flex items-center gap-2"
-                                >
-                                    <span className="w-full">Manage Job</span>
-                                </Button>
-                            }
-                            open={isOpen}
-                            setOpen={setIsOpen}
-                        />
                         <DrawingDialog
                             jobId={data?.data.job.id}
                             designs={data?.data.designs}
@@ -48,13 +34,25 @@ export default function SummarySpools({ data, loading, hp }: SummaryCardProps) {
                                     variant="outline"
                                     className="flex items-center gap-2"
                                 >
-                                    <span className="w-full">
-                                        Manage Drawings
-                                    </span>
+                                    <span className="w-full">Files</span>
                                 </Button>
                             }
                             open={isOpenDrawing}
                             setOpen={setIsOpenDrawing}
+                        />
+                        <EditDialog
+                            mode="edit"
+                            hp={hp}
+                            triggerBtn={
+                                <Button
+                                    variant="outline"
+                                    className="flex items-center gap-2"
+                                >
+                                    <span className="w-full">Edit</span>
+                                </Button>
+                            }
+                            open={isOpen}
+                            setOpen={setIsOpen}
                         />
                     </div>
                 </div>

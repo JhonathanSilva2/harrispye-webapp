@@ -35,8 +35,7 @@ export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
 
     return (
         <Button
-            className="mx-2 my-3 hover:bg-green-800"
-            variant={"outline"}
+            variant={"constructive"}
             onClick={handleSpool}
             disabled={isDisabled}
             data-cy="addSpool"

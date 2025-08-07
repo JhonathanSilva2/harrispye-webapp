@@ -1,7 +1,7 @@
 import React from "react";
 import AddSpoolButton from "./add-spool-button";
 import EditTableToggle from "./edit-table-toggle";
-import AccessControl from "@/lib/auth/policy-decision-point";
+import SpoolLogDialog from "./spool-log/spool-log-dialog";
 
 interface TableHeaderProps {
     job: string;
@@ -18,9 +18,10 @@ export default function TableHeader({
     // verificar se o usuário tem permissão EDIT OR ALL
     // Placeholder for actual permission check
     return (
-        <div className="gapx-2 flex">
-            <AddSpoolButton canWrite={canWrite} job={job} />
+        <div className="flex gap-2">
+            <SpoolLogDialog />
             <EditTableToggle disabled={canEdit} onToggle={onToggle} />
+            <AddSpoolButton canWrite={canWrite} job={job} />
         </div>
     );
 }
