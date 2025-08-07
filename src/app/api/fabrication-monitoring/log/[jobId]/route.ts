@@ -1,4 +1,4 @@
-import { TPayload } from "@/app/types";
+import { StringDictionary, TPayload } from "@/app/types";
 import { prismaBase } from "@/db/base-client";
 import { getApiPagination, ValidSort } from "@/lib/pagination";
 import { Prisma } from "@/../prisma/generated/client-hp-base";
@@ -30,6 +30,10 @@ export async function GET(
 
         const advancedFilterKeys: ValidSort[] = [];
 
+        const defaultOrderBy: StringDictionary = {
+            id: "desc",
+        };
+
         const { page, pageSize, where, skip, take, orderBy } =
             getApiPagination<Prisma.fabrication_monitoring_logWhereInput>(
                 urlObj,
@@ -37,45 +41,78 @@ export async function GET(
                 advancedFilterKeys,
             );
 
-        const data = await prismaBase.fabrication_monitoring_log.findMany({
-            skip,
-            take,
-            where: {
-                ...where,
-                AND: [
-                    {
-                        previous_state: {
-                            not: "{}",
-                        },
+        const { data, rowCount } = await prismaBase.$transaction(async (tx) => {
+            const rawLogs =
+                await prismaBase.fabrication_monitoring_log.findMany({
+                    skip,
+                    take,
+                    where: {
+                        ...where,
+                        AND: [
+                            {
+                                previous_state: {
+                                    not: "{}",
+                                },
+                            },
+                            {
+                                new_state: {
+                                    not: "{}",
+                                },
+                            },
+                        ],
+                        fabrication_monitoring_jobs_id: id,
                     },
-                    {
-                        new_state: {
-                            not: "{}",
-                        },
-                    },
-                ],
-                fabrication_monitoring_jobs_id: id,
-            },
-            orderBy,
-        });
+                    orderBy: orderBy ? orderBy : defaultOrderBy,
+                });
 
-        const rowCount = await prismaBase.fabrication_monitoring_log.count({
-            where: {
-                ...where,
-                AND: [
-                    {
-                        previous_state: {
-                            not: "{}",
+            const logs = await Promise.all(
+                rawLogs.map(async (log) => {
+                    const userHp = log.updated_by
+                        ? parseInt(log.updated_by.toString())
+                        : null;
+
+                    if (!userHp) return log;
+
+                    const user = await tx.users.findFirst({
+                        where: {
+                            hp_registration: userHp,
                         },
-                    },
-                    {
-                        new_state: {
-                            not: "{}",
+                    });
+
+                    if (!user) return log;
+
+                    const userSystemName = user.username.split("@")[0];
+
+                    return {
+                        ...log,
+                        updated_by: userSystemName,
+                    };
+                }),
+            );
+
+            const rowCount = await prismaBase.fabrication_monitoring_log.count({
+                where: {
+                    ...where,
+                    AND: [
+                        {
+                            previous_state: {
+                                not: "{}",
+                            },
                         },
-                    },
-                ],
-                fabrication_monitoring_jobs_id: id,
-            },
+                        {
+                            new_state: {
+                                not: "{}",
+                            },
+                        },
+                    ],
+                    fabrication_monitoring_jobs_id: id,
+                },
+            });
+
+            return {
+                data: logs,
+                rowCount,
+            };
         });
 
         const payload: TPayload<typeof data> = {
