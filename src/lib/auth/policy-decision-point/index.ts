@@ -116,7 +116,7 @@ class AccessControl {
         );
     }
     getRole() {
-        return this._session.user.role || "guest";
+        return this._session.user.userAttributes?.user_roles?.role || "guest";
     }
 }
 
