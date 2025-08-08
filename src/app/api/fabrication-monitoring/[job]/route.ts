@@ -397,6 +397,10 @@ export async function DELETE(
     { params }: { params: Promise<{ job: string }> },
 ) {
     try {
+        const session = await getServerSession(options);
+        if (!session || !session.user.hp_registration) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
         const job = (await params).job;
         if (!job) {
             return new NextResponse("Job not found", { status: 404 });
@@ -412,7 +416,10 @@ export async function DELETE(
         }
         await prismaBase.$transaction([
             prismaBase.fabrication_monitoring.deleteMany({
-                where: { id_fabrication_monitoring_jobs: jobToDelete.id },
+                where: {
+                    id_fabrication_monitoring_jobs: jobToDelete.id,
+                    updated_by: session.user.hp_registration,
+                },
             }),
             prismaBase.fabrication_monitoring_log.deleteMany({
                 where: { fabrication_monitoring_jobs_id: jobToDelete.id },

@@ -110,6 +110,10 @@ export async function DELETE(
     { params }: { params: Promise<{ spool_id: string }> },
 ) {
     try {
+        const session = await getServerSession(options);
+        if (!session || !session.user.hp_registration) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
         const resolvedParams = await params;
         const spool_id = resolvedParams.spool_id;
         if (!spool_id) {
@@ -119,6 +123,7 @@ export async function DELETE(
             await prismaBase!.fabrication_monitoring.findUnique({
                 where: {
                     id: Number(spool_id),
+                    updated_by: session.user.hp_registration,
                 },
             });
         if (!spoolToDelete) {
