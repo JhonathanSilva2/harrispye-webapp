@@ -49,7 +49,8 @@ export const fabricationMonitoringUpdateSpoolSchema = z
         fabrication_complete: z
             .number()
             .int()
-            .min(0, "Fabrication Complete must be at least 0"),
+            .min(0, "Fabrication Complete must be at least 0")
+            .optional(),
         scan_3d: z
             .number()
             .int()
