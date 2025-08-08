@@ -2,6 +2,7 @@ import {
     FloatingInput,
     FloatingLabel,
 } from "@/components/ui/floating-label-input";
+import { formatBrNumber } from "@/utils/brasil-format-number";
 import { formatMoney } from "@/utils/format-currency";
 interface SummaryCardProps {
     label: string;
@@ -22,7 +23,9 @@ export function SummaryCard({
             return formatMoney(value as number);
         }
         if (defineFormatType === "mass") {
-            return `${value} kg`; // Assuming value is in kg, adjust as necessary
+            // formatar tipo de numeração para decimal e ponto para br
+
+            return `${formatBrNumber(Number(value))} kg`; // Assuming value is in kg, adjust as necessary
         }
         return value;
     };

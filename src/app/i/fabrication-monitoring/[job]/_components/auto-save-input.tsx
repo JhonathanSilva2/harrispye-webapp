@@ -9,6 +9,7 @@ import { Row, Table } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react"; // Ícone de loading
 import { useCallback, useState } from "react";
 import { PermissionValue } from "../_permissions/types";
+import { formatBrNumber } from "@/utils/brasil-format-number";
 
 interface AutoSaveInputProps<TData> {
     name: string;
@@ -35,7 +36,7 @@ export default function AutoSaveInput<TData>({
             case "number":
                 if (name === "mass")
                     return (
-                        (formatMoney(Number(currentValue)) || "0") + " kg"
+                        (formatBrNumber(Number(currentValue)) || "0") + " kg"
                     );
                 return Number(currentValue) || 0;
 
