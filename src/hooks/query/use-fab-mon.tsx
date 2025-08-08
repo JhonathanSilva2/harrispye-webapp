@@ -42,6 +42,9 @@ export function useUpdateJob(
             queryClient.invalidateQueries({
                 queryKey: ["fab-mon-jobs"],
             });
+            queryClient.invalidateQueries({
+                queryKey: ["fab-mon-logs"],
+            });
             toast.success("Job atualizado com sucesso");
 
             options?.onSuccess?.(

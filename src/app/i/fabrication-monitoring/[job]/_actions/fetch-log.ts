@@ -1,7 +1,6 @@
 "use server";
 
-import { GET } from "@/app/api/fabrication-monitoring/log/[jobId]/route";
-import { FetchJobLogProps, ReturnTypeFromAPICall } from "@/app/types";
+import { FetchJobLogProps } from "@/app/types";
 import AuthClient from "@/infra/auth-client";
 import { clientEnv } from "@/lib/constants/config";
 
@@ -16,5 +15,5 @@ export async function fetchLog({ jobId, filters }: FetchJobLogProps) {
             }
         });
     }
-    return await AuthClient<ReturnTypeFromAPICall<typeof GET>>(url.toString());
+    return await AuthClient(url.toString());
 }

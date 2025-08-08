@@ -20,6 +20,7 @@ import { deleteJob } from "../[job]/_actions/delete-job";
 import { EditDialog } from "./edit-dialog";
 import { useAccessControl } from "@/hooks/use-access-control";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 export const ActionsCell: React.FC<{
     row: Row<FabricationMonitoringFetchReturn>;
@@ -97,11 +98,22 @@ export const ActionsCell: React.FC<{
                         {(actionsPermissions?.DELETE ?? false) && (
                             <AlertDialogComponent
                                 onConfirm={async () => {
-                                    await deleteJob(row.getValue("hp"));
-                                    queryClient.invalidateQueries({
-                                        queryKey: ["fab-mon-jobs"],
-                                    });
-                                    setIsOpen(false);
+                                    try {
+                                        await deleteJob(row.getValue("hp"));
+                                        queryClient.invalidateQueries({
+                                            queryKey: ["fab-mon-jobs"],
+                                        });
+                                        setIsOpen(false);
+                                    } catch (error) {
+                                        toast.error(
+                                            "Failed to delete job. Please try again.",
+                                        );
+                                        console.error(
+                                            "Failed to delete job:",
+                                            error,
+                                        );
+                                        setIsOpen(false);
+                                    }
                                 }}
                                 triggerBtn={
                                     <DropdownMenuItem

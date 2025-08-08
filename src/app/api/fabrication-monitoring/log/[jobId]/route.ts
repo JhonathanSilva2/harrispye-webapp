@@ -5,6 +5,17 @@ import { Prisma } from "@/../prisma/generated/client-hp-base";
 import assert from "assert";
 import { NextRequest, NextResponse } from "next/server";
 
+export interface FabricationMonitoringLog {
+    id: number;
+    method: string;
+    fabrication_monitoring_id: number;
+    fabrication_monitoring_jobs_id: number;
+    previous_state: string;
+    new_state: string;
+    updated_by: string | null;
+    updated_at: Date | null;
+}
+
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ jobId: string }> },
@@ -71,7 +82,11 @@ export async function GET(
                         ? parseInt(log.updated_by.toString())
                         : null;
 
-                    if (!userHp) return log;
+                    if (!userHp)
+                        return {
+                            ...log,
+                            updated_by: log.updated_by.toString(),
+                        };
 
                     const user = await tx.users.findFirst({
                         where: {
@@ -79,7 +94,11 @@ export async function GET(
                         },
                     });
 
-                    if (!user) return log;
+                    if (!user)
+                        return {
+                            ...log,
+                            updated_by: log.updated_by.toString(),
+                        };
 
                     const userSystemName = user.username.split("@")[0];
 
