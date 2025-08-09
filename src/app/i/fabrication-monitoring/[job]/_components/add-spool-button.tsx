@@ -42,7 +42,7 @@ export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
             data-cy="addSpool"
         >
             {isLoading ? <Loader2 className="animate-spin" /> : <CirclePlus />}{" "}
-            Spool
+            Items
         </Button>
     );
 }

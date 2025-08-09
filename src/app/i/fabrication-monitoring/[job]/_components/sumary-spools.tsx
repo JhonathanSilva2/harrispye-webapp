@@ -87,12 +87,20 @@ export default function SummarySpools({ data, loading, hp }: SummaryCardProps) {
                             )
                                 return null;
 
+                            const labelTrated = label
+                                .toLowerCase()
+                                .includes("spools")
+                                ? label.replace("Spools", "Item")
+                                : label.toLowerCase().includes("spool")
+                                  ? label.replace("Spool", "Item")
+                                  : label;
+
                             const inputType = defineFormatType(label);
 
                             return (
                                 <SummaryCard
                                     defineFormatType={inputType}
-                                    label={label}
+                                    label={labelTrated}
                                     value={value as string | number | Date}
                                     key={index}
                                 />

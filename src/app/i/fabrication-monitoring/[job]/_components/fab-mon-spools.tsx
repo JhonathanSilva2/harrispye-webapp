@@ -218,7 +218,9 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
             ) : (
                 <Card>
                     <CardHeader>
-                        <h2 className="text-lg font-semibold">Spools</h2>
+                        <h2 className="text-lg font-semibold">
+                            Fabrication Table
+                        </h2>
                     </CardHeader>
                     <CardContent>
                         <DataTable
