@@ -1,6 +1,5 @@
-import { Edit } from "lucide-react";
-import { UserRole } from "./types";
 import AccessControl from "@/lib/auth/policy-decision-point";
+import { UserRole } from "./types";
 
 const FabMonSpoolsPermission: UserRole = {
     clientApprover: {
@@ -11,8 +10,8 @@ const FabMonSpoolsPermission: UserRole = {
         manager_approval: false,
         spec: "READ",
         mass: "READ",
-        price_per_kg: "READ",
-        gross_spool_cost: "READ",
+        price_per_kg: false,
+        gross_spool_cost: false,
         materials_ordered: "READ",
         materials_arrived: "READ",
         fabrication_complete: "READ",
@@ -23,8 +22,8 @@ const FabMonSpoolsPermission: UserRole = {
         external_coating: "READ",
         packing: "READ",
         dispatch: "READ",
-        notes: "READ",
-        _actions: "READ",
+        notes: false,
+        _actions: false,
     },
     clientGuest: {
         drawing_ref: "READ",
@@ -34,8 +33,8 @@ const FabMonSpoolsPermission: UserRole = {
         manager_approval: false,
         spec: "READ",
         mass: "READ",
-        price_per_kg: "READ",
-        gross_spool_cost: "READ",
+        price_per_kg: false,
+        gross_spool_cost: false,
         materials_ordered: "READ",
         materials_arrived: "READ",
         fabrication_complete: "READ",
@@ -46,8 +45,8 @@ const FabMonSpoolsPermission: UserRole = {
         external_coating: "READ",
         packing: "READ",
         dispatch: "READ",
-        notes: "READ",
-        _actions: "READ",
+        notes: false,
+        _actions: false,
     },
     operationManager: {
         drawing_ref: "READ",
