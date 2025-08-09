@@ -87,7 +87,7 @@ export default function SummarySpools({ data, loading, hp }: SummaryCardProps) {
                             )
                                 return null;
 
-                            const labelTrated = label
+                            const labelTreated = label
                                 .toLowerCase()
                                 .includes("spools")
                                 ? label.replace("Spools", "Item")
