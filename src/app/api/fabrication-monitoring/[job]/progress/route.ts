@@ -92,6 +92,7 @@ export async function GET(
         });
     } catch (err) {
         assert(err instanceof Error);
+        console.error(err);
         return new NextResponse("Unexpected Error", {
             status: 500,
         });
