@@ -93,7 +93,7 @@ export async function GET(
     } catch (err) {
         assert(err instanceof Error);
         return new NextResponse("Unexpected Error", {
-            status: 200,
+            status: 500,
         });
     }
 }
