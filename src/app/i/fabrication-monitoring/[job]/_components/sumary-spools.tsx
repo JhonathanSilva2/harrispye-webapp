@@ -100,7 +100,7 @@ export default function SummarySpools({ data, loading, hp }: SummaryCardProps) {
                             return (
                                 <SummaryCard
                                     defineFormatType={inputType}
-                                    label={labelTrated}
+                                    label={labelTreated}
                                     value={value as string | number | Date}
                                     key={index}
                                 />
