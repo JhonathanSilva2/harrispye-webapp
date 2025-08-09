@@ -265,7 +265,6 @@ export async function GET(
             hp: job.hp,
         });
 
-        console.log(progress);
 
         const data = {
             job,
