@@ -5,6 +5,7 @@ import {
     Prisma,
 } from "@/../prisma/generated/client-hp-base";
 import options from "@/app/api/auth/[...nextauth]/options";
+import { fetchProgress } from "@/app/i/fabrication-monitoring/[job]/_actions/fetch-progress";
 import { TPayload } from "@/app/types";
 import { prismaBase } from "@/db/base-client";
 import { getApiPagination, ValidSort } from "@/lib/pagination";
@@ -260,10 +261,17 @@ export async function GET(
                 },
             });
 
+        const progress = await fetchProgress({
+            hp: job.hp,
+        });
+
+        console.log(progress);
+
         const data = {
             job,
             spools,
             designs,
+            progress,
             summary: {
                 approvals,
                 "Spools Count": summary._count.id,
@@ -271,6 +279,7 @@ export async function GET(
                 "Total Mass": summary._sum.mass || 0,
                 "Gross Spool Cost By Approval": groosCostApprovals || {},
                 "Total Gross Spool Cost": summary._sum.gross_spool_cost || 0,
+                Progress: progress.data || 0,
             },
         };
 

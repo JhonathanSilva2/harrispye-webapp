@@ -1,14 +1,13 @@
 import { FabricationMonitoringSpoolsFetchReturn } from "@/app/api/fabrication-monitoring/[job]/route";
 import { Payload } from "prisma/generated/client-hp-base/runtime/library";
-import React, { useState } from "react";
-import { format } from "date-fns";
+import { useState } from "react";
 
-import { SummaryCard } from "./summary-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { EditDialog } from "../../_components/edit-dialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EditDialog } from "../../_components/edit-dialog";
 import { DrawingDialog } from "./manage-drawings/drawing-dialog";
+import { SummaryCard } from "./summary-card";
 interface SummaryCardProps {
     data: Payload<FabricationMonitoringSpoolsFetchReturn> | undefined;
     loading: boolean;
@@ -77,6 +76,8 @@ export default function SummarySpools({ data, loading, hp }: SummaryCardProps) {
                                 }
                                 if (label.toLowerCase().includes("mass"))
                                     return "mass";
+                                if (label.toLowerCase().includes("progress"))
+                                    return "percentage";
                                 return "text";
                             };
 

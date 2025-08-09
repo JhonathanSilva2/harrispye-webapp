@@ -7,7 +7,7 @@ import { formatMoney } from "@/utils/format-currency";
 interface SummaryCardProps {
     label: string;
     value: string | number | Date;
-    defineFormatType?: "text" | "currency" | "date" | "mass";
+    defineFormatType?: "text" | "currency" | "date" | "mass" | "percentage";
 }
 
 export function SummaryCard({
@@ -21,6 +21,9 @@ export function SummaryCard({
         }
         if (defineFormatType === "currency") {
             return formatMoney(value as number);
+        }
+        if (defineFormatType === "percentage") {
+            return `${value as number}%`;
         }
         if (defineFormatType === "mass") {
             // formatar tipo de numeração para decimal e ponto para br
