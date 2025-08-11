@@ -33,7 +33,7 @@ interface Props {
 //         ],
 //         title: "Action",
 //     },
-// ];
+// TODO: Add `searchables` array for advanced search functionality if/when needed.
 
 const SpoolLogTable = ({ jobId }: Props) => {
     const { filters, resetFilters, setFilters } = useLocalStateFilters();
