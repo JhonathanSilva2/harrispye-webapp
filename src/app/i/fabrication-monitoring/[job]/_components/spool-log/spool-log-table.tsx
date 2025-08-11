@@ -3,14 +3,37 @@ import { Loader2 } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { fabricationMonitoringLogColumns } from "./column-def";
 import { DataTable } from "@/components/data-table";
-import { useFilters, useLocalStateFilters } from "@/hooks/use-filters";
+import { useLocalStateFilters } from "@/hooks/use-filters";
 import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
+import { Searchable } from "@/components/data-table/types";
 
 interface Props {
     jobId: number;
 }
+
+// const searchables: Searchable[] = [
+//     {
+//         key: "updated_at",
+//         type: "date",
+//         title: "Updated At",
+//     },
+//     {
+//         key: "updated_by",
+//         type: "text",
+//         title: "Updated By",
+//     },
+//     {
+//         key: "method",
+//         type: "select",
+//         options: [
+//             { value: "UPDATE", label: "Update" },
+//             { value: "DELETE", label: "Delete" },
+//         ],
+//         title: "Action",
+//     },
+// ];
 
 const SpoolLogTable = ({ jobId }: Props) => {
     const { filters, resetFilters, setFilters } = useLocalStateFilters();
@@ -60,7 +83,10 @@ const SpoolLogTable = ({ jobId }: Props) => {
     };
     const columns = useMemo(() => fabricationMonitoringLogColumns, []);
 
-    const { data, error, isError, isPending, isLoading } = useLogs({ jobId });
+    const { data, error, isError, isPending, isLoading } = useLogs({
+        jobId,
+        filters,
+    });
 
     if (isError) {
         return <div>Error loading logs: {error.message}</div>;
@@ -98,6 +124,7 @@ const SpoolLogTable = ({ jobId }: Props) => {
             onSortingChange={onSortingChange}
             isPending={isPending}
             isError={isError}
+            // searchables={searchables}
         />
     );
 };

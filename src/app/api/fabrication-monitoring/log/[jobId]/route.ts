@@ -37,9 +37,23 @@ export async function GET(
         const id = parseInt(jobId);
 
         const urlObj = new URL(request.url);
-        const validSort: ValidSort[] = [];
+        const validSort: ValidSort[] = [
+            {
+                key: "updated_at",
+                type: "date",
+            },
+        ];
 
-        const advancedFilterKeys: ValidSort[] = [];
+        const advancedFilterKeys: ValidSort[] = [
+            {
+                key: "updated_by",
+                type: "string",
+            },
+            {
+                key: "method",
+                type: "string",
+            },
+        ];
 
         const defaultOrderBy: StringDictionary = {
             id: "desc",
@@ -52,13 +66,14 @@ export async function GET(
                 advancedFilterKeys,
             );
 
+        console.log(urlObj, JSON.stringify(where, null, 4));
+
         const { data, rowCount } = await prismaBase.$transaction(async (tx) => {
             const rawLogs =
                 await prismaBase.fabrication_monitoring_log.findMany({
                     skip,
                     take,
                     where: {
-                        ...where,
                         AND: [
                             {
                                 previous_state: {
@@ -71,6 +86,7 @@ export async function GET(
                                 },
                             },
                         ],
+                        ...where,
                         fabrication_monitoring_jobs_id: id,
                     },
                     orderBy: orderBy ? orderBy : defaultOrderBy,

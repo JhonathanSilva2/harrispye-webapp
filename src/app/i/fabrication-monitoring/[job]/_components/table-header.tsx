@@ -5,12 +5,14 @@ import SpoolLogDialog from "./spool-log/spool-log-dialog";
 
 interface TableHeaderProps {
     job: string;
+    jobId?: number;
     onToggle?: (isEditing: boolean) => void;
     canEdit: boolean;
     canWrite: boolean;
 }
 export default function TableHeader({
     job,
+    jobId,
     onToggle,
     canEdit,
     canWrite,
@@ -19,7 +21,7 @@ export default function TableHeader({
     // Placeholder for actual permission check
     return (
         <div className="flex gap-2">
-            <SpoolLogDialog />
+            {jobId && <SpoolLogDialog jobId={jobId} />}
             <EditTableToggle disabled={canEdit} onToggle={onToggle} />
             <AddSpoolButton canWrite={canWrite} job={job} />
         </div>

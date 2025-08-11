@@ -12,9 +12,10 @@ import SpoolLogTable from "./spool-log-table";
 
 interface Props {
     jobId: number;
+    className?: string;
 }
 
-const SpoolLogDialog = ({ jobId }: Props) => {
+const SpoolLogDialog = ({ jobId, className }: Props) => {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -23,7 +24,7 @@ const SpoolLogDialog = ({ jobId }: Props) => {
                     Log
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className={`flex flex-col ${className ?? ""}`}>
                 <DialogHeader>
                     <DialogTitle>Spool Change Log</DialogTitle>
                     <DialogDescription>
@@ -32,7 +33,7 @@ const SpoolLogDialog = ({ jobId }: Props) => {
                         modified or deleted.
                     </DialogDescription>
                 </DialogHeader>
-                <SpoolLogTable jobId={7} />
+                <SpoolLogTable jobId={jobId} />
             </DialogContent>
         </Dialog>
     );

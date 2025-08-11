@@ -257,6 +257,7 @@ const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
                                     canEdit={userAccessControlAction ?? false}
                                     canWrite={canwrite ?? false}
                                     job={hp}
+                                    jobId={data?.data.job.id}
                                     onToggle={setIsEditing}
                                 />
                             }
