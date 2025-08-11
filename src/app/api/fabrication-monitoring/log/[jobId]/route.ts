@@ -66,7 +66,6 @@ export async function GET(
                 advancedFilterKeys,
             );
 
-        console.log(urlObj, JSON.stringify(where, null, 4));
 
         const { data, rowCount } = await prismaBase.$transaction(async (tx) => {
             const rawLogs =
