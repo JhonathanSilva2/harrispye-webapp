@@ -116,6 +116,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[200px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "client_approval",
@@ -147,6 +149,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "manager_approval",
@@ -178,6 +182,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "spec",
@@ -198,6 +204,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "mass",
@@ -218,6 +226,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "price_per_kg",
@@ -240,6 +250,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "gross_spool_cost",
@@ -262,6 +274,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "materials_ordered",
@@ -286,6 +300,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "materials_arrived",
@@ -310,6 +326,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "fabrication_complete",
@@ -334,6 +352,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "scan_3d",
@@ -354,6 +374,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "ndt_complete",
@@ -376,6 +398,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "pressure_test",
@@ -400,6 +424,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "internal_coating",
@@ -424,6 +450,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "external_coating",
@@ -448,6 +476,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "packing",
@@ -468,6 +498,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "dispatch",
@@ -488,6 +520,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "notes",
@@ -508,6 +542,8 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             meta: {
                 className: "min-w-[180px] border-y",
             },
+            enableSorting: false,
+            enableHiding: false,
         },
         {
             accessorKey: "_actions",
@@ -531,5 +567,6 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                 className: "border-y",
             },
             enableSorting: false,
+            enableHiding: false,
         },
     ];
