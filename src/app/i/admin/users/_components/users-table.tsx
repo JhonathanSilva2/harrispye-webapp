@@ -9,8 +9,43 @@ import { SortingState, Updater } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { AddUserDialog } from "./add-user";
 import { usersColumns } from "./column-def";
+import { Searchable } from "@/components/data-table/types";
 
 const UsersTable = () => {
+    const searchables: Searchable[] = [
+        { key: "hp_registration", type: "number", title: "HP Registration" },
+        {
+            key: "name",
+            type: "text",
+            title: "Full Name",
+        },
+        {
+            key: "username",
+            type: "text",
+            title: "Email",
+        },
+        {
+            key: "role",
+            type: "text",
+            title: "Role",
+        },
+        // {
+        //     key: "department",
+        //     type: "text",
+        //     title: "Department",
+        // },
+        // {
+        //     key: "direct_manager",
+        //     type: "text",
+        //     title: "Manager",
+        // },
+        {
+            key: "admission_date",
+            type: "date",
+            title: "Admission Date",
+        },
+    ];
+
     const { filters, resetFilters, setFilters } = useFilters();
     const { data, isError, isPending } = useUsers({
         filters,
@@ -79,8 +114,9 @@ const UsersTable = () => {
             onSortingChange={onSortingChange}
             isPending={isPending}
             isError={isError}
-            headerClassName="gap-3"
+            headerClassName="flex justify-between gap-3"
             headerComponent={<AddUserDialog />}
+            searchables={searchables}
         />
     );
 };
