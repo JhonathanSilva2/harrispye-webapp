@@ -18,30 +18,30 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deleteJob } from "../[job]/_actions/delete-job";
 import { EditDialog } from "./edit-dialog";
-import { useAccessControl } from "@/hooks/use-access-control";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import AccessControl from "@/lib/auth/policy-decision-point";
 
 export const ActionsCell: React.FC<{
     row: Row<FabricationMonitoringFetchReturn>;
-}> = ({ row }) => {
-    const router = useRouter();
-    const [isOpen, setIsOpen] = useState(false);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const queryClient = useQueryClient();
-    const { accessControl, loading } = useAccessControl();
-    const actionsPermissions = accessControl?.checkAccessControlActions(
-        "fabrication-monitoring",
-    );
-    const canRead = accessControl?.isSomeAccess("fabrication-monitoring");
-    if (loading) {
+    accessControl?: AccessControl;
+}> = ({ row, accessControl }) => {
+    if (!accessControl)
         return (
             <Skeleton
                 className="h-full w-full"
                 data-cy="actionHpMenu-skeleton"
             />
         );
-    }
+    const router = useRouter();
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const queryClient = useQueryClient();
+    const actionsPermissions = accessControl?.checkAccessControlActions(
+        "fabrication-monitoring",
+    );
+    const canRead = accessControl?.isSomeAccess("fabrication-monitoring");
     return (
         <>
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

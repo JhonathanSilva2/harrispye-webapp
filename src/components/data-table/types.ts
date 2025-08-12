@@ -14,6 +14,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { JSX } from "react";
+import AccessControl from "@/lib/auth/policy-decision-point";
 type PermissionValue = "READ" | "UPDATE" | "WRITE" | false;
 
 declare module "@tanstack/react-table" {
@@ -21,6 +22,7 @@ declare module "@tanstack/react-table" {
         hp?: string;
         isEditing: boolean;
         FabMonPermissions?: ProfilePermissions;
+        accessControl?: AccessControl;
     }
     interface ColumnMeta<TData extends RowData, TValue> {
         className: string;
