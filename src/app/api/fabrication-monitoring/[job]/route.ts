@@ -264,7 +264,7 @@ export async function GET(
                         (approval) => approval.client_approval === "PENDING",
                     )?._count.client_approval || 0,
             };
-            const groosCostApprovals = {
+            const grossCostApprovals = {
                 APPROVED:
                     Number(
                         summaryApprovals.find(
@@ -301,7 +301,7 @@ export async function GET(
                 progress: await promiseProgress,
                 approvals,
                 summary,
-                groosCostApprovals,
+                grossCostApprovals,
                 spoolsRowCount,
             };
         });
@@ -312,7 +312,7 @@ export async function GET(
             progress,
             approvals,
             summary,
-            groosCostApprovals,
+            grossCostApprovals,
             spoolsRowCount,
         } = transaction;
 
@@ -326,7 +326,7 @@ export async function GET(
                 "Spools Count": summary._count.id,
                 "Approved Spools": designs.length,
                 "Total Mass": summary._sum.mass || 0,
-                "Gross Spool Cost By Approval": groosCostApprovals || {},
+                "Gross Spool Cost By Approval": grossCostApprovals || {},
                 "Total Gross Spool Cost": summary._sum.gross_spool_cost || 0,
                 Progress: progress.data || 0,
             },
