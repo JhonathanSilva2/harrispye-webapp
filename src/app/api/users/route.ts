@@ -50,7 +50,7 @@ export async function GET(
             const defaultWhere: Prisma.usersWhereInput = {
                 NOT: [
                     {
-                        AND: [
+                        OR: [
                             {
                                 hp_registration: 0,
                             },
