@@ -1,5 +1,4 @@
 import { TAccessControl, UserFullProfile, UserProfile } from "@/app/types";
-import { prismaBase } from "@/db/base-client";
 import { Prisma } from "prisma/generated/client-hp-base";
 
 export default async function getUserFullProfile(
