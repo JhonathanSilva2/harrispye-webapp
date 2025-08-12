@@ -18,128 +18,136 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deleteJob } from "../[job]/_actions/delete-job";
 import { EditDialog } from "./edit-dialog";
-import { useAccessControl } from "@/hooks/use-access-control";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import AccessControl from "@/lib/auth/policy-decision-point";
 
 export const ActionsCell: React.FC<{
     row: Row<FabricationMonitoringFetchReturn>;
-}> = ({ row }) => {
+    accessControl?: AccessControl;
+}> = ({ row, accessControl }) => {
     const router = useRouter();
+
     const [isOpen, setIsOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const queryClient = useQueryClient();
-    const { accessControl, loading } = useAccessControl();
-    const actionsPermissions = accessControl?.checkAccessControlActions(
-        "fabrication-monitoring",
-    );
-    const canRead = accessControl?.isSomeAccess("fabrication-monitoring");
-    if (loading) {
-        return (
-            <Skeleton
-                className="h-full w-full"
-                data-cy="actionHpMenu-skeleton"
-            />
-        );
-    }
+    const actionsPermissions = accessControl
+        ? accessControl.checkAccessControlActions("fabrication-monitoring")
+        : null;
+    const canRead = accessControl
+        ? accessControl.isSomeAccess("fabrication-monitoring")
+        : false;
     return (
         <>
-            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-                <DropdownMenuTrigger asChild>
-                    <Button
-                        className="h-6"
-                        variant="ghost"
-                        data-cy="actionHpMenu"
-                    >
-                        <MoreHorizontal />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-36">
-                    <DropdownMenuLabel className="text-center">
-                        {row.getValue("hp")}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                        {/* SUMMARY */}
-                        {(canRead ?? false) && (
-                            <DropdownMenuItem
-                                className="gap-x-5 text-center"
-                                data-cy="accessFabricationProject"
-                                onClick={() =>
-                                    router.push(
-                                        `${clientEnv.NEXT_PUBLIC_URL}/i/fabrication-monitoring/${row.getValue(
-                                            "hp",
-                                        )}`,
-                                    )
-                                }
+            {!accessControl ? (
+                <Skeleton
+                    className="h-full w-full"
+                    data-cy="actionHpMenu-skeleton"
+                />
+            ) : (
+                <>
+                    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                className="h-6"
+                                variant="ghost"
+                                data-cy="actionHpMenu"
                             >
-                                <Send />
-                                <span>Summary</span>
-                            </DropdownMenuItem>
-                        )}
-                        {/* EDIT */}
-                        {((actionsPermissions?.EDIT ||
-                            actionsPermissions?.ALL) ??
-                            false) && (
-                            <DropdownMenuItem
-                                className="gap-x-5 text-center"
-                                data-cy="editHp"
-                                onSelect={(e) => {
-                                    e.preventDefault();
-                                    setIsEditDialogOpen(true);
-                                }}
-                            >
-                                <Edit2 />
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                        )}
-
-                        {/* DELETE */}
-                        {(actionsPermissions?.DELETE ?? false) && (
-                            <AlertDialogComponent
-                                onConfirm={async () => {
-                                    try {
-                                        await deleteJob(row.getValue("hp"));
-                                        queryClient.invalidateQueries({
-                                            queryKey: ["fab-mon-jobs"],
-                                        });
-                                        setIsOpen(false);
-                                    } catch (error) {
-                                        toast.error(
-                                            "Failed to delete job. Please try again.",
-                                        );
-                                        console.error(
-                                            "Failed to delete job:",
-                                            error,
-                                        );
-                                        setIsOpen(false);
-                                    }
-                                }}
-                                triggerBtn={
+                                <MoreHorizontal />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-36">
+                            <DropdownMenuLabel className="text-center">
+                                {row.getValue("hp")}
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                {/* SUMMARY */}
+                                {(canRead ?? false) && (
                                     <DropdownMenuItem
                                         className="gap-x-5 text-center"
-                                        data-cy="deleteHp"
-                                        onSelect={(e) => e.preventDefault()}
+                                        data-cy="accessFabricationProject"
+                                        onClick={() =>
+                                            router.push(
+                                                `${clientEnv.NEXT_PUBLIC_URL}/i/fabrication-monitoring/${row.getValue(
+                                                    "hp",
+                                                )}`,
+                                            )
+                                        }
                                     >
-                                        <Trash2 className="text-red-500" />
-                                        <span className="text-red-500">
-                                            Delete
-                                        </span>
+                                        <Send />
+                                        <span>Summary</span>
                                     </DropdownMenuItem>
-                                }
-                            />
-                        )}
-                    </DropdownMenuGroup>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                                )}
+                                {/* EDIT */}
+                                {((actionsPermissions?.EDIT ||
+                                    actionsPermissions?.ALL) ??
+                                    false) && (
+                                    <DropdownMenuItem
+                                        className="gap-x-5 text-center"
+                                        data-cy="editHp"
+                                        onSelect={(e) => {
+                                            e.preventDefault();
+                                            setIsEditDialogOpen(true);
+                                        }}
+                                    >
+                                        <Edit2 />
+                                        <span>Edit</span>
+                                    </DropdownMenuItem>
+                                )}
 
-            {isEditDialogOpen && (
-                <EditDialog
-                    mode="edit"
-                    hp={row.getValue("hp")}
-                    open={isEditDialogOpen}
-                    setOpen={setIsEditDialogOpen}
-                />
+                                {/* DELETE */}
+                                {(actionsPermissions?.DELETE ?? false) && (
+                                    <AlertDialogComponent
+                                        onConfirm={async () => {
+                                            try {
+                                                await deleteJob(
+                                                    row.getValue("hp"),
+                                                );
+                                                queryClient.invalidateQueries({
+                                                    queryKey: ["fab-mon-jobs"],
+                                                });
+                                                setIsOpen(false);
+                                            } catch (error) {
+                                                toast.error(
+                                                    "Failed to delete job. Please try again.",
+                                                );
+                                                console.error(
+                                                    "Failed to delete job:",
+                                                    error,
+                                                );
+                                                setIsOpen(false);
+                                            }
+                                        }}
+                                        triggerBtn={
+                                            <DropdownMenuItem
+                                                className="gap-x-5 text-center"
+                                                data-cy="deleteHp"
+                                                onSelect={(e) =>
+                                                    e.preventDefault()
+                                                }
+                                            >
+                                                <Trash2 className="text-red-500" />
+                                                <span className="text-red-500">
+                                                    Delete
+                                                </span>
+                                            </DropdownMenuItem>
+                                        }
+                                    />
+                                )}
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    {isEditDialogOpen && (
+                        <EditDialog
+                            mode="edit"
+                            hp={row.getValue("hp")}
+                            open={isEditDialogOpen}
+                            setOpen={setIsEditDialogOpen}
+                        />
+                    )}
+                </>
             )}
         </>
     );

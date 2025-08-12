@@ -59,7 +59,12 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
         {
             accessorKey: "_actions",
             header: "Actions",
-            cell: ({ row }) => <ActionsCell row={row} />,
+            cell: ({ table, row }) => (
+                <ActionsCell
+                    row={row}
+                    accessControl={table.options.meta?.accessControl}
+                />
+            ),
             enableSorting: false,
         },
     ];

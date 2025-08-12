@@ -15,7 +15,7 @@ export async function GET(
         }
         const parsedId = parseInt(id);
         const userFullProfile = await prismaBase.$transaction(async (tx) => {
-            const user = await prismaBase.users.findUnique({
+            const user = await tx.users.findUnique({
                 where: {
                     id: parsedId,
                 },

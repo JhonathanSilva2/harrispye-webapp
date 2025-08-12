@@ -12,11 +12,12 @@ import _ from "lodash";
 import { useMemo, useState } from "react";
 import { fabricationMonitoringColumns } from "./column-def";
 import TableHeader from "./table-header";
-import { useAccessControl } from "@/hooks/use-access-control";
 import { Permissions } from "../_permissions/permissions";
 import SummarySpools from "./sumary-spools";
 import ChartSpools from "./chart-spools";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Session } from "next-auth";
+import AccessControl from "@/lib/auth/policy-decision-point";
 
 const advancedSearch: Searchable[] = [
     {
@@ -104,9 +105,16 @@ const advancedSearch: Searchable[] = [
     },
 ];
 
-const FabMonSpoolsTable = ({ hp }: { hp: string }) => {
+const FabMonSpoolsTable = ({
+    hp,
+    session,
+}: {
+    hp: string;
+    session: Session;
+}) => {
     const [isEditing, setIsEditing] = useState(false);
-    const { accessControl, loading } = useAccessControl();
+    const accessControl = new AccessControl(session);
+
     const role = accessControl?.getRole();
     // verificar se ele tem permissão de ALL
 

@@ -5,20 +5,21 @@ import { Session } from "next-auth";
 import AccessControl from "@/lib/auth/policy-decision-point";
 
 export function useAccessControl() {
-    const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
+    const [accessControl, setAccessControl] = useState<AccessControl | null>(
+        null,
+    );
 
     useEffect(() => {
         getSession().then((s) => {
-            setSession(s);
+            if (!s) {
+                setLoading(false);
+                return;
+            }
+            setAccessControl(new AccessControl(s));
             setLoading(false);
         });
     }, []);
-
-    const accessControl = useMemo(() => {
-        if (!session) return null;
-        return new AccessControl(session);
-    }, [session]);
 
     return { accessControl, loading };
 }
