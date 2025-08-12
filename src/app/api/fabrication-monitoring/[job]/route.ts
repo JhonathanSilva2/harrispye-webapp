@@ -142,13 +142,6 @@ export async function GET(
             },
         ];
 
-        const { page, pageSize, where, skip, take, orderBy } =
-            getApiPagination<Prisma.fabrication_monitoringWhereInput>(
-                urlObj,
-                validSort,
-                advancedFilterKeys,
-            );
-
         const job = await prismaBase.fabrication_monitoring_jobs.findFirst({
             where: {
                 hp,
@@ -159,112 +152,169 @@ export async function GET(
             return new NextResponse("Job not found", { status: 404 });
         }
 
-        const spools = await prismaBase.fabrication_monitoring.findMany({
-            where: {
-                id_fabrication_monitoring_jobs: job!.id,
-                ...where,
-            },
-            include: {
-                fabrication_monitoring_designs: true,
-            },
-            skip,
-            take,
-            orderBy,
-        });
+        const { page, pageSize, where, skip, take, orderBy } =
+            getApiPagination<Prisma.fabrication_monitoringWhereInput>(
+                urlObj,
+                validSort,
+                advancedFilterKeys,
+            );
 
-        const spoolsRowCount =
-            await prismaBase.fabrication_monitoring.aggregate({
+        const transaction = await prismaBase.$transaction(async (tx) => {
+            const promiseProgress = fetchProgress({
+                hp: job.hp,
+            });
+
+            const drawing_sort_order = !orderBy?.drawing_ref
+                ? "asc"
+                : orderBy.spool_number === "asc"
+                  ? "asc"
+                  : "desc";
+            const spool_sort_order = !orderBy?.spool_number
+                ? "asc"
+                : orderBy.spool_number === "asc"
+                  ? "asc"
+                  : "desc";
+
+            const spools = await prismaBase.fabrication_monitoring.findMany({
                 where: {
                     id_fabrication_monitoring_jobs: job!.id,
                     ...where,
                 },
-                _count: {
-                    id: true,
+                include: {
+                    fabrication_monitoring_designs: true,
                 },
+                skip,
+                take,
+                orderBy: [
+                    {
+                        drawing_sort_key: {
+                            sort: drawing_sort_order,
+                            nulls: "last",
+                        },
+                    },
+                    {
+                        spool_sort_key: {
+                            sort: spool_sort_order,
+                            nulls: "last",
+                        },
+                    },
+                ],
             });
 
-        // pegar o total de spools gross cost e mass
-        const summary = await prismaBase.fabrication_monitoring.aggregate({
-            _sum: {
-                mass: true,
-                gross_spool_cost: true,
-            },
-            _count: {
-                id: true,
-            },
-            where: {
-                id_fabrication_monitoring_jobs: job!.id,
-            },
-        });
-        // pegar o total gross cost por approval
-        // retorna total_approved_gross_cost, total_declined_gross_cost, total_pending_gross_cost
-        const summaryApprovals =
-            await prismaBase!.fabrication_monitoring.groupBy({
-                by: ["client_approval"],
+            const spoolsRowCount =
+                await prismaBase.fabrication_monitoring.aggregate({
+                    where: {
+                        id_fabrication_monitoring_jobs: job!.id,
+                        ...where,
+                    },
+                    _count: {
+                        id: true,
+                    },
+                });
+
+            // pegar o total de spools gross cost e mass
+            const summary = await prismaBase.fabrication_monitoring.aggregate({
                 _sum: {
+                    mass: true,
                     gross_spool_cost: true,
+                },
+                _count: {
+                    id: true,
                 },
                 where: {
                     id_fabrication_monitoring_jobs: job!.id,
                 },
             });
+            // pegar o total gross cost por approval
+            // retorna total_approved_gross_cost, total_declined_gross_cost, total_pending_gross_cost
+            const summaryApprovals =
+                await prismaBase!.fabrication_monitoring.groupBy({
+                    by: ["client_approval"],
+                    _sum: {
+                        gross_spool_cost: true,
+                    },
+                    where: {
+                        id_fabrication_monitoring_jobs: job!.id,
+                    },
+                });
 
-        const approvalsDb = await prismaBase.fabrication_monitoring.groupBy({
-            by: ["client_approval"],
-            _count: {
-                client_approval: true,
-            },
-            where: {
-                id_fabrication_monitoring_jobs: job!.id,
-            },
-        });
-
-        const approvals = {
-            APPROVED:
-                approvalsDb.find(
-                    (approval) => approval.client_approval === "APPROVED",
-                )?._count.client_approval || 0,
-            DECLINED:
-                approvalsDb.find(
-                    (approval) => approval.client_approval === "DECLINED",
-                )?._count.client_approval || 0,
-            PENDING:
-                approvalsDb.find(
-                    (approval) => approval.client_approval === "PENDING",
-                )?._count.client_approval || 0,
-        };
-        const groosCostApprovals = {
-            APPROVED:
-                Number(
-                    summaryApprovals.find(
-                        (approval) => approval.client_approval === "APPROVED",
-                    )?._sum.gross_spool_cost,
-                ) || 0,
-            DECLINED:
-                Number(
-                    summaryApprovals.find(
-                        (approval) => approval.client_approval === "DECLINED",
-                    )?._sum.gross_spool_cost,
-                ) || 0,
-            PENDING:
-                Number(
-                    summaryApprovals.find(
-                        (approval) => approval.client_approval === "PENDING",
-                    )?._sum.gross_spool_cost,
-                ) || 0,
-        };
-
-        const designs =
-            await prismaBase!.fabrication_monitoring_designs.findMany({
-                where: {
-                    fabrication_monitoring_jobs_id: job!.id,
+            const approvalsDb = await prismaBase.fabrication_monitoring.groupBy(
+                {
+                    by: ["client_approval"],
+                    _count: {
+                        client_approval: true,
+                    },
+                    where: {
+                        id_fabrication_monitoring_jobs: job!.id,
+                    },
                 },
-            });
+            );
 
-        const progress = await fetchProgress({
-            hp: job.hp,
+            const approvals = {
+                APPROVED:
+                    approvalsDb.find(
+                        (approval) => approval.client_approval === "APPROVED",
+                    )?._count.client_approval || 0,
+                DECLINED:
+                    approvalsDb.find(
+                        (approval) => approval.client_approval === "DECLINED",
+                    )?._count.client_approval || 0,
+                PENDING:
+                    approvalsDb.find(
+                        (approval) => approval.client_approval === "PENDING",
+                    )?._count.client_approval || 0,
+            };
+            const groosCostApprovals = {
+                APPROVED:
+                    Number(
+                        summaryApprovals.find(
+                            (approval) =>
+                                approval.client_approval === "APPROVED",
+                        )?._sum.gross_spool_cost,
+                    ) || 0,
+                DECLINED:
+                    Number(
+                        summaryApprovals.find(
+                            (approval) =>
+                                approval.client_approval === "DECLINED",
+                        )?._sum.gross_spool_cost,
+                    ) || 0,
+                PENDING:
+                    Number(
+                        summaryApprovals.find(
+                            (approval) =>
+                                approval.client_approval === "PENDING",
+                        )?._sum.gross_spool_cost,
+                    ) || 0,
+            };
+
+            const designs =
+                await prismaBase!.fabrication_monitoring_designs.findMany({
+                    where: {
+                        fabrication_monitoring_jobs_id: job!.id,
+                    },
+                });
+
+            return {
+                spools,
+                designs,
+                progress: await promiseProgress,
+                approvals,
+                summary,
+                groosCostApprovals,
+                spoolsRowCount,
+            };
         });
 
+        const {
+            spools,
+            designs,
+            progress,
+            approvals,
+            summary,
+            groosCostApprovals,
+            spoolsRowCount,
+        } = transaction;
 
         const data = {
             job,
