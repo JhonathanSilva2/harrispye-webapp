@@ -18,51 +18,56 @@ const options: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             authorize: async (credentials) => {
-                const user = await prismaBase.users.findFirst({
-                    where: {
-                        username: credentials!.email,
-                    },
-                    omit: {
-                        password: true,
-                        id_perfil: true,
-                        type_user: true,
-                    },
-                    include: {
-                        user_attributes: true,
-                    },
-                });
+                return await prismaBase.$transaction(async (tx) => {
+                    const user = await tx.users.findFirst({
+                        where: {
+                            username: credentials!.email,
+                        },
+                        omit: {
+                            password: true,
+                            id_perfil: true,
+                            type_user: true,
+                        },
+                        include: {
+                            user_attributes: true,
+                        },
+                    });
 
-                if (!user) {
+                    if (!user) {
+                        return null;
+                    }
+
+                    const password = await tx.users.findFirst({
+                        where: {
+                            id: user.id,
+                        },
+                        select: {
+                            password: true,
+                        },
+                    });
+
+                    if (!password) {
+                        return null;
+                    }
+
+                    const match = await bcrypt.compare(
+                        credentials!.password,
+                        password.password,
+                    );
+
+                    if (match) {
+                        const userFullProfile = await getUserFullProfile(
+                            user,
+                            tx,
+                        );
+                        return {
+                            ...userFullProfile,
+                            id: user.id.toString(), // Convert id from number to string
+                        };
+                    }
+
                     return null;
-                }
-
-                const password = await prismaBase.users.findFirst({
-                    where: {
-                        id: user.id,
-                    },
-                    select: {
-                        password: true,
-                    },
                 });
-
-                if (!password) {
-                    return null;
-                }
-
-                const match = await bcrypt.compare(
-                    credentials!.password,
-                    password.password,
-                );
-
-                if (match) {
-                    const userFullProfile = await getUserFullProfile(user);
-                    return {
-                        ...userFullProfile,
-                        id: user.id.toString(), // Convert id from number to string
-                    };
-                }
-
-                return null;
             },
         }),
     ],

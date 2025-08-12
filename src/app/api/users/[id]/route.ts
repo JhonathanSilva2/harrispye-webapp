@@ -14,30 +14,33 @@ export async function GET(
             return new NextResponse("Invalid user id", { status: 400 });
         }
         const parsedId = parseInt(id);
-        const user = await prismaBase.users.findUnique({
-            where: {
-                id: parsedId,
-            },
-            omit: {
-                password: true,
-                id_perfil: true,
-                type_user: true,
-            },
-            include: {
-                user_attributes: true,
-            },
+        const userFullProfile = await prismaBase.$transaction(async (tx) => {
+            const user = await prismaBase.users.findUnique({
+                where: {
+                    id: parsedId,
+                },
+                omit: {
+                    password: true,
+                    id_perfil: true,
+                    type_user: true,
+                },
+                include: {
+                    user_attributes: true,
+                },
+            });
+
+            if (!user) {
+                return new NextResponse(
+                    JSON.stringify({
+                        message: "User not found",
+                    }),
+                    { status: 404 },
+                );
+            }
+
+            return await getUserFullProfile(user, tx);
         });
 
-        if (!user) {
-            return new NextResponse(
-                JSON.stringify({
-                    message: "User not found",
-                }),
-                { status: 404 },
-            );
-        }
-
-        const userFullProfile = await getUserFullProfile(user);
         return NextResponse.json(userFullProfile, { status: 200 });
     } catch (err) {
         assert(err instanceof Error);
