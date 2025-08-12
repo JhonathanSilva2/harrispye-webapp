@@ -47,15 +47,25 @@ export async function GET(
             );
 
         const transaction = await prismaBase.$transaction(async (tx) => {
+            const defaultWhere: Prisma.usersWhereInput = {
+                NOT: [
+                    {
+                        AND: [
+                            {
+                                hp_registration: 0,
+                            },
+                            {
+                                hp_registration: null,
+                            },
+                        ],
+                    },
+                ],
+                ...where,
+            };
             const users = await tx.users.findMany({
                 skip,
                 take,
-                where: {
-                    NOT: {
-                        ["hp_registration"]: 0,
-                    },
-                    ...where,
-                },
+                where: defaultWhere,
                 orderBy: [
                     ...(orderBy
                         ? [orderBy]
@@ -76,7 +86,7 @@ export async function GET(
             });
 
             const promiseUsersCount = tx.users.count({
-                where,
+                where: defaultWhere,
             });
 
             return {
