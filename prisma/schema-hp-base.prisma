@@ -3,8 +3,8 @@ generator client {
   output                  = "generated/client-hp-base"
   previewFeatures         = ["views"]
   binaryTargets           = ["native", "debian-openssl-3.0.x"]
-  extendedIndexes         = "true"
   interactiveTransactions = "true"
+  extendedIndexes         = "true"
 }
 
 datasource dbHPBase {
@@ -109,11 +109,14 @@ model fabrication_monitoring {
   manager_approval                 fabrication_monitoring_manager_approval @default(PENDING)
   updated_by                       Int?
   updated_at                       DateTime?                               @dbHPBase.DateTime(0)
+  drawing_sort_key                 BigInt?                                 @dbHPBase.UnsignedBigInt
+  spool_sort_key                   BigInt?                                 @dbHPBase.UnsignedBigInt
   fabrication_monitoring_designs   fabrication_monitoring_designs?         @relation(fields: [fabrication_monitoring_design_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_designs")
   fabrication_monitoring_jobs      fabrication_monitoring_jobs             @relation(fields: [id_fabrication_monitoring_jobs], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_jobs")
 
   @@index([fabrication_monitoring_design_id], map: "fk_fabrication_monitoring_designs")
   @@index([id_fabrication_monitoring_jobs], map: "fk_fabrication_monitoring_jobs")
+  @@index([drawing_sort_key, spool_sort_key], map: "idx_sort")
 }
 
 model fabrication_monitoring_designs {
