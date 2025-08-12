@@ -2,6 +2,7 @@ import { PageProps } from "@/app/types";
 import { Searchable } from "@/components/data-table/types";
 import FabMonTable from "./_components/fab-mon-spools";
 import { getServerSession } from "next-auth";
+import options from "@/app/api/auth/[...nextauth]/options";
 
 export default async function JobPage({ searchParams, params }: PageProps) {
     const advancedSearch: Searchable[] = [
@@ -12,7 +13,7 @@ export default async function JobPage({ searchParams, params }: PageProps) {
         },
     ];
 
-    const session = await getServerSession();
+    const session = await getServerSession(options);
 
     if (!session) {
         return (
