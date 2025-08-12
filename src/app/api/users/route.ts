@@ -1,4 +1,4 @@
-import { TPayload, UserFullProfile } from "@/app/types";
+import { StringDictionary, TPayload, UserFullProfile } from "@/app/types";
 import { prismaBase } from "@/db/base-client";
 import getUserFullProfile from "@/infra/get-user-full-profile";
 import { serverEnv } from "@/lib/constants/config";
@@ -29,10 +29,14 @@ export async function GET(
         ];
 
         const advancedFilterKeys: ValidSort[] = [
-            { key: "hp", type: "string" },
-            { key: "client", type: "string" },
-            { key: "po_number", type: "string" },
-            { key: "expected_delivery_date", type: "date" },
+            { key: "hp_registration", type: "number" },
+            { key: "display_name", type: "string" },
+            { key: "username", type: "string" },
+            { key: "role", type: "string" },
+            // { key: "department", type: "string" },
+            // { key: "direct_manager", type: "string" },
+            { key: "name", type: "string" },
+            { key: "admission_date", type: "date" },
         ];
 
         const { page, pageSize, where, skip, take, orderBy } =
@@ -42,28 +46,50 @@ export async function GET(
                 advancedFilterKeys,
             );
 
-        const users = await prismaBase.users.findMany({
-            skip,
-            take,
-            where,
-            orderBy,
-            omit: {
-                password: true,
-                id_perfil: true,
-                type_user: true,
-            },
-            include: {
-                user_attributes: true,
-            },
+        const transaction = await prismaBase.$transaction(async (tx) => {
+            const users = await tx.users.findMany({
+                skip,
+                take,
+                where: {
+                    NOT: {
+                        ["hp_registration"]: 0,
+                    },
+                    ...where,
+                },
+                orderBy: [
+                    ...(orderBy
+                        ? [orderBy]
+                        : [
+                              {
+                                  hp_registration: "asc",
+                              },
+                          ]),
+                ],
+                omit: {
+                    password: true,
+                    id_perfil: true,
+                    type_user: true,
+                },
+                include: {
+                    user_attributes: true,
+                },
+            });
+
+            const promiseUsersCount = tx.users.count({
+                where,
+            });
+
+            return {
+                usersWithManagers: await Promise.all(
+                    users.map(
+                        async (user) => await getUserFullProfile(user, tx),
+                    ),
+                ),
+                usersCount: await promiseUsersCount,
+            };
         });
 
-        const usersWithManagers: UserFullProfile[] = await Promise.all(
-            users.map(async (user) => await getUserFullProfile(user)),
-        );
-
-        const usersCount = await prismaBase.users.count({
-            where,
-        });
+        const { usersWithManagers, usersCount } = transaction;
 
         const payload: TPayload<UserFullProfile[]> = {
             data: usersWithManagers,

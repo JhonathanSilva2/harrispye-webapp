@@ -8,14 +8,14 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 
 export function AddUserDialog() {
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button className="bg-green-600 hover:bg-green-400">
-                    <Plus size={10} /> User
+                    <PlusCircle size={10} /> User
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

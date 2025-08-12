@@ -1,14 +1,16 @@
 import { TAccessControl, UserFullProfile, UserProfile } from "@/app/types";
 import { prismaBase } from "@/db/base-client";
+import { Prisma } from "prisma/generated/client-hp-base";
 
 export default async function getUserFullProfile(
     user: UserProfile,
+    tx: Prisma.TransactionClient,
 ): Promise<UserFullProfile> {
     const managerId = user.direct_manager;
 
     const [manager, department, userAttributes, userAccessControlRaw] =
         await Promise.all([
-            prismaBase.users.findFirst({
+            tx.users.findFirst({
                 where: {
                     hp_registration: managerId,
                 },
@@ -19,7 +21,7 @@ export default async function getUserFullProfile(
                     role: true,
                 },
             }),
-            prismaBase.departments.findFirst({
+            tx.departments.findFirst({
                 where: {
                     id: user.department || 0,
                 },
@@ -27,7 +29,7 @@ export default async function getUserFullProfile(
                     department: true,
                 },
             }),
-            prismaBase.user_attributes.findUnique({
+            tx.user_attributes.findUnique({
                 where: {
                     user_id: user.id,
                 },
@@ -61,7 +63,7 @@ export default async function getUserFullProfile(
                     clearance: true,
                 },
             }),
-            prismaBase.user_access_control.findMany({
+            tx.user_access_control.findMany({
                 where: {
                     AND: [
                         {
