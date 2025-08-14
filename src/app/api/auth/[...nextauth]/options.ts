@@ -78,19 +78,39 @@ const options: NextAuthOptions = {
             }
             return token;
         },
-        session({ session, token }) {
+        async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id;
-                session.user.username = token.username;
-                session.user.name = token.name;
-                session.user.display_name = token.display_name;
-                session.user.is_admin = token.is_admin;
-                session.user.admission_date = token.admission_date;
-                session.user.role = token.role;
-                session.user.hp_registration = token.hp_registration;
-                session.user.manager = token.manager;
-                session.user.userAttributes = token.userAttributes;
-                session.user.userAccessControl = token.userAccessControl;
+                const userSession = await prismaBase.$transaction(
+                    async (tx) => {
+                        const user = await tx.users.findUnique({
+                            where: {
+                                id: token.id,
+                            },
+                            omit: {
+                                password: true,
+                                id_perfil: true,
+                                type_user: true,
+                            },
+                            include: {
+                                user_attributes: true,
+                            },
+                        });
+
+                        if (!user) {
+                            return null;
+                        }
+
+                        const userFullProfile = await getUserFullProfile(
+                            user,
+                            tx,
+                        );
+
+                        return userFullProfile;
+                    },
+                );
+                if (userSession) {
+                    session.user = userSession;
+                }
             }
             return session;
         },
