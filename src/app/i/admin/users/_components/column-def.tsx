@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import UserAccessControl from "./user-access-control";
-import EditUserPolicy from "./user-policy";
+import UserAttributes from "./user-attributes-dialog-content";
 
 export const usersColumns: ColumnDef<UserFullProfile>[] = [
     {
@@ -156,11 +156,7 @@ export const usersColumns: ColumnDef<UserFullProfile>[] = [
                                             save when you&apos;re done.
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <EditUserPolicy
-                                        userAttributes={
-                                            row.original.userAttributes
-                                        }
-                                    />
+                                    <UserAttributes userId={row.original.id} />
                                 </DialogContent>
                             </Dialog>
 

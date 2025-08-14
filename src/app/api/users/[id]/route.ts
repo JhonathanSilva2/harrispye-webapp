@@ -67,7 +67,6 @@ export async function PATCH(
 
         const newBody = validation.data;
 
-        console.log("id: ", id);
         const user = await prismaBase.users.findUnique({
             where: {
                 id: parsedId,
