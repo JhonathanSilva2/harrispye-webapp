@@ -67,14 +67,7 @@ export async function POST(
             role_id,
             clearance,
         } = body;
-        console.log({
-            department_id,
-            localization_id,
-            organization_id,
-            role_id,
-            clearance,
-        });
-        // Verifica se ao menos um campo válido foi enviado
+
         if (
             department_id === undefined &&
             localization_id === undefined &&
