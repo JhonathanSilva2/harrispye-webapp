@@ -203,7 +203,11 @@ const UserAttributes = ({ userId }: { userId: number }) => {
                                                 // Atualiza no backend apenas o campo alterado
                                                 updateUserAttributes({
                                                     [field]:
-                                                        Number(selectedValue),
+                                                        field === "clearance"
+                                                            ? selectedValue
+                                                            : Number(
+                                                                  selectedValue,
+                                                              ),
                                                 });
                                             }
                                         }}

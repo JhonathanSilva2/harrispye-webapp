@@ -60,20 +60,31 @@ export async function POST(
             );
         }
         const body = await request.json();
-        const { department_id, localization_id, organization_id, role_id } =
-            body;
-
+        const {
+            department_id,
+            localization_id,
+            organization_id,
+            role_id,
+            clearance,
+        } = body;
+        console.log({
+            department_id,
+            localization_id,
+            organization_id,
+            role_id,
+            clearance,
+        });
         // Verifica se ao menos um campo válido foi enviado
         if (
             department_id === undefined &&
             localization_id === undefined &&
             organization_id === undefined &&
-            role_id === undefined
+            role_id === undefined &&
+            clearance === undefined
         ) {
             return NextResponse.json(
                 {
-                    message:
-                        "Must send at least one attribute to update",
+                    message: "Must send at least one attribute to update",
                 },
                 { status: 400 },
             );
@@ -93,6 +104,7 @@ export async function POST(
                     localization_id: localization_id ?? null,
                     organization_id: organization_id ?? null,
                     role_id: role_id ?? null,
+                    clearance: clearance ?? null, // Inicializa com null, se necessário
                 },
             });
         } else {
