@@ -35,7 +35,7 @@ export const ActionsCell: React.FC<{
         ? accessControl.checkAccessControlActions("fabrication-monitoring")
         : null;
     const canRead = accessControl
-        ? accessControl.isSomeAccess("fabrication-monitoring")
+        ? accessControl.hasSomeAccess("fabrication-monitoring")
         : false;
     return (
         <>
