@@ -73,7 +73,7 @@ export async function POST(
             return NextResponse.json(
                 {
                     message:
-                        "Deve enviar pelo menos um atributo para atualizar",
+                        "Must send at least one attribute to update",
                 },
                 { status: 400 },
             );
