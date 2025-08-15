@@ -116,16 +116,11 @@ const FabMonSpoolsTable = ({
     const [isEditing, setIsEditing] = useState(false);
     const accessControl = new AccessControl(session);
 
-    const canEdit =
-        accessControl?.hasRoleAccess(
-            "ALL",
-            "fabrication-monitoring-spool-table",
-        ) ||
-        accessControl?.hasRoleAccess(
-            "EDIT",
-            "fabrication-monitoring-spool-table",
-        );
-    const isAdmin = accessControl?.isAdmin();
+    const canEdit = accessControl.hasRoleAccess(
+        "EDIT",
+        "fabrication-monitoring-spool-table",
+    );
+    const isAdmin = accessControl.isAdmin();
     const canAddSpool = isAdmin || permissions.add_spools;
     const canSeeGraphs = isAdmin || permissions.graph;
     const canViewSummary = isAdmin || permissions.summary;
@@ -182,13 +177,17 @@ const FabMonSpoolsTable = ({
         return setFilters({ sortBy: stateToSortBy(newSortingState) });
     };
 
-    const unpermittedColumns: Record<string, false> = permissions
-        ? Object.fromEntries(
-              Object.entries(permissions)
-                  .filter(([, value]) => value === "NONE")
-                  .map(([key]) => [key, false]),
-          )
-        : {};
+    let unpermittedColumns: Record<string, false> = {};
+
+    if (!isAdmin) {
+        unpermittedColumns = permissions
+            ? Object.fromEntries(
+                  Object.entries(permissions)
+                      .filter(([, value]) => value === "NONE")
+                      .map(([key]) => [key, false]),
+              )
+            : {};
+    }
 
     const columns = useMemo(() => fabricationMonitoringColumns, []);
     return (
