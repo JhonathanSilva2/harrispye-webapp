@@ -34,7 +34,7 @@ export default async function DashboardPage() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-lg font-semibold">5</p>
-                            {/* <pre>{JSON.stringify(session.user, null, 4)}</pre> */}
+                            <pre>{JSON.stringify(session.user, null, 4)}</pre>
                         </CardContent>
                     </Card>
 

@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
                 req: request,
                 secret: serverEnv.NEXTAUTH_SECRET,
             });
+            console.log(JSON.stringify(token, null, 4));
             const pageAuthResponse = await PageAuthMiddleware(
                 request,
                 pathname,

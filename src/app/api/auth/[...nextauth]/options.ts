@@ -33,7 +33,7 @@ const options: NextAuthOptions = {
                         },
                     });
 
-                    if (!user) {
+                    if (!user || !user.ativo) {
                         return null;
                     }
 
@@ -72,53 +72,60 @@ const options: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, account, user }) {
+        async jwt({ token, account, user, session }) {
             if (account) {
-                token = { ...user, id: parseInt(user.id) };
+                return { ...user, id: parseInt(user.id) };
             }
-            return token;
+
+            const userSession = await prismaBase.$transaction(async (tx) => {
+                const userDb = await tx.users.findUnique({
+                    where: {
+                        id: token.id,
+                    },
+                    omit: {
+                        password: true,
+                        id_perfil: true,
+                        type_user: true,
+                    },
+                    include: {
+                        user_attributes: true,
+                    },
+                });
+
+                if (!userDb) {
+                    return null;
+                }
+
+                const userFullProfile = await getUserFullProfile(userDb, tx);
+
+                return userFullProfile;
+            });
+
+            if (!userSession || !userSession.ativo) {
+                token = {
+                    ...token,
+                    ...userSession,
+                    ativo: false,
+                };
+            }
+
+            return {
+                ...token,
+                ...userSession,
+            };
         },
         async session({ session, token }) {
-            if (session.user) {
-                const userSession = await prismaBase.$transaction(
-                    async (tx) => {
-                        const user = await tx.users.findUnique({
-                            where: {
-                                id: token.id,
-                            },
-                            omit: {
-                                password: true,
-                                id_perfil: true,
-                                type_user: true,
-                            },
-                            include: {
-                                user_attributes: true,
-                            },
-                        });
+            session.user = {
+                ...token,
+            };
 
-                        if (!user) {
-                            return null;
-                        }
-
-                        const userFullProfile = await getUserFullProfile(
-                            user,
-                            tx,
-                        );
-
-                        return userFullProfile;
-                    },
-                );
-                if (userSession) {
-                    session.user = userSession;
-                }
-            }
             return session;
         },
     },
     pages: {
         signIn: "/auth/signin",
         signOut: "/auth/signout",
-        // error: "/auth/error",
+        error: "/auth/error",
     },
 };
 
