@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react"; // Importando useState e useEffect
 import { fetchSpool } from "@/app/i/fabrication-monitoring/_actions/fetch-spool";
+import { useState } from "react"; // Importando useState e useEffect
 
 import { Button } from "@/components/ui/button";
-import { CirclePlus, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { CirclePlus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface AddSpoolButtonProps {
     job: string;
-    canWrite: boolean;
+    canAddSpool: boolean;
 }
 
-export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
+export default function AddSpoolButton({
+    job,
+    canAddSpool,
+}: AddSpoolButtonProps) {
     const queryClient = useQueryClient();
     const [isLoading, setIsLoading] = useState(false); // Controle de estado para loading
     const [error, setError] = useState<string | null>(null); // Controle de erro
@@ -31,7 +34,7 @@ export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
         }
     };
 
-    const isDisabled = !canWrite || isLoading;
+    const isDisabled = !canAddSpool || isLoading;
 
     return (
         <Button
