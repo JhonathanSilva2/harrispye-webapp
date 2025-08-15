@@ -1,27 +1,24 @@
-import { ProfilePermissions } from "@/app/i/fabrication-monitoring/[job]/_permissions/types";
-import { HeaderContext, RowData } from "@tanstack/react-table";
-import { fabrication_monitoring } from "prisma/generated/client-hp-base";
+import { FabMonSpoolsPermission } from "@/app/api/fabrication-monitoring/permissions/_action/fetch-permission";
 import { TPayload } from "@/app/types";
+import AccessControl from "@/lib/auth/policy-decision-point";
 import {
     ColumnDef,
-    flexRender,
-    getCoreRowModel,
+    HeaderContext,
     OnChangeFn,
     PaginationOptions,
     PaginationState,
+    RowData,
     SortingState,
     TableOptions,
-    useReactTable,
 } from "@tanstack/react-table";
 import { JSX } from "react";
-import AccessControl from "@/lib/auth/policy-decision-point";
 type PermissionValue = "READ" | "UPDATE" | "WRITE" | false;
 
 declare module "@tanstack/react-table" {
     interface TableMeta<TData extends RowData> {
         hp?: string;
         isEditing?: boolean;
-        FabMonPermissions?: ProfilePermissions;
+        FabMonPermissions?: FabMonSpoolsPermission;
         accessControl?: AccessControl;
     }
     interface ColumnMeta<TData extends RowData, TValue> {

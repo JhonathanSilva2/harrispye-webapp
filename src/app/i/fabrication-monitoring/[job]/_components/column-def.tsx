@@ -1,15 +1,12 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
 import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
-
 import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table";
+import Actions from "./actions";
 import ApprovalSelect from "./approval-select";
 import AutoSaveInput from "./auto-save-input";
-import DeleteSpoolButton from "./delete-spool-button";
 import { DrawingRefSelect } from "./drawing-ref-datalist";
-import { Table } from "lucide-react";
-import Actions from "./actions";
 
 export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
     [
@@ -57,7 +54,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "drawing_ref"
                               ]
-                            : false
+                            : "NONE"
                     }
                     row={row}
                     table={table}
@@ -84,7 +81,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                                 ? table.options.meta.FabMonPermissions[
                                       "spool_number"
                                   ]
-                                : false
+                                : "NONE"
                         }
                     />
                 );
@@ -109,7 +106,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "description"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -141,7 +138,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                                 ? table.options.meta.FabMonPermissions[
                                       "client_approval"
                                   ]
-                                : false
+                                : "NONE"
                         }
                     />
                 );
@@ -174,7 +171,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                                 ? table.options.meta.FabMonPermissions[
                                       "manager_approval"
                                   ]
-                                : false
+                                : "NONE"
                         }
                     />
                 );
@@ -197,7 +194,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["spec"]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -219,7 +216,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["mass"]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -243,7 +240,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "price_per_kg"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -267,7 +264,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "gross_spool_cost"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -293,7 +290,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "materials_ordered"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -319,7 +316,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "materials_ordered"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -345,7 +342,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "fabrication_complete"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -367,7 +364,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["scan_3d"]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -391,7 +388,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "ndt_complete"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -417,7 +414,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "pressure_test"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -443,7 +440,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "internal_coating"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -469,7 +466,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             ? table.options.meta.FabMonPermissions[
                                   "external_coating"
                               ]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -491,7 +488,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["packing"]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -513,7 +510,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["dispatch"]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -535,7 +532,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["notes"]
-                            : false
+                            : "NONE"
                     }
                 />
             ),
@@ -553,12 +550,9 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     <Actions
                         row={row}
                         table={table}
-                        permission={
+                        deleteSpool={
                             table.options.meta?.FabMonPermissions
-                                ? table.options.meta.FabMonPermissions[
-                                      "_actions"
-                                  ]
-                                : false
+                                ?.delete_spools ?? false
                         }
                     />
                 );

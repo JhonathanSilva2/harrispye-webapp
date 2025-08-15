@@ -1,10 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { fetchPermission } from "./_action/fetch-permission";
 import assert from "assert";
 import { getServerSession } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
 import options from "../../auth/[...nextauth]/options";
+import {
+    FabMonSpoolsPermission,
+    fetchPermission,
+} from "./_action/fetch-permission";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+    req: NextRequest,
+): Promise<NextResponse<FabMonSpoolsPermission | { error: string }>> {
     try {
         const session = await getServerSession(options);
         if (!session) {
@@ -34,12 +39,13 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        const permissions = await fetchPermission({
-            user_organizations_id: organization_id,
-            user_localizations_id: localization_id,
-            user_roles_id: role_id,
-            user_clearance: clearance,
-        });
+        const permissions: FabMonSpoolsPermission | null =
+            await fetchPermission({
+                user_organizations_id: organization_id,
+                user_localizations_id: localization_id,
+                user_roles_id: role_id,
+                user_clearance: clearance,
+            });
 
         if (!permissions) {
             return NextResponse.json(
