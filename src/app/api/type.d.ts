@@ -36,7 +36,7 @@ export interface Attributes {
     localizations: TLocalizationAttribute[];
     organizations: TOrganizationAttribute[];
     roles: TRoleAttribute[];
-    clearances: TClearanceAttribute[];
+    clearances?: TClearanceAttribute[];
 }
 
 export interface UserAttributesResponse {

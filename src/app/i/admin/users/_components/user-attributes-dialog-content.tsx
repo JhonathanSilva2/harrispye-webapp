@@ -72,6 +72,7 @@ const UserAttributes = ({ userId }: { userId: number }) => {
                 roles: "role",
                 clearances: "clearance",
             };
+            if (!items) return [];
             const labelKey = labelKeys[key] as keyof (typeof items)[0];
             return items.map((item) => ({
                 label: String(item[labelKey]),
