@@ -21,7 +21,7 @@ const SpoolLogDialog = ({ jobId, className }: Props) => {
             <DialogTrigger asChild>
                 <Button variant="outline" className="">
                     <ScrollText />
-                    Log
+                    History
                 </Button>
             </DialogTrigger>
             <DialogContent className={`flex flex-col ${className ?? ""}`}>
