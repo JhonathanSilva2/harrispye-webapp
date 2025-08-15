@@ -25,7 +25,6 @@ model adobe {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model adobe_pdf_data {
-  my_row_id        BigInt   @id @dbHPBase.UnsignedBigInt
   hash             String   @dbHPBase.VarChar(255)
   vessel           String   @dbHPBase.VarChar(255)
   job              String   @dbHPBase.VarChar(255)
@@ -55,6 +54,7 @@ model adobe_pdf_data {
   job_fri          Json
   job_sat          Json
   job_sun          Json
+  my_row_id        BigInt   @id @dbHPBase.UnsignedBigInt
 
   @@ignore
 }
@@ -121,14 +121,11 @@ model fabrication_monitoring {
 
 model fabrication_monitoring_permissions {
   user_organizations_id Int
-  user_organizations    user_organizations                       @relation(fields: [user_organizations_id], references: [id], onDelete: Cascade)
   user_roles_id         Int
-  user_roles            user_roles                               @relation(fields: [user_roles_id], references: [id], onDelete: Cascade)
   user_localizations_id Int
-  user_localizations    user_localizations                       @relation(fields: [user_localizations_id], references: [id], onDelete: Cascade)
   user_clearance        user_clearance                           @default(LOW)
-  add_spools            Boolean?                                 @default(false)
-  delete_spools         Boolean?                                 @default(false)
+  add_spools            Boolean                                  @default(false)
+  delete_spools         Boolean                                  @default(false)
   spec                  fabrication_monitoring_permission_action @default(NONE)
   mass                  fabrication_monitoring_permission_action @default(NONE)
   price_per_kg          fabrication_monitoring_permission_action @default(NONE)
@@ -149,6 +146,11 @@ model fabrication_monitoring_permissions {
   notes                 fabrication_monitoring_permission_action @default(NONE)
   client_approval       fabrication_monitoring_permission_action @default(NONE)
   manager_approval      fabrication_monitoring_permission_action @default(NONE)
+  graph                 Boolean                                  @default(false)
+  summary               Boolean                                  @default(false)
+  user_localizations    user_localizations                       @relation(fields: [user_localizations_id], references: [id], onDelete: Cascade)
+  user_organizations    user_organizations                       @relation(fields: [user_organizations_id], references: [id], onDelete: Cascade)
+  user_roles            user_roles                               @relation(fields: [user_roles_id], references: [id], onDelete: Cascade)
 
   @@id([user_organizations_id, user_roles_id, user_localizations_id, user_clearance])
   @@index([user_localizations_id], map: "fabrication_monitoring_permissions_localizations_id_fkey")
@@ -213,10 +215,9 @@ model finances {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model finances_comment {
-  my_row_id BigInt   @id @dbHPBase.UnsignedBigInt
-  hp        String   @dbHPBase.VarChar(255)
-  date      DateTime @dbHPBase.Date
-  comments  String?  @dbHPBase.MediumText
+  hp       String   @dbHPBase.VarChar(255)
+  date     DateTime @dbHPBase.Date
+  comments String?  @dbHPBase.MediumText
 
   @@ignore
 }
@@ -324,11 +325,11 @@ model requisicao_ferias {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model respostas {
-  my_row_id     BigInt   @id @dbHPBase.UnsignedBigInt
   id_pedido     Int?
   id_fornecedor String?  @dbHPBase.VarChar(1000)
   data_hora     DateTime @default(now()) @dbHPBase.DateTime(0)
   reposta       Json?
+  my_row_id     BigInt   @id @dbHPBase.UnsignedBigInt
 
   @@ignore
 }
@@ -419,9 +420,9 @@ model user_roles {
   role                               String                               @dbHPBase.VarChar(255)
   created_at                         DateTime                             @default(now()) @dbHPBase.DateTime(0)
   created_by                         Int
+  fabrication_monitoring_permissions fabrication_monitoring_permissions[]
   user_attributes                    user_attributes[]
   users                              users                                @relation(fields: [created_by], references: [id], onDelete: Cascade)
-  fabrication_monitoring_permissions fabrication_monitoring_permissions[]
 
   @@index([created_by], map: "user_roles_created_by_fkey")
 }
@@ -463,9 +464,9 @@ model user_organizations {
   organization                       String                               @dbHPBase.VarChar(255)
   created_at                         DateTime                             @default(now()) @dbHPBase.DateTime(0)
   created_by                         Int
+  fabrication_monitoring_permissions fabrication_monitoring_permissions[]
   user_attributes                    user_attributes[]
   users                              users                                @relation(fields: [created_by], references: [id], onDelete: Cascade)
-  fabrication_monitoring_permissions fabrication_monitoring_permissions[]
 
   @@index([created_by], map: "user_organizations_created_by_fkey")
 }
@@ -475,9 +476,9 @@ model user_localizations {
   localization                       String                               @dbHPBase.VarChar(255)
   created_at                         DateTime                             @default(now()) @dbHPBase.DateTime(0)
   created_by                         Int
+  fabrication_monitoring_permissions fabrication_monitoring_permissions[]
   user_attributes                    user_attributes[]
   users                              users                                @relation(fields: [created_by], references: [id], onDelete: Cascade)
-  fabrication_monitoring_permissions fabrication_monitoring_permissions[]
 
   @@index([created_by], map: "user_localizations_created_by_fkey")
 }
@@ -561,4 +562,10 @@ enum fabrication_monitoring_manager_approval {
   PENDING
   APPROVED
   DECLINED
+}
+
+enum access_control_attributes_clearance {
+  HIGH
+  MEDIUM
+  LOW
 }
