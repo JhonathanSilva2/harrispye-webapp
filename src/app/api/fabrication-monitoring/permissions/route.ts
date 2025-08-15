@@ -54,6 +54,17 @@ export async function GET(
             );
         }
 
+        if (user.is_admin) {
+            for (const key in permissions) {
+                const value = (permissions as Record<string, unknown>)[key];
+                if (typeof value === "boolean") {
+                    (permissions as Record<string, unknown>)[key] = true;
+                } else if (typeof value === "string") {
+                    (permissions as Record<string, unknown>)[key] = "ALL";
+                }
+            }
+        }
+
         return NextResponse.json(permissions, {
             status: 200,
         });
