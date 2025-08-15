@@ -18,6 +18,7 @@ import ChartSpools from "./chart-spools";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Session } from "next-auth";
 import AccessControl from "@/lib/auth/policy-decision-point";
+import { Prisma } from "prisma/generated/client-hp-base";
 
 const advancedSearch: Searchable[] = [
     {
@@ -105,12 +106,16 @@ const advancedSearch: Searchable[] = [
     },
 ];
 
+type FabMonSpoolsPermission = Prisma.$fabrication_monitoring_permissionsPayload;
+
 const FabMonSpoolsTable = ({
     hp,
     session,
+    permissions,
 }: {
     hp: string;
     session: Session;
+    permissions: FabMonSpoolsPermission;
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const accessControl = new AccessControl(session);
@@ -202,8 +207,6 @@ const FabMonSpoolsTable = ({
                 : updaterOrValue;
         return setFilters({ sortBy: stateToSortBy(newSortingState) });
     };
-
-    const permissions = Permissions.getPermissionPayload(accessControl);
 
     const unpermittedColumns = permissions
         ? (Object.fromEntries(

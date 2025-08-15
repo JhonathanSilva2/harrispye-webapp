@@ -20,7 +20,7 @@ type PermissionValue = "READ" | "UPDATE" | "WRITE" | false;
 declare module "@tanstack/react-table" {
     interface TableMeta<TData extends RowData> {
         hp?: string;
-        isEditing: boolean;
+        isEditing?: boolean;
         FabMonPermissions?: ProfilePermissions;
         accessControl?: AccessControl;
     }
@@ -28,6 +28,7 @@ declare module "@tanstack/react-table" {
         className: string;
     }
 }
+
 export interface DataTableProps<T> {
     searchables?: Searchable[];
     data?: TPayload<T[]>;
