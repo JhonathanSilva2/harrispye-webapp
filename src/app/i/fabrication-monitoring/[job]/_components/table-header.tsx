@@ -21,8 +21,8 @@ export default function TableHeader({
     return (
         <div className="flex gap-2">
             {jobId && <SpoolLogDialog jobId={jobId} />}
-            <EditTableToggle disabled={canEdit} onToggle={onToggle} />
-            <AddSpoolButton canAddSpool={canAddSpool} job={job} />
+            {canEdit && <EditTableToggle onToggle={onToggle} />}
+            {canAddSpool && <AddSpoolButton job={job} />}
         </div>
     );
 }

@@ -237,13 +237,15 @@ const FabMonSpoolsTable = ({
                             isError={isError}
                             headerClassName="flex justify-between items-center"
                             headerComponent={
-                                <TableHeader
-                                    canEdit={canEdit}
-                                    canAddSpool={canAddSpool}
-                                    job={hp}
-                                    jobId={data?.data.job.id}
-                                    onToggle={setIsEditing}
-                                />
+                                !isPending && !isError ? (
+                                    <TableHeader
+                                        canEdit={canEdit}
+                                        canAddSpool={canAddSpool}
+                                        job={hp}
+                                        jobId={data?.data.job.id}
+                                        onToggle={setIsEditing}
+                                    />
+                                ) : undefined
                             }
                             unpermittedColumns={unpermittedColumns}
                             meta={{

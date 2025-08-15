@@ -8,13 +8,9 @@ import { toast } from "sonner";
 
 interface AddSpoolButtonProps {
     job: string;
-    canAddSpool: boolean;
 }
 
-export default function AddSpoolButton({
-    job,
-    canAddSpool,
-}: AddSpoolButtonProps) {
+export default function AddSpoolButton({ job }: AddSpoolButtonProps) {
     const queryClient = useQueryClient();
     const [isLoading, setIsLoading] = useState(false); // Controle de estado para loading
     const [error, setError] = useState<string | null>(null); // Controle de erro
@@ -34,13 +30,11 @@ export default function AddSpoolButton({
         }
     };
 
-    const isDisabled = !canAddSpool || isLoading;
-
     return (
         <Button
             variant={"constructive"}
             onClick={handleSpool}
-            disabled={isDisabled}
+            disabled={isLoading}
             data-cy="addSpool"
         >
             {isLoading ? <Loader2 className="animate-spin" /> : <CirclePlus />}{" "}
