@@ -32,7 +32,7 @@ export default function PdfModal({
     const setOpen = useCallback(
         (value: boolean) => {
             if (isControlled) {
-                controlledSetOpen!(value);
+                controlledSetOpen(value);
             } else {
                 setUncontrolledOpen(value);
             }

@@ -15,7 +15,6 @@ export async function patchSpool(job: string, spoolID: string, data: body) {
         method: "PATCH",
         body: JSON.stringify(data),
     };
-    console.log({ fetchOptions });
     return await AuthClient<ReturnTypeFromAPICall<typeof PATCH>>(
         url.toString(),
         fetchOptions,
