@@ -101,5 +101,10 @@ export const fabricationMonitoringUpdateSpoolSchema = z
             .int()
             .min(3, "updated_by must be at least 3")
             .optional(),
+        fabrication_monitoring_design_id: z
+            .number()
+            .int()
+            .min(1, "fabrication_monitoring_design_id must be at least 1")
+            .optional(),
     })
     .strict();

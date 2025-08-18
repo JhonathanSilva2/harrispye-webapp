@@ -34,6 +34,11 @@ interface DrawingRefSelectProps<TData> {
     permission: $Enums.fabrication_monitoring_permission_action;
 }
 
+interface DrawingRefSelectValue {
+    value: string;
+    designID: number | null;
+    label: string | null;
+}
 export function DrawingRefSelect<TData>({
     row,
     table,
@@ -43,25 +48,36 @@ export function DrawingRefSelect<TData>({
     const spoolID = String(row.original.id); // Supondo que o ID seja "id"
     const isEditing = table.options.meta!.isEditing ?? "";
     const job = table.options.meta?.hp ?? "";
-    const initialValue = row.getValue("drawing_ref") as string;
+    const initialValue = {
+        value: row.getValue("drawing_ref") as string,
+        designID: row.original.fabrication_monitoring_design_id ?? null,
+        label: null,
+    } as DrawingRefSelectValue;
     const [open, setOpen] = React.useState(false);
     const { data, isLoading } = useDrawing(String(jobID), open);
-    const [value, setValue] = React.useState(initialValue);
     const drawings = React.useMemo(() => {
         return (
             data?.data?.map((item) => ({
                 value: item.display_name,
                 label: item.display_name,
+                designID: item.id,
             })) ?? []
         );
     }, [data]);
-    const url = `/api/fabrication-monitoring/designs/${row.original.fabrication_monitoring_design_id}`;
+    const [selectedDrawing, setSelectedDrawing] = React.useState(initialValue);
+
+    const url = `/api/fabrication-monitoring/designs/${selectedDrawing.designID}`;
     const mutation = useUpdateSpool(job, spoolID);
     const handleSelect = useCallback(
-        async (selectedValue: string) => {
-            setValue(selectedValue);
+        async (selectedValue: DrawingRefSelectValue) => {
+            setSelectedDrawing(selectedValue);
             setOpen(false);
-            const body = { drawing_ref: selectedValue };
+            const body = {
+                drawing_ref: selectedValue.value,
+                fabrication_monitoring_design_id: Number(
+                    selectedValue.designID,
+                ),
+            };
             try {
                 mutation.mutateAsync(body);
             } catch (error) {
@@ -83,8 +99,8 @@ export function DrawingRefSelect<TData>({
                         className="w-full justify-between"
                         data-cy="spool-column-drawing_ref"
                     >
-                        {value ? (
-                            <span className="">{value}</span>
+                        {selectedDrawing.value ? (
+                            <span className="">{selectedDrawing.value}</span>
                         ) : (
                             "Select drawing..."
                         )}
@@ -110,14 +126,19 @@ export function DrawingRefSelect<TData>({
                                             key={drawing.value}
                                             value={drawing.value}
                                             onSelect={() =>
-                                                handleSelect(drawing.value)
+                                                handleSelect({
+                                                    value: drawing.value,
+                                                    label: drawing.label,
+                                                    designID: drawing.designID,
+                                                })
                                             }
                                         >
                                             {drawing.label}
                                             <Check
                                                 className={cn(
                                                     "ml-auto",
-                                                    value === drawing.value
+                                                    selectedDrawing.value ===
+                                                        drawing.value
                                                         ? "opacity-100"
                                                         : "opacity-0",
                                                 )}
@@ -143,7 +164,7 @@ export function DrawingRefSelect<TData>({
                             className="my-1 underline"
                         >
                             <FileUp />
-                            <span className="">{value}</span>
+                            <span className="">{selectedDrawing.value}</span>
                         </Button>
                     </div>
                 </PdfModal>
