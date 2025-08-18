@@ -64,7 +64,6 @@ export async function PATCH(
 
         // Campos validados e prontos para atualização
         const newBody = validation.data;
-
         // Atualiza o spool no banco de dados
         const updateSpool = await prismaBase.fabrication_monitoring.update({
             where: { id: spool.id },
@@ -72,6 +71,9 @@ export async function PATCH(
                 spec: newBody.spec,
                 mass: newBody.mass,
                 price_per_kg: newBody.price_per_kg,
+                fabrication_monitoring_design_id:
+                    newBody.fabrication_monitoring_design_id,
+
                 gross_spool_cost: newBody.gross_spool_cost,
                 description: newBody.description,
                 drawing_ref: newBody.drawing_ref,
