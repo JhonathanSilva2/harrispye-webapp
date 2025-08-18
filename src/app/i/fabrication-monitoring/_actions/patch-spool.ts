@@ -8,16 +8,16 @@ import { clientEnv } from "@/lib/constants/config";
 type body = Record<string, string | number>;
 
 export async function patchSpool(job: string, spoolID: string, data: body) {
-	const url = new URL(
-		`${clientEnv.NEXT_PUBLIC_URL}/api/fabrication-monitoring/${job}/${spoolID}`,
-	);
-	const fetchOptions = {
-		method: "PATCH",
-		body: JSON.stringify(data),
-	};
-
-	return await AuthClient<ReturnTypeFromAPICall<typeof PATCH>>(
-		url.toString(),
-		fetchOptions,
-	);
+    const url = new URL(
+        `${clientEnv.NEXT_PUBLIC_URL}/api/fabrication-monitoring/${job}/${spoolID}`,
+    );
+    const fetchOptions = {
+        method: "PATCH",
+        body: JSON.stringify(data),
+    };
+    console.log({ fetchOptions });
+    return await AuthClient<ReturnTypeFromAPICall<typeof PATCH>>(
+        url.toString(),
+        fetchOptions,
+    );
 }
