@@ -3,6 +3,10 @@
 import { Check, ChevronsUpDown, FileUp } from "lucide-react";
 import * as React from "react";
 
+import {
+    $Enums,
+    fabrication_monitoring,
+} from "@/../prisma/generated/client-hp-base";
 import { Button } from "@/components/ui/button";
 import {
     Command,
@@ -20,16 +24,14 @@ import {
 import { useDrawing } from "@/hooks/query/use-drawings";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
 import { cn } from "@/lib/utils";
-import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import { Row, Table } from "@tanstack/react-table";
 import { useCallback } from "react";
-import { PermissionValue } from "../_permissions/types";
 import PdfModal from "./manage-drawings/pdf-dialog";
 
 interface DrawingRefSelectProps<TData> {
     row: Row<fabrication_monitoring>;
     table: Table<TData>;
-    permission: PermissionValue;
+    permission: $Enums.fabrication_monitoring_permission_action;
 }
 
 export function DrawingRefSelect<TData>({
@@ -68,8 +70,8 @@ export function DrawingRefSelect<TData>({
         },
         [mutation],
     );
-    if (permission) {
-        const canEdit = permission !== "READ";
+    if (permission !== "NONE") {
+        const canEdit = permission === "EDIT" || permission === "ALL";
 
         return isEditing && canEdit ? (
             <Popover open={open} onOpenChange={setOpen}>

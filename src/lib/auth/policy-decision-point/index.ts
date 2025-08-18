@@ -96,7 +96,7 @@ class AccessControl {
         }
         return actionsResponse;
     }
-    isSomeAccess(resource: TResource) {
+    hasSomeAccess(resource: TResource) {
         const actions = this.checkAccessControlActions(resource);
         return Object.values(actions).some((value) => value);
     }

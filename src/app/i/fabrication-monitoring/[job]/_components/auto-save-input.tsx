@@ -1,15 +1,17 @@
 "use client";
 
+import {
+    $Enums,
+    fabrication_monitoring,
+} from "@/../prisma/generated/client-hp-base";
 import { Input } from "@/components/ui/input";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
+import { formatBrNumber } from "@/utils/brasil-format-number";
 import { formatMoney } from "@/utils/format-currency";
 import { formatPercentage } from "@/utils/format-percentage";
-import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import { Row, Table } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react"; // Ícone de loading
 import { useCallback, useState } from "react";
-import { PermissionValue } from "../_permissions/types";
-import { formatBrNumber } from "@/utils/brasil-format-number";
 
 interface AutoSaveInputProps<TData> {
     name: string;
@@ -17,7 +19,7 @@ interface AutoSaveInputProps<TData> {
     row: Row<fabrication_monitoring>;
     table: Table<TData>;
     onlyIntegers?: boolean;
-    permission: PermissionValue;
+    permission: $Enums.fabrication_monitoring_permission_action;
 }
 
 export default function AutoSaveInput<TData>({
@@ -80,7 +82,6 @@ export default function AutoSaveInput<TData>({
             mutation.mutateAsync(body);
         } catch (error) {
             console.error("Erro ao salvar os dados:", error);
-        } finally {
         }
     }, [name, type, value, mutation]);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,8 +100,8 @@ export default function AutoSaveInput<TData>({
         }
     };
 
-    if (permission) {
-        const canEdit = permission !== "READ";
+    if (permission !== "NONE") {
+        const canEdit = permission === "EDIT" || permission === "ALL";
         return isEditing && canEdit ? (
             <div className="w-full">
                 <Input

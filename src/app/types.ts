@@ -31,6 +31,13 @@ export type ReturnTypeFromPaginatedApiCall<
         ? T
         : never;
 /* eslint-enable @typescript-eslint/no-explicit-any */
+
+export type XOR<A, B> =
+    | (A & { [K in Exclude<keyof B, keyof A>]?: never })
+    | (B & { [K in Exclude<keyof A, keyof B>]?: never });
+
+export type AtLeastOne<T, K extends keyof T = keyof T> = Omit<T, K> &
+    { [P in K]-?: Required<Pick<T, P>> & Partial<Pick<T, Exclude<K, P>>> }[K];
 export interface PageProps {
     params: Promise<StringDictionary>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

@@ -10,17 +10,18 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import HOCAuthComponent from "@/lib/auth/hoc-auth-component";
+import AccessControl from "@/lib/auth/policy-decision-point";
 import { clientEnv } from "@/lib/constants/config";
 import { useQueryClient } from "@tanstack/react-query";
 import { Row } from "@tanstack/react-table";
 import { Edit2, MoreHorizontal, Send, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { deleteJob } from "../[job]/_actions/delete-job";
 import { EditDialog } from "./edit-dialog";
-import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
-import AccessControl from "@/lib/auth/policy-decision-point";
 
 export const ActionsCell: React.FC<{
     row: Row<FabricationMonitoringFetchReturn>;
@@ -31,12 +32,6 @@ export const ActionsCell: React.FC<{
     const [isOpen, setIsOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const queryClient = useQueryClient();
-    const actionsPermissions = accessControl
-        ? accessControl.checkAccessControlActions("fabrication-monitoring")
-        : null;
-    const canRead = accessControl
-        ? accessControl.isSomeAccess("fabrication-monitoring")
-        : false;
     return (
         <>
             {!accessControl ? (
@@ -62,8 +57,14 @@ export const ActionsCell: React.FC<{
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                {/* SUMMARY */}
-                                {(canRead ?? false) && (
+                                <HOCAuthComponent
+                                    enforcePolicy={{
+                                        roleBasedAccess: {
+                                            action: "READ",
+                                            resource: "fabrication-monitoring",
+                                        },
+                                    }}
+                                >
                                     <DropdownMenuItem
                                         className="gap-x-5 text-center"
                                         data-cy="accessFabricationProject"
@@ -78,11 +79,15 @@ export const ActionsCell: React.FC<{
                                         <Send />
                                         <span>Summary</span>
                                     </DropdownMenuItem>
-                                )}
-                                {/* EDIT */}
-                                {((actionsPermissions?.EDIT ||
-                                    actionsPermissions?.ALL) ??
-                                    false) && (
+                                </HOCAuthComponent>
+                                <HOCAuthComponent
+                                    enforcePolicy={{
+                                        roleBasedAccess: {
+                                            action: "EDIT",
+                                            resource: "fabrication-monitoring",
+                                        },
+                                    }}
+                                >
                                     <DropdownMenuItem
                                         className="gap-x-5 text-center"
                                         data-cy="editHp"
@@ -94,10 +99,16 @@ export const ActionsCell: React.FC<{
                                         <Edit2 />
                                         <span>Edit</span>
                                     </DropdownMenuItem>
-                                )}
+                                </HOCAuthComponent>
 
-                                {/* DELETE */}
-                                {(actionsPermissions?.DELETE ?? false) && (
+                                <HOCAuthComponent
+                                    enforcePolicy={{
+                                        roleBasedAccess: {
+                                            action: "DELETE",
+                                            resource: "fabrication-monitoring",
+                                        },
+                                    }}
+                                >
                                     <AlertDialogComponent
                                         onConfirm={async () => {
                                             try {
@@ -134,7 +145,7 @@ export const ActionsCell: React.FC<{
                                             </DropdownMenuItem>
                                         }
                                     />
-                                )}
+                                </HOCAuthComponent>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>

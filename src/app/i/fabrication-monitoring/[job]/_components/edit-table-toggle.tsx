@@ -1,17 +1,14 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { CheckSquare, Edit } from "lucide-react";
+import { useState } from "react";
 
 interface EditTableToggleProps {
     onToggle?: (isEditing: boolean) => void;
     disabled?: boolean;
 }
 
-export default function EditTableToggle({
-    onToggle,
-    disabled,
-}: EditTableToggleProps) {
+export default function EditTableToggle({ onToggle }: EditTableToggleProps) {
     const [isEditing, setIsEditing] = useState(false);
     const handleToggle = () => {
         setIsEditing((prev) => !prev);
@@ -24,10 +21,9 @@ export default function EditTableToggle({
             size="icon"
             variant="outline"
             onClick={handleToggle}
-            disabled={!disabled} // Desabilita o botão se não estiver editando
             data-cy="editTableToggle"
         >
-            <Edit />
+            {isEditing ? <Edit /> : <CheckSquare />}
         </Button>
     );
 }

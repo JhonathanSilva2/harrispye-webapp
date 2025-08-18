@@ -21,7 +21,7 @@ const FabricationMonitoringLayout = async ({
         return null;
     }
     const accessControl = new AccessControl(session);
-    const hasAccess = accessControl.isSomeAccess("fabrication-monitoring");
+    const hasAccess = accessControl.hasSomeAccess("fabrication-monitoring");
     if (!hasAccess && !accessControl.isAdmin()) {
         redirect("/i");
     }

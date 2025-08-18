@@ -33,7 +33,7 @@ const options: NextAuthOptions = {
                         },
                     });
 
-                    if (!user) {
+                    if (!user || !user.ativo) {
                         return null;
                     }
 
@@ -72,33 +72,60 @@ const options: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, account, user }) {
+        async jwt({ token, account, user, session }) {
             if (account) {
-                token = { ...user, id: parseInt(user.id) };
+                return { ...user, id: parseInt(user.id) };
             }
-            return token;
+
+            const userSession = await prismaBase.$transaction(async (tx) => {
+                const userDb = await tx.users.findUnique({
+                    where: {
+                        id: token.id,
+                    },
+                    omit: {
+                        password: true,
+                        id_perfil: true,
+                        type_user: true,
+                    },
+                    include: {
+                        user_attributes: true,
+                    },
+                });
+
+                if (!userDb) {
+                    return null;
+                }
+
+                const userFullProfile = await getUserFullProfile(userDb, tx);
+
+                return userFullProfile;
+            });
+
+            if (!userSession || !userSession.ativo) {
+                token = {
+                    ...token,
+                    ...userSession,
+                    ativo: false,
+                };
+            }
+
+            return {
+                ...token,
+                ...userSession,
+            };
         },
-        session({ session, token }) {
-            if (session.user) {
-                session.user.id = token.id;
-                session.user.username = token.username;
-                session.user.name = token.name;
-                session.user.display_name = token.display_name;
-                session.user.is_admin = token.is_admin;
-                session.user.admission_date = token.admission_date;
-                session.user.role = token.role;
-                session.user.hp_registration = token.hp_registration;
-                session.user.manager = token.manager;
-                session.user.userAttributes = token.userAttributes;
-                session.user.userAccessControl = token.userAccessControl;
-            }
+        async session({ session, token }) {
+            session.user = {
+                ...token,
+            };
+
             return session;
         },
     },
     pages: {
         signIn: "/auth/signin",
         signOut: "/auth/signout",
-        // error: "/auth/error",
+        error: "/auth/error",
     },
 };
 

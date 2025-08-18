@@ -1,18 +1,20 @@
-import { JSX, useCallback, useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import {
     Select,
-    SelectTrigger,
-    SelectValue,
     SelectContent,
     SelectGroup,
     SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, XCircle, Clock } from "lucide-react";
-import { Row, Table } from "@tanstack/react-table";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
-import { fabrication_monitoring } from "prisma/generated/client-hp-base";
-import { PermissionValue } from "../_permissions/types";
+import { Row, Table } from "@tanstack/react-table";
+import { CheckCircle, Clock, XCircle } from "lucide-react";
+import {
+    $Enums,
+    fabrication_monitoring,
+} from "prisma/generated/client-hp-base";
+import { JSX, useCallback, useState } from "react";
 import { toast } from "sonner";
 
 type ApprovalStatus = "APPROVED" | "DECLINED" | "PENDING";
@@ -22,7 +24,7 @@ interface ApprovalSelectProps<TData> {
     select_name: "client_approval" | "manager_approval";
     row: Row<fabrication_monitoring>;
     table: Table<TData>;
-    permission: PermissionValue;
+    permission: $Enums.fabrication_monitoring_permission_action;
 }
 
 const statusColors: Record<ApprovalStatus, string> = {
@@ -61,12 +63,11 @@ export default function ClientApprovalSelect<TData>({
             } catch (error) {
                 toast.error("Failed to update status, please try again.");
                 console.error("Erro ao salvar os dados:", error);
-            } finally {
             }
         },
         [mutation, select_name],
     );
-    const canEdit = permission !== "READ";
+    const canEdit = permission === "EDIT" || permission === "ALL";
 
     return canEdit && isEditing && status === "PENDING" ? (
         <Select

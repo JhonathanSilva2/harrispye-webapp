@@ -1,23 +1,22 @@
 "use client";
 
+import { FabMonSpoolsPermission } from "@/app/api/fabrication-monitoring/permissions/_action/fetch-permission";
 import { DataTable } from "@/components/data-table";
 import { Searchable } from "@/components/data-table/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useFabMon } from "@/hooks/query/use-fab-mon";
 import { useFilters } from "@/hooks/use-filters";
+import AccessControl from "@/lib/auth/policy-decision-point";
 import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
-import _ from "lodash";
-import { useMemo, useState } from "react";
-import { fabricationMonitoringColumns } from "./column-def";
-import TableHeader from "./table-header";
-import { Permissions } from "../_permissions/permissions";
-import SummarySpools from "./sumary-spools";
-import ChartSpools from "./chart-spools";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Session } from "next-auth";
-import AccessControl from "@/lib/auth/policy-decision-point";
+import { useMemo, useState } from "react";
+import ChartSpools from "./chart-spools";
+import { fabricationMonitoringColumns } from "./column-def";
+import SummarySpools from "./sumary-spools";
+import TableHeader from "./table-header";
 
 const advancedSearch: Searchable[] = [
     {
@@ -108,48 +107,23 @@ const advancedSearch: Searchable[] = [
 const FabMonSpoolsTable = ({
     hp,
     session,
+    permissions,
 }: {
     hp: string;
     session: Session;
+    permissions: FabMonSpoolsPermission;
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const accessControl = new AccessControl(session);
 
-    const role = accessControl?.getRole();
-    // verificar se ele tem permissão de ALL
-
-    const userAccessControlAction =
-        accessControl?.hasRoleAccess(
-            "ALL",
-            "fabrication-monitoring-spool-table",
-        ) ||
-        accessControl?.hasRoleAccess(
-            "EDIT",
-            "fabrication-monitoring-spool-table",
-        );
-    const canwrite =
-        accessControl?.hasRoleAccess(
-            "WRITE",
-            "fabrication-monitoring-spool-table",
-        ) ||
-        accessControl?.hasRoleAccess(
-            "ALL",
-            "fabrication-monitoring-spool-table",
-        );
-    const isAdmin = accessControl?.isAdmin();
-    const columnPermissions = isAdmin || Permissions.FabMonSpoolsPermission;
-    const canSeeGraphs =
-        isAdmin ||
-        Permissions.getFeaturePermission(
-            Permissions.FabMonFeaturesPermission.graph,
-            role,
-        );
-    const canViewSummary =
-        isAdmin ||
-        Permissions.getFeaturePermission(
-            Permissions.FabMonFeaturesPermission.summary,
-            role,
-        );
+    const canEdit = accessControl.hasRoleAccess(
+        "EDIT",
+        "fabrication-monitoring-spool-table",
+    );
+    const isAdmin = accessControl.isAdmin();
+    const canAddSpool = isAdmin || permissions.add_spools;
+    const canSeeGraphs = isAdmin || permissions.graph;
+    const canViewSummary = isAdmin || permissions.summary;
 
     const { filters, resetFilters, setFilters } = useFilters();
 
@@ -203,15 +177,17 @@ const FabMonSpoolsTable = ({
         return setFilters({ sortBy: stateToSortBy(newSortingState) });
     };
 
-    const permissions = Permissions.getPermissionPayload(accessControl);
+    let unpermittedColumns: Record<string, false> = {};
 
-    const unpermittedColumns = permissions
-        ? (Object.fromEntries(
-              Object.entries(permissions).filter(
-                  ([key, value]) => value === false,
-              ),
-          ) as Record<string, false>)
-        : {};
+    if (!isAdmin) {
+        unpermittedColumns = permissions
+            ? Object.fromEntries(
+                  Object.entries(permissions)
+                      .filter(([, value]) => value === "NONE")
+                      .map(([key]) => [key, false]),
+              )
+            : {};
+    }
 
     const columns = useMemo(() => fabricationMonitoringColumns, []);
     return (
@@ -261,13 +237,15 @@ const FabMonSpoolsTable = ({
                             isError={isError}
                             headerClassName="flex justify-between items-center"
                             headerComponent={
-                                <TableHeader
-                                    canEdit={userAccessControlAction ?? false}
-                                    canWrite={canwrite ?? false}
-                                    job={hp}
-                                    jobId={data?.data.job.id}
-                                    onToggle={setIsEditing}
-                                />
+                                !isPending && !isError ? (
+                                    <TableHeader
+                                        canEdit={canEdit}
+                                        canAddSpool={canAddSpool}
+                                        job={hp}
+                                        jobId={data?.data.job.id}
+                                        onToggle={setIsEditing}
+                                    />
+                                ) : undefined
                             }
                             unpermittedColumns={unpermittedColumns}
                             meta={{

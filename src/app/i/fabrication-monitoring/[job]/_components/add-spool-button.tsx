@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react"; // Importando useState e useEffect
 import { fetchSpool } from "@/app/i/fabrication-monitoring/_actions/fetch-spool";
+import { useState } from "react"; // Importando useState e useEffect
 
 import { Button } from "@/components/ui/button";
-import { CirclePlus, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { CirclePlus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface AddSpoolButtonProps {
     job: string;
-    canWrite: boolean;
 }
 
-export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
+export default function AddSpoolButton({ job }: AddSpoolButtonProps) {
     const queryClient = useQueryClient();
     const [isLoading, setIsLoading] = useState(false); // Controle de estado para loading
     const [error, setError] = useState<string | null>(null); // Controle de erro
@@ -31,13 +30,11 @@ export default function AddSpoolButton({ job, canWrite }: AddSpoolButtonProps) {
         }
     };
 
-    const isDisabled = !canWrite || isLoading;
-
     return (
         <Button
             variant={"constructive"}
             onClick={handleSpool}
-            disabled={isDisabled}
+            disabled={isLoading}
             data-cy="addSpool"
         >
             {isLoading ? <Loader2 className="animate-spin" /> : <CirclePlus />}{" "}
