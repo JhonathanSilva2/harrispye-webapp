@@ -13,6 +13,7 @@ import { FileText, MoreHorizontal, Trash2 } from "lucide-react";
 import PdfModal from "./pdf-dialog";
 import { Separator } from "@/components/ui/separator";
 import DeleteDrawingButton from "./delete-drawing-button";
+import { DrawingActions } from "./drawing-actions";
 
 export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitoring_designs>[] =
     [
@@ -27,33 +28,6 @@ export const fabricationMonitoringDrawingColumns: ColumnDef<fabrication_monitori
         {
             id: "actions",
             enableHiding: false,
-            cell: ({ row }) => {
-                const url = `/api/fabrication-monitoring/designs/${row.original.id}`;
-                return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel className="text-center">
-                                Actions
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="cursor-pointer">
-                                <FileText />
-                                <PdfModal pdfUrl={url}>Open</PdfModal>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DeleteDrawingButton
-                                url={url}
-                                drawingId={row.original.id}
-                            />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                );
-            },
+            cell: ({ row }) => <DrawingActions drawingId={row.original.id} />,
         },
     ];
