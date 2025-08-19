@@ -1,3 +1,4 @@
+import { DEFAULT_FAB_MON_SPOOLS_PERMISSION } from "@/lib/constants/permissions";
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -54,32 +55,7 @@ export async function GET(
                     email: user.email,
                 }),
             );
-            permissions = {
-                add_spools: false,
-                delete_spools: false,
-                spec: "NONE",
-                mass: "NONE",
-                price_per_kg: "NONE",
-                gross_spool_cost: "NONE",
-                description: "NONE",
-                drawing_ref: "NONE",
-                spool_number: "NONE",
-                materials_ordered: "NONE",
-                materials_arrived: "NONE",
-                fabrication_complete: "NONE",
-                scan_3d: "NONE",
-                ndt_complete: "NONE",
-                pressure_test: "NONE",
-                internal_coating: "NONE",
-                external_coating: "NONE",
-                packing: "NONE",
-                dispatch: "NONE",
-                notes: "NONE",
-                client_approval: "NONE",
-                manager_approval: "NONE",
-                graph: false,
-                summary: false,
-            };
+            permissions = DEFAULT_FAB_MON_SPOOLS_PERMISSION;
         }
 
         if (user.is_admin) {
