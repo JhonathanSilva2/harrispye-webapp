@@ -31,7 +31,7 @@ export default async function JobPage({ searchParams, params }: PageProps) {
     if (!permissions.ok || !permissions.data || "error" in permissions.data) {
         return (
             <div className="flex h-screen items-center justify-center">
-                <p className="text-red-500">{"Failed to fetch permissions."}</p>
+                <p className="text-red-500">{"You're not authorized to access this page."}</p>
             </div>
         );
     }
