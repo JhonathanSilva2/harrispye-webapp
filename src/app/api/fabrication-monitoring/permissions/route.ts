@@ -39,19 +39,47 @@ export async function GET(
             );
         }
 
-        const permissions: FabMonSpoolsPermission | null =
-            await fetchPermission({
-                user_organizations_id: organization_id,
-                user_localizations_id: localization_id,
-                user_roles_id: role_id,
-                user_clearance: clearance,
-            });
+        let permissions: FabMonSpoolsPermission | null = await fetchPermission({
+            user_organizations_id: organization_id,
+            user_localizations_id: localization_id,
+            user_roles_id: role_id,
+            user_clearance: clearance,
+        });
 
         if (!permissions) {
-            return NextResponse.json(
-                { error: "Permission not found for the given user context." },
-                { status: 404 },
+            console.error(
+                "Permission not found for the given user context: ",
+                JSON.stringify({
+                    user_id: user.id,
+                    email: user.email,
+                }),
             );
+            permissions = {
+                add_spools: false,
+                delete_spools: false,
+                spec: "NONE",
+                mass: "NONE",
+                price_per_kg: "NONE",
+                gross_spool_cost: "NONE",
+                description: "NONE",
+                drawing_ref: "NONE",
+                spool_number: "NONE",
+                materials_ordered: "NONE",
+                materials_arrived: "NONE",
+                fabrication_complete: "NONE",
+                scan_3d: "NONE",
+                ndt_complete: "NONE",
+                pressure_test: "NONE",
+                internal_coating: "NONE",
+                external_coating: "NONE",
+                packing: "NONE",
+                dispatch: "NONE",
+                notes: "NONE",
+                client_approval: "NONE",
+                manager_approval: "NONE",
+                graph: false,
+                summary: false,
+            };
         }
 
         if (user.is_admin) {
