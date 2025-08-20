@@ -28,7 +28,7 @@ const BreadCrumb = () => {
     const pathnames = pathname.split("/").filter((x) => x);
 
     return (
-        <Breadcrumb className="z-40 ml-2 pt-1">
+        <Breadcrumb className="ml-2 pt-1">
             <BreadcrumbList>
                 {pathnames.map((link, index) => {
                     const url = `/${pathnames.slice(0, index + 1).join("/")}`;
