@@ -1,5 +1,7 @@
 import { FabMonSpoolsPermission } from "@/app/api/fabrication-monitoring/permissions/_action/fetch-permission";
 
+export const HARRIS_PYE_ORGANIZATION_NAME = "HARRIS PYE";
+
 export const DEFAULT_FAB_MON_SPOOLS_PERMISSION: FabMonSpoolsPermission = {
     add_spools: false,
     delete_spools: false,
@@ -24,5 +26,32 @@ export const DEFAULT_FAB_MON_SPOOLS_PERMISSION: FabMonSpoolsPermission = {
     client_approval: "NONE",
     manager_approval: "NONE",
     graph: false,
-    summary: false
-}
+    summary: false,
+};
+
+export const ADMIN_FAB_MON_SPOOLS_PERMISSION: FabMonSpoolsPermission = {
+    add_spools: true,
+    delete_spools: true,
+    spec: "ALL",
+    mass: "ALL",
+    price_per_kg: "ALL",
+    gross_spool_cost: "ALL",
+    description: "ALL",
+    drawing_ref: "ALL",
+    spool_number: "ALL",
+    materials_ordered: "ALL",
+    materials_arrived: "ALL",
+    fabrication_complete: "ALL",
+    scan_3d: "ALL",
+    ndt_complete: "ALL",
+    pressure_test: "ALL",
+    internal_coating: "ALL",
+    external_coating: "ALL",
+    packing: "ALL",
+    dispatch: "ALL",
+    notes: "ALL",
+    client_approval: "ALL",
+    manager_approval: "ALL",
+    graph: true,
+    summary: true,
+};

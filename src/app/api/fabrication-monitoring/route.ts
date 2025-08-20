@@ -1,14 +1,17 @@
-import { TPayload } from "@/app/types";
-import { prismaBase } from "@/db/base-client";
-import { getApiPagination, ValidSort } from "@/lib/pagination";
-import { fabricationMonitoringJobCreateSchema } from "@/schemas/fabrication-monitoring-jobs";
 import {
     fabrication_monitoring_jobs,
     Prisma,
 } from "@/../prisma/generated/client-hp-base";
+import { TPayload } from "@/app/types";
+import { prismaBase } from "@/db/base-client";
+import { HARRIS_PYE_ORGANIZATION_NAME } from "@/lib/constants/permissions";
+import { getApiPagination, ValidSort } from "@/lib/pagination";
+import { fabricationMonitoringJobCreateSchema } from "@/schemas/fabrication-monitoring-jobs";
 import assert from "assert";
 import _ from "lodash";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import options from "../auth/[...nextauth]/options";
 
 export interface FabricationMonitoringFetchReturn
     extends fabrication_monitoring_jobs {
@@ -18,7 +21,11 @@ export interface FabricationMonitoringFetchReturn
 
 export async function GET(
     request: NextRequest,
-): Promise<NextResponse<TPayload<FabricationMonitoringFetchReturn[]>>> {
+): Promise<
+    NextResponse<
+        TPayload<FabricationMonitoringFetchReturn[]> | { error: string }
+    >
+> {
     try {
         const urlObj = new URL(request.nextUrl);
         const validSort: ValidSort[] = [
@@ -38,6 +45,24 @@ export async function GET(
             { key: "expected_delivery_date", type: "date" },
         ];
 
+        const session = await getServerSession(options);
+        if (!session || !session.user) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 },
+            );
+        }
+
+        const isAdmin = session.user.is_admin;
+        const userOrg = session.user.userAttributes?.user_organizations?.id;
+
+        if (!isAdmin && !userOrg) {
+            return NextResponse.json(
+                { error: "User organization not found." },
+                { status: 404 },
+            );
+        }
+
         const { page, pageSize, where, skip, take, orderBy } =
             getApiPagination<Prisma.fabrication_monitoring_jobsWhereInput>(
                 urlObj,
@@ -45,8 +70,29 @@ export async function GET(
                 advancedFilterKeys,
             );
 
+        const harrisPyeRow = await prismaBase.user_organizations.findFirst({
+            where: {
+                organization: {
+                    contains: HARRIS_PYE_ORGANIZATION_NAME,
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!harrisPyeRow)
+            throw new Error("HARRIS PYE organization not found.");
+        const harrisPyeId = harrisPyeRow.id; // Default to 1 if not found
+
         const jobs = await prismaBase.fabrication_monitoring_jobs.findMany({
-            where,
+            where: {
+                ...where,
+                ...(isAdmin || userOrg === harrisPyeId
+                    ? {}
+                    : {
+                          organization_id: userOrg,
+                      }),
+            },
             skip,
             take,
             include: {

@@ -1,4 +1,7 @@
-import { DEFAULT_FAB_MON_SPOOLS_PERMISSION } from "@/lib/constants/permissions";
+import {
+    ADMIN_FAB_MON_SPOOLS_PERMISSION,
+    DEFAULT_FAB_MON_SPOOLS_PERMISSION,
+} from "@/lib/constants/permissions";
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,7 +16,7 @@ export async function GET(
 ): Promise<NextResponse<FabMonSpoolsPermission | { error: string }>> {
     try {
         const session = await getServerSession(options);
-        if (!session) {
+        if (!session || !session.user) {
             return NextResponse.json(
                 { error: "Unauthorized" },
                 { status: 401 },
@@ -21,7 +24,14 @@ export async function GET(
         }
 
         const user = session.user;
-        if (!user || !user.userAttributes) {
+
+        if (user.is_admin) {
+            return NextResponse.json(ADMIN_FAB_MON_SPOOLS_PERMISSION, {
+                status: 200,
+            });
+        }
+
+        if (!user.userAttributes) {
             return NextResponse.json(
                 { error: "User attributes not found in session." },
                 { status: 404 },
@@ -56,17 +66,6 @@ export async function GET(
                 }),
             );
             permissions = DEFAULT_FAB_MON_SPOOLS_PERMISSION;
-        }
-
-        if (user.is_admin) {
-            for (const key in permissions) {
-                const value = (permissions as Record<string, unknown>)[key];
-                if (typeof value === "boolean") {
-                    (permissions as Record<string, unknown>)[key] = true;
-                } else if (typeof value === "string") {
-                    (permissions as Record<string, unknown>)[key] = "ALL";
-                }
-            }
         }
 
         return NextResponse.json(permissions, {
