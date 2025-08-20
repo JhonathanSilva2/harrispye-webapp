@@ -233,6 +233,76 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             enableHiding: false,
         },
         {
+            accessorKey: "m2_fbe",
+            header: () => <span style={{ fontWeight: 800 }}>M² FBE</span>,
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="number"
+                    name={"m2_fbe"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions["m2_fbe"]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "m2_galvanized",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>M² Galvanized</span>
+            ),
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="number"
+                    name={"m2_galvanized"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions[
+                                  "m2_galvanized"
+                              ]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "m2_price",
+            header: () => <span style={{ fontWeight: 800 }}>Price per M²</span>,
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="currency"
+                    name={"m2_price"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions["m2_price"]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
             accessorKey: "price_per_kg",
             header: () => <span style={{ fontWeight: 800 }}>Price per KG</span>,
             cell: ({ row, table }) => (
