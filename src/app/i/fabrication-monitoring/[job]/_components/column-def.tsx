@@ -35,7 +35,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             ),
             meta: {
                 className:
-                    "bg-background sticky left-0 min-w-[60px] max-w-[60px] group-hover/row:bg-muted border-y transition-colors",
+                    "bg-background sticky left-0 min-w-[60px] max-w-[60px] group-hover/row:bg-muted border-y transition-colors z-10",
             },
             enableSorting: false,
             enableHiding: false,
@@ -63,7 +63,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
 
             meta: {
                 className:
-                    "bg-background sticky left-[60px] min-w-[230px] max-w-[230px] group-hover/row:bg-muted border-y transition-colors",
+                    "bg-background sticky left-[60px] min-w-[280px] max-w-[230px] group-hover/row:bg-muted border-y transition-colors z-10",
             },
         },
         {
@@ -89,7 +89,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
 
             meta: {
                 className:
-                    "bg-background sticky left-[290px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors ",
+                    "bg-background sticky left-[340px] min-w-[180px] max-w-[180px] group-hover/row:bg-muted border-y transition-colors z-10 ",
             },
         },
         {

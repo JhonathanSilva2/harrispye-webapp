@@ -68,6 +68,7 @@ export function DrawingRefSelect<TData>({
 
     const url = `/api/fabrication-monitoring/designs/${selectedDrawing.designID}`;
     const mutation = useUpdateSpool(job, spoolID);
+    const isRenderIcon = Boolean(selectedDrawing.value);
     const handleSelect = useCallback(
         async (selectedValue: DrawingRefSelectValue) => {
             setSelectedDrawing(selectedValue);
@@ -156,14 +157,14 @@ export function DrawingRefSelect<TData>({
                 <PdfModal pdfUrl={url}>
                     <div
                         data-cy="spool-column-drawing_ref-readOnly"
-                        className="cursor-pointer font-medium text-primary"
+                        className="w-full cursor-pointer font-medium text-primary"
                     >
                         <Button
                             variant={"link"}
                             size={"icon"}
-                            className="my-1 underline"
+                            className="gap-x2 my-1 flex w-full justify-start gap-x-2"
                         >
-                            <FileUp />
+                            {isRenderIcon && <FileUp />}
                             <span className="">{selectedDrawing.value}</span>
                         </Button>
                     </div>
