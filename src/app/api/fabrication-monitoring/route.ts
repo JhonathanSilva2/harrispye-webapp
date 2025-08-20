@@ -19,13 +19,7 @@ export interface FabricationMonitoringFetchReturn
     grossCost: number;
 }
 
-export async function GET(
-    request: NextRequest,
-): Promise<
-    NextResponse<
-        TPayload<FabricationMonitoringFetchReturn[]> | { error: string }
-    >
-> {
+export async function GET(request: NextRequest) {
     try {
         const urlObj = new URL(request.nextUrl);
         const validSort: ValidSort[] = [

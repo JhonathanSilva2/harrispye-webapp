@@ -4,15 +4,14 @@ import { DataTable } from "@/components/data-table";
 import { Searchable } from "@/components/data-table/types";
 import { useFabMonJobs } from "@/hooks/query/use-fab-mon-jobs";
 import { useFilters } from "@/hooks/use-filters";
+import AccessControl from "@/lib/auth/policy-decision-point";
 import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
+import { Session } from "next-auth";
 import { useMemo, useState } from "react";
 import { AddHp } from "./add-hp";
 import { fabricationMonitoringJobsColumns } from "./column-def";
-import { Session } from "next-auth";
-import { Permissions } from "../[job]/_permissions/permissions";
-import AccessControl from "@/lib/auth/policy-decision-point";
 
 const advancedSearch: Searchable[] = [
     {
@@ -88,8 +87,6 @@ const FabMonJobsTable = ({ session }: { session: Session }) => {
                 : updaterOrValue;
         return setFilters({ sortBy: stateToSortBy(newSortingState) });
     };
-
-    const permissions = Permissions.getPermissionPayload(accessControl);
 
     const columns = useMemo(() => fabricationMonitoringJobsColumns, []);
 
