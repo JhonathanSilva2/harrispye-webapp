@@ -162,7 +162,7 @@ export function DrawingRefSelect<TData>({
                         <Button
                             variant={"link"}
                             size={"icon"}
-                            className="gap-x2 my-1 flex w-full justify-start gap-x-2"
+                            className="my-1 flex w-full justify-start gap-x-2"
                         >
                             {isRenderIcon && <FileUp />}
                             <span className="">{selectedDrawing.value}</span>
