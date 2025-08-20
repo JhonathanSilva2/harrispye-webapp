@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         const bodyForValidation = {
             ...body,
 
-            status_changed_by: session?.user?.display_name ?? "unkown user",
+            status_changed_by: session?.user?.display_name ?? "unknown user",
             status_change_date: new Date().toLocaleString("pt-BR", {
                 day: "2-digit",
                 month: "2-digit",
