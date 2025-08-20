@@ -20,7 +20,7 @@ export const sendApprovalMail = async (data: ApprovalMailBody) => {
                 body: JSON.stringify(data),
             },
         );
-        console.log("Email enviado com sucesso!");
+        
     } catch (err) {
         console.error("Falha ao enviar email:", err);
     }
