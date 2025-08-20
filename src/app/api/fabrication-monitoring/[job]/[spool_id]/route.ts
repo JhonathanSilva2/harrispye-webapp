@@ -1,7 +1,7 @@
+import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import options from "@/app/api/auth/[...nextauth]/options";
 import { prismaBase } from "@/db/base-client";
 import { fabricationMonitoringUpdateSpoolSchema } from "@/schemas/fabrication-monitoring-spool";
-import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -70,6 +70,9 @@ export async function PATCH(
             data: {
                 spec: newBody.spec,
                 mass: newBody.mass,
+                m2_fbe: newBody.m2_fbe,
+                m2_galvanized: newBody.m2_galvanized,
+                m2_price: newBody.m2_price,
                 price_per_kg: newBody.price_per_kg,
                 fabrication_monitoring_design_id:
                     newBody.fabrication_monitoring_design_id,
