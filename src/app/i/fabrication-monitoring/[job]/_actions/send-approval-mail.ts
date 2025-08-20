@@ -21,6 +21,6 @@ export const sendApprovalMail = async (data: ApprovalMailBody) => {
         );
         
     } catch (err) {
-        console.error("Falha ao enviar email:", err);
+        console.error("Failed to send email:", err);
     }
 };
