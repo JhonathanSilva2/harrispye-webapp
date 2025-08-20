@@ -127,12 +127,18 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     | "DECLINED"
                     | "PENDING";
 
+                const job = table.options.meta?.job;
+                if (!job) {
+                    return <div>Loading...</div>; // or some fallback UI
+                }
+
                 return (
                     <ApprovalSelect
                         status={status}
                         row={row}
                         table={table}
                         select_name="client_approval"
+                        job={job}
                         permission={
                             table.options.meta?.FabMonPermissions
                                 ? table.options.meta.FabMonPermissions[

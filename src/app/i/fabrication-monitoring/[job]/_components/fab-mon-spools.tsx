@@ -190,6 +190,7 @@ const FabMonSpoolsTable = ({
     }
 
     const columns = useMemo(() => fabricationMonitoringColumns, []);
+    const job = data?.data.job;
     return (
         <div>
             {canSeeGraphs && <ChartSpools loading={isPending} data={data} />}
@@ -252,6 +253,7 @@ const FabMonSpoolsTable = ({
                                 hp,
                                 isEditing,
                                 FabMonPermissions: permissions,
+                                job: job,
                             }}
                         />
                     </CardContent>

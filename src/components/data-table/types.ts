@@ -11,6 +11,7 @@ import {
     SortingState,
     TableOptions,
 } from "@tanstack/react-table";
+import { fabrication_monitoring_jobs } from "prisma/generated/client-hp-base";
 import { JSX } from "react";
 type PermissionValue = "READ" | "UPDATE" | "WRITE" | false;
 
@@ -20,6 +21,7 @@ declare module "@tanstack/react-table" {
         isEditing?: boolean;
         FabMonPermissions?: FabMonSpoolsPermission;
         accessControl?: AccessControl;
+        job?: fabrication_monitoring_jobs;
     }
     interface ColumnMeta<TData extends RowData, TValue> {
         className: string;
