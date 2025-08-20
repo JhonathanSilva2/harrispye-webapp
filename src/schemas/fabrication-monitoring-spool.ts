@@ -13,13 +13,25 @@ export const fabricationMonitoringUpdateSpoolSchema = z
             .number()
             .min(0, "Mass must be at least 0") // Validação para garantir que a massa não seja negativa
             .optional(),
+        m2_fbe: z
+            .number()
+            .min(0, "m² FBE must be at least 0") // Validação para garantir que a massa não seja negativa
+            .optional(),
+        m2_galvanized: z
+            .number()
+            .min(0, "m² Galvanized must be at least 0") // Validação para garantir que a massa não seja negativa
+            .optional(),
+        m2_price: z
+            .number()
+            .min(0, "m² must be at least 0") // Validação para garantir que a massa não seja negativa
+            .optional(),
         price_per_kg: z
             .number()
-            .min(0, "Pricer per kg must be at least 0") // Validação para garantir que a massa não seja negativa
+            .min(0, "Price per kg must be at least 0") // Validação para garantir que a massa não seja negativa
             .optional(),
         gross_spool_cost: z
             .number()
-            .min(0, "gross spool cost must be at least 0") // Validação para garantir que a massa não seja negativa
+            .min(0, "Gross spool cost must be at least 0") // Validação para garantir que a massa não seja negativa
             .optional(),
         description: z
             .string()
