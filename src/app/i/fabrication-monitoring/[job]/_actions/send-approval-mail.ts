@@ -2,7 +2,7 @@ import { clientEnv } from "@/lib/constants/config";
 
 export type ApprovalMailBody = {
     drawing_ref: string;
-    status: "APPROVED" | "DECLINED" | "PENDING";
+    status: "APPROVED" | "DECLINED";
     hp: string;
     client: string | null;
     spool_name: string;
