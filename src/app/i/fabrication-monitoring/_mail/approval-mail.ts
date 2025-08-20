@@ -18,7 +18,7 @@ export async function approvalMail(
         },
         {
             type: "text",
-            value: "This is a confirmation email regarding a rejected spool. Here are the details:",
+            value: `This is a confirmation email regarding a ${isApproved ? "approved" : "rejected"} spool. Here are the details:`,
         },
         {
             type: "table",
