@@ -86,7 +86,7 @@ export default function ClientApprovalSelect<TData>({
                 }
             } catch (error) {
                 toast.error("Failed to update status, please try again.");
-                console.error("Erro ao salvar os dados:", error);
+                console.error("Error saving data:", error);
             }
         },
         [mutation, select_name, job, hp, row],
