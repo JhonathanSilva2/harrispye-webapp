@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
         const session = await getServerSession(options);
         const bodyForValidation = {
             ...body,
-            status_changed_by: session?.user?.display_name ?? "unkown user",
+            status_changed_by: session?.user?.display_name ?? "unknown user",
         };
         const validation = fabApprovalMailSchema.safeParse(bodyForValidation);
 
