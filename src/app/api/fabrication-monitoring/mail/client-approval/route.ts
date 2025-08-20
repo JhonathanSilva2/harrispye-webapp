@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
             });
         const newBody = validation.data;
         try {
-            console.log(validation);
             await approvalMail(newBody);
             return NextResponse.json(
                 { message: "Email sent successfully", body: newBody },
