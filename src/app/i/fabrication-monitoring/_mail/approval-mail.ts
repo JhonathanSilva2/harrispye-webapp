@@ -54,10 +54,10 @@ export async function approvalMail(
 
     const mailAbout = `${data.hp} - ${data.spool_name} ${data.status} BY ${data.client} `;
 
-    const responseMail = sendMail({
+    const responseMail = await sendMail({
         mailAbout,
         mailContent,
-        mailTo: mailTo,
+        mailTo,
     });
     return responseMail;
 }

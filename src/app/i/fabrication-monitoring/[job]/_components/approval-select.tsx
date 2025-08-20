@@ -56,7 +56,6 @@ export default function ClientApprovalSelect<TData>({
     const [selectedStatus, setSelectedStatus] =
         useState<ApprovalStatus>(status);
     const mutation = useUpdateSpool(hp, spoolID);
-    const client = job ? job.client : null;
     const handleChange = useCallback(
         async (newStatus: ApprovalStatus) => {
             setSelectedStatus(newStatus);
@@ -81,7 +80,6 @@ export default function ClientApprovalSelect<TData>({
                         spool_name:
                             (row.getValue("spool_number") as string) ?? "",
                         status_changed_by: row.original.updated_by,
-                        status_change_date: new Date().toISOString(),
                     });
                 }
             } catch (error) {

@@ -8,9 +8,19 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const session = await getServerSession(options);
+
         const bodyForValidation = {
             ...body,
-            status_changed_by: session?.user?.display_name ?? "unknown user",
+
+            status_changed_by: session?.user?.display_name ?? "unkown user",
+            status_change_date: new Date().toLocaleString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }),
         };
         const validation = fabApprovalMailSchema.safeParse(bodyForValidation);
 
@@ -20,15 +30,17 @@ export async function POST(request: NextRequest) {
             });
         const newBody = validation.data;
         try {
+            console.log(validation);
             await approvalMail(newBody);
             return NextResponse.json(
-                { message: "Email sent successfully" },
+                { message: "Email sent successfully", body: newBody },
+
                 { status: 200 },
             );
         } catch (error) {
             console.error("Error sending approval email:", error);
             return NextResponse.json(
-                { message: "Error sending approval email" },
+                { message: "Error sending approval email", newBody },
                 { status: 500 },
             );
         }

@@ -35,7 +35,7 @@ export class MailTemplate {
                            const value =
                                typeof valueCell === "string"
                                    ? valueCell
-                                   : valueCell.value;
+                                   : (valueCell.value ?? "");
 
                            const valueStyle =
                                typeof valueCell === "string"

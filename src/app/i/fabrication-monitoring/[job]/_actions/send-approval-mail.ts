@@ -7,7 +7,6 @@ export type ApprovalMailBody = {
     client: string | null;
     spool_name: string;
     status_changed_by: number | null;
-    status_change_date: string;
 };
 
 export const sendApprovalMail = async (data: ApprovalMailBody) => {
