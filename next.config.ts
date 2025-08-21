@@ -91,6 +91,8 @@ const nextConfig: NextConfig = {
         SENTRY_DSN: process.env.SENTRY_DSN,
         NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
         CI: process.env.CI,
+        DEVELOPMENT_BRAZIL_EMAIL: process.env.DEVELOPMENT_BRAZIL_EMAIL,
+        PROJECTS_BRAZIL_EMAIL: process.env.PROJECTS_BRAZIL_EMAIL,
     },
 };
 

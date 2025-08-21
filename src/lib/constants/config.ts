@@ -24,6 +24,8 @@ const envSchema = z.object({
     AZURE_STORAGE_CONNECTION_STRING: z.string().optional(), // Azure Storage connection string
     AZURE_STORAGE_ACCOUNT_NAME: z.string().optional(), // Azure Storage account name
     AZURE_STORAGE_ACCOUNT_KEY: z.string().optional(), // Azure Storage account key
+    DEVELOPMENT_BRAZIL_EMAIL: z.string().email(), // email for development purposes
+    PROJECTS_BRAZIL_EMAIL: z.string().email(), // email for projects purposes
 });
 
 const env = envSchema.parse({
@@ -45,6 +47,8 @@ const env = envSchema.parse({
         process.env.AZURE_STORAGE_CONNECTION_STRING,
     AZURE_STORAGE_ACCOUNT_NAME: process.env.AZURE_STORAGE_ACCOUNT_NAME,
     AZURE_STORAGE_ACCOUNT_KEY: process.env.AZURE_STORAGE_ACCOUNT_KEY,
+    DEVELOPMENT_BRAZIL_EMAIL: process.env.DEVELOPMENT_BRAZIL_EMAIL,
+    PROJECTS_BRAZIL_EMAIL: process.env.PROJECTS_BRAZIL_EMAIL,
 });
 
 const serverEnv = {
@@ -64,6 +68,8 @@ const serverEnv = {
     AZURE_STORAGE_CONNECTION_STRING: env.AZURE_STORAGE_CONNECTION_STRING,
     AZURE_STORAGE_ACCOUNT_NAME: env.AZURE_STORAGE_ACCOUNT_NAME,
     AZURE_STORAGE_ACCOUNT_KEY: env.AZURE_STORAGE_ACCOUNT_KEY,
+    DEVELOPMENT_BRAZIL_EMAIL: env.DEVELOPMENT_BRAZIL_EMAIL,
+    PROJECTS_BRAZIL_EMAIL: env.PROJECTS_BRAZIL_EMAIL,
 };
 
 const clientEnv = {
