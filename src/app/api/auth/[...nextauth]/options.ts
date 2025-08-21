@@ -77,42 +77,39 @@ const options: NextAuthOptions = {
                 return { ...user, id: parseInt(user.id) };
             }
 
-            const userSession = await prismaBase.$transaction(async (tx) => {
-                const userDb = await tx.users.findUnique({
-                    where: {
-                        id: token.id,
-                    },
-                    omit: {
-                        password: true,
-                        id_perfil: true,
-                        type_user: true,
-                    },
-                    include: {
-                        user_attributes: true,
-                    },
-                });
+            // const userSession = await prismaBase.$transaction(async (tx) => {
+            //     const userDb = await tx.users.findUnique({
+            //         where: {
+            //             id: token.id,
+            //         },
+            //         omit: {
+            //             password: true,
+            //             id_perfil: true,
+            //             type_user: true,
+            //         },
+            //         include: {
+            //             user_attributes: true,
+            //         },
+            //     });
 
-                if (!userDb) {
-                    return null;
-                }
+            //     if (!userDb) {
+            //         return null;
+            //     }
 
-                const userFullProfile = await getUserFullProfile(userDb, tx);
+            //     const userFullProfile = await getUserFullProfile(userDb, tx);
 
-                return userFullProfile;
-            });
+            //     return userFullProfile;
+            // });
 
-            if (!userSession || !userSession.ativo) {
-                token = {
-                    ...token,
-                    ...userSession,
-                    ativo: false,
-                };
-            }
+            // if (!userSession || !userSession.ativo) {
+            //     token = {
+            //         ...token,
+            //         ...userSession,
+            //         ativo: false,
+            //     };
+            // }
 
-            return {
-                ...token,
-                ...userSession,
-            };
+            return token;
         },
         async session({ session, token }) {
             session.user = {
