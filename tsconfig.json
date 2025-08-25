@@ -1,38 +1,18 @@
 {
+    "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES2017",
-        "types": ["jest", "node"],
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "noEmit": true,
-        "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "jsx": "preserve",
-        "incremental": true,
-        "plugins": [
-            {
-                "name": "next"
-            }
-        ],
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        }
+        "baseUrl": "."
     },
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        ".next/types/**/*.ts",
-        "src/app/maintenance",
-        "scripts/copy-prisma-binaries.cjs",
-        "src/**/*",
-        "tests/jest/**/*"
-    ],
-    "exclude": ["node_modules", "prisma/generated/**/*"]
+    "files": [],
+    "references": [
+        {
+            "path": "./tsconfig.app.json"
+        },
+        {
+            "path": "./tsconfig.jest.json"
+        },
+        {
+            "path": "./tsconfig.cypress.json"
+        }
+    ]
 }
