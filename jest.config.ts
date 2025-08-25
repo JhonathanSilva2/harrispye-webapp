@@ -100,7 +100,7 @@ const config: Config = {
         "^PrismaClientHPBase$":
             "<rootDir>/@/../prisma/generated/client-hp-base",
         "^PrismaClientProposals$":
-            "<rootDir>@/../prisma/generated/client-proposals",
+            "<rootDir>/@/../prisma/generated/client-proposals",
         "^@/(.*)$": "<rootDir>/src/$1",
     },
 
@@ -114,7 +114,7 @@ const config: Config = {
     // notifyMode: "failure-change",
 
     // A preset that is used as a base for Jest's configuration
-    preset: "ts-jest",
+    // preset: "ts-jest",
 
     // Run tests from one or more projects
     // projects: undefined,
@@ -158,10 +158,12 @@ const config: Config = {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    testEnvironment: "node",
+    testEnvironment: "jsdom",
 
     // Options that will be passed to the testEnvironment
-    // testEnvironmentOptions: {},
+    testEnvironmentOptions: {
+        customExportConditions: ["node", "node-addons"],
+    },
 
     // Adds a location field to test results
     // testLocationInResults: false,
@@ -186,14 +188,16 @@ const config: Config = {
     // This option allows use of a custom test runner
     // testRunner: "jest-circus/runner",
 
+    // This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
+    extensionsToTreatAsEsm: [".ts", ".tsx"],
+
     // A map from regular expressions to paths to transformers
-    // transform: undefined,
+    transform: {
+        "^.+\\.(t|j)sx?$": ["ts-jest", { useESM: true }],
+    },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    // transformIgnorePatterns: [
-    //   "\\\\node_modules\\\\",
-    //   "\\.pnp\\.[^\\\\]+$"
-    // ],
+    transformIgnorePatterns: ["/node_modules/(?!lucide-react/)"],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
     // unmockedModulePathPatterns: undefined,

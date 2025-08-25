@@ -7,4 +7,10 @@ export default defineConfig({
             // event listeners aqui, se precisar
         },
     },
+    component: {
+        devServer: {
+            framework: "next",
+            bundler: "webpack",
+        },
+    },
 });
