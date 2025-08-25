@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { JSX } from "react";
 
 interface Props {
-    children: JSX.Element;
+    children?: JSX.Element;
     title: string;
     description: string;
 }
