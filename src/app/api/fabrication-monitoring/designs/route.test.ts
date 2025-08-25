@@ -5,6 +5,10 @@ import { NextRequest } from "next/server";
 import { default as path, default as pathModule } from "path";
 import { GET, POST } from "./route";
 
+describe("Designs API", () => {
+    it("renders login form", () => {});
+});
+
 // jest.mock("@/../prisma/generated/client-hp-base", () => ({
 //     PrismaClient: jest.fn().mockImplementation(() => ({
 //         fabrication_monitoring_designs: {
