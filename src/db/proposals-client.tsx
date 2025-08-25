@@ -1,6 +1,7 @@
 /* eslint-disable no-var */
 
 import { PrismaClient } from "@/../prisma/generated/client-proposals";
+import { clientProposalsOptions } from "./client-options";
 
 let prismaProposals: PrismaClient;
 
@@ -9,10 +10,10 @@ declare global {
 }
 
 if (process.env.NODE_ENV === "production") {
-    prismaProposals = new PrismaClient();
+    prismaProposals = new PrismaClient(clientProposalsOptions);
 } else {
     if (!global.prismaProposals) {
-        global.prismaProposals = new PrismaClient();
+        global.prismaProposals = new PrismaClient(clientProposalsOptions);
     }
     prismaProposals = global.prismaProposals;
 }
