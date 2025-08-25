@@ -1,7 +1,6 @@
+// tsconfig.cypress.json (unchanged is fine)
 {
     "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "types": ["cypress", "node"]
-    },
+    "compilerOptions": { "types": ["cypress", "node"] },
     "include": ["cypress/**/*.ts", "cypress/**/*.tsx"]
 }

@@ -1,18 +1,8 @@
+// tsconfig.json  (root)
 {
     "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": "."
-    },
-    "files": [],
-    "references": [
-        {
-            "path": "./tsconfig.app.json"
-        },
-        {
-            "path": "./tsconfig.jest.json"
-        },
-        {
-            "path": "./tsconfig.cypress.json"
-        }
-    ]
+    "compilerOptions": { "baseUrl": ".", "noEmit": true },
+    "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules"],
+    "references": [{ "path": "./tsconfig.app.json" }]
 }

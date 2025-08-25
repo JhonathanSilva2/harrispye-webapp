@@ -1,5 +1,18 @@
+// tsconfig.jest.json
 {
     "extends": "./tsconfig.base.json",
-    "compilerOptions": { "types": ["jest", "node"] },
-    "include": ["**/*.test.ts", "**/*.test.tsx", "jest.setup.ts"]
+    "compilerOptions": {
+        "types": ["jest", "node"],
+        "composite": false,
+        "noEmit": true
+    },
+    "include": [
+        "next-env.d.ts",
+        ".next/types/**/*.ts",
+        "src",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "jest.setup.ts"
+    ],
+    "exclude": [".next", "node_modules"]
 }

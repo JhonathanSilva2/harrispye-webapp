@@ -1,5 +1,10 @@
+// tsconfig.app.json
 {
     "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "composite": true,
+        "noEmit": true
+    },
     "include": ["src/**/*.ts", "src/**/*.tsx", "*.ts"],
     "exclude": ["**/*.test.ts", "**/*.test.tsx", "cypress"]
 }
