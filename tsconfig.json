@@ -2,7 +2,7 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": { "baseUrl": ".", "noEmit": true },
-    "include": ["next-env.d.ts", ".next/types/**/*.ts", "src"],
+    "include": ["next-env.d.ts", ".next/types/**/*.ts", "src", "src/types"],
     "exclude": [
         "node_modules",
         "tests",

@@ -1,5 +1,6 @@
-// this file only exists for IDE support on tests
+// src/tsconfig.json
 {
     "extends": "../tsconfig.jest.json",
-    "include": ["**/*.test.ts", "**/*.test.tsx"]
+    "include": ["**/*.test.ts", "**/*.test.tsx", "../jest.setup.ts"],
+    "exclude": ["**/*"] // belt-and-suspenders: keep non-tests out
 }
