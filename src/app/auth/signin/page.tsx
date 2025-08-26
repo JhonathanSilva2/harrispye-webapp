@@ -1,7 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 import AuthFrame from "../_components/auth-frame";
 
-export default async function SignIn({
+export default function SignIn({
     params,
     searchParams,
 }: {
