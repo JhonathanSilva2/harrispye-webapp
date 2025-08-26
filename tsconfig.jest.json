@@ -1,18 +1,19 @@
-// tsconfig.jest.json
+// tsconfig.jest.json  — replace with:
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "types": ["jest", "node"],
+        "types": ["jest", "@testing-library/jest-dom", "node"],
         "composite": false,
         "noEmit": true
     },
     "include": [
         "next-env.d.ts",
         ".next/types/**/*.ts",
-        "src",
+        "src/**/*.ts",
+        "src/**/*.tsx",
         "**/*.test.ts",
         "**/*.test.tsx",
         "jest.setup.ts"
     ],
-    "exclude": [".next", "node_modules"]
+    "exclude": [".next", "node_modules", "cypress"]
 }

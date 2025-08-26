@@ -1,0 +1,5 @@
+// this file only exists for IDE support on tests
+{
+    "extends": "../tsconfig.jest.json",
+    "include": ["**/*.test.ts", "**/*.test.tsx"]
+}
