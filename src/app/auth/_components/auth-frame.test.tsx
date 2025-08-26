@@ -9,11 +9,18 @@ jest.mock("@/hooks/use-screen-width", () => ({
 }));
 
 import useClientDevice from "@/hooks/use-screen-width";
+import Image from "next/image";
 
 jest.mock("@/components/file-storage/image", () => ({
     __esModule: true,
     default: (props: any) => (
-        <img data-testid="file-storage-image" alt={props.alt} />
+        <Image
+            data-testid="file-storage-image"
+            src={`/${props.src}`}
+            alt={props.alt}
+            width={props.width}
+            height={props.height}
+        />
     ),
 }));
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { EditDialog } from "./edit-dialog";
+import { useFormContext } from "react-hook-form";
 
 // Mocks for external modules used by the component
 jest.mock("@/hooks/query/use-fab-mon", () => {
@@ -12,11 +13,9 @@ jest.mock("@/hooks/query/use-fab-mon", () => {
 });
 
 jest.mock("@/components/forms/generic-inputs", () => {
-    const React = require("react");
-    const { useFormContext } = require("react-hook-form");
     return {
         __esModule: true,
-        default: ({ name, label, type }: any) => {
+        default: function GenericInput({ name, label, type }: any) {
             const { register } = useFormContext();
             return (
                 <div>
@@ -33,7 +32,6 @@ jest.mock("@/components/forms/generic-inputs", () => {
 });
 
 jest.mock("@/components/alert", () => {
-    const React = require("react");
     return {
         __esModule: true,
         AlertDialogComponent: ({ triggerBtn, onConfirm }: any) => {
@@ -44,7 +42,6 @@ jest.mock("@/components/alert", () => {
 });
 
 jest.mock("@/components/ui/button", () => {
-    const React = require("react");
     return {
         __esModule: true,
         Button: ({ children, ...props }: any) => (
@@ -54,7 +51,6 @@ jest.mock("@/components/ui/button", () => {
 });
 
 jest.mock("@/components/ui/dialog", () => {
-    const React = require("react");
     return {
         __esModule: true,
         Dialog: ({ children, open, onOpenChange }: any) => (
