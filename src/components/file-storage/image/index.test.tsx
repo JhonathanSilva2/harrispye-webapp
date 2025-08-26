@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import FileStorageImage from "./index";
-import Image from "next/image";
 
 jest.mock("next/image", () => {
     // Return a simple img that maps onLoad -> onLoadingComplete and onError -> onError
@@ -9,11 +8,9 @@ jest.mock("next/image", () => {
         __esModule: true,
         default: ({ src, alt, onLoadingComplete, onError, ...rest }: any) => {
             return (
-                <Image
+                <img
                     data-testid="mock-next-image"
                     src={src}
-                    width={rest.width}
-                    height={rest.height}
                     alt={alt}
                     onLoad={() => onLoadingComplete?.()}
                     onError={() => onError?.()}
