@@ -5,7 +5,7 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-type body = Record<string, string | number>;
+type body = Record<string, string | number | null>;
 
 export function useUpdateSpool(
     job: string,
@@ -24,6 +24,7 @@ export function useUpdateSpool(
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["fab-mon-spools"] });
+            toast.success("Updated successfully");
         },
         onError: () => {
             toast.error("Updated fail");

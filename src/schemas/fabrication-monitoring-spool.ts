@@ -9,30 +9,32 @@ export const fabricationMonitoringUpdateSpoolSchema = z
             .max(255)
             .optional(),
         // decimal
-        mass: z
-            .number()
-            .min(0, "Mass must be at least 0") // Validação para garantir que a massa não seja negativa
-            .optional(),
+        mass: z.number().min(0, "Mass must be at least 0").optional().nullish(),
         m2_fbe: z
             .number()
             .min(0, "m² FBE must be at least 0") // Validação para garantir que a massa não seja negativa
-            .optional(),
+            .optional()
+            .nullish(),
         m2_galvanized: z
             .number()
             .min(0, "m² Galvanized must be at least 0") // Validação para garantir que a massa não seja negativa
-            .optional(),
+            .optional()
+            .nullish(),
         m2_price: z
             .number()
             .min(0, "m² must be at least 0") // Validação para garantir que a massa não seja negativa
-            .optional(),
+            .optional()
+            .nullish(),
         price_per_kg: z
             .number()
             .min(0, "Price per kg must be at least 0") // Validação para garantir que a massa não seja negativa
-            .optional(),
+            .optional()
+            .nullish(),
         gross_spool_cost: z
             .number()
             .min(0, "Gross spool cost must be at least 0") // Validação para garantir que a massa não seja negativa
-            .optional(),
+            .optional()
+            .nullish(),
         description: z
             .string()
             .min(3, "Description must be at least 3 characters")
@@ -52,42 +54,50 @@ export const fabricationMonitoringUpdateSpoolSchema = z
             .number()
             .int()
             .min(0, "Materials ordered must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         materials_arrived: z
             .number()
             .int()
             .min(0, "Materials arrived must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         fabrication_complete: z
             .number()
             .int()
             .min(0, "Fabrication Complete must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         scan_3d: z
             .number()
             .int()
             .min(0, "3D Scan must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         ndt_complete: z
             .number()
             .int()
             .min(0, "NDT must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         pressure_test: z
             .number()
             .int()
             .min(0, "Pressure Test must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         internal_coating: z
             .number()
             .int()
             .min(0, "Internal Coating must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         external_coating: z
             .number()
             .int()
             .min(0, "External Coating must be at least 0")
-            .optional(),
+            .optional()
+            .nullish(),
         packing: z
             .number()
             .int()

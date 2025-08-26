@@ -5,7 +5,7 @@ import { ReturnTypeFromAPICall } from "@/app/types";
 import AuthClient from "@/infra/auth-client";
 import { clientEnv } from "@/lib/constants/config";
 
-type body = Record<string, string | number>;
+type body = Record<string, string | number | null>;
 
 export async function patchSpool(job: string, spoolID: string, data: body) {
     const url = new URL(
