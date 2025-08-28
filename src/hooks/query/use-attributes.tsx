@@ -15,6 +15,7 @@ import {
     UseMutationOptions,
     useQuery,
     useQueryClient,
+    UseQueryResult,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -26,7 +27,9 @@ interface UpdateUserAttributesPayload {
     clearances?: string;
 }
 
-export function useAttribute(attribute: AttributeKeys) {
+export function useAttribute<T extends AttributeKeys>(
+    attribute: T,
+): UseQueryResult<Attributes[T], Error> {
     return useQuery({
         queryKey: ["attribute", attribute],
         queryFn: async () => {

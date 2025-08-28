@@ -44,7 +44,9 @@ export function DatePicker({ className, placeholder, value, onChange }: Props) {
                     {isValidDate(date) ? (
                         format(date as Date, "dd/MM/yyyy")
                     ) : (
-                        <span>{placeholder ?? "Pick a date"}</span>
+                        <span className="text-muted-foreground">
+                            {placeholder ?? "Pick a date"}
+                        </span>
                     )}
 
                     <CalendarIcon />
