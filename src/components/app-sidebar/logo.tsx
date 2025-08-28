@@ -1,4 +1,4 @@
-import FileStorageImage from "../file-storage/image";
+import Image from "next/image";
 
 interface SidebarLogoProps {
     isExpanded: boolean;
@@ -6,11 +6,11 @@ interface SidebarLogoProps {
 
 export const SidebarLogo = ({ isExpanded }: SidebarLogoProps) => {
     return (
-        <FileStorageImage
+        <Image
             src={
                 isExpanded
-                    ? "images/horizontal-logo.png"
-                    : "images/logo-icon.png"
+                    ? "/images/horizontal-logo.png"
+                    : "/images/logo-icon.png"
             }
             alt="logo"
             width={isExpanded ? 180 : 50}

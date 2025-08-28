@@ -1,8 +1,8 @@
 "use client";
 
-import FileStorageImage from "@/components/file-storage/image";
 import useClientDevice from "@/hooks/use-screen-width";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { JSX } from "react";
 
 interface Props {
@@ -18,9 +18,9 @@ const AuthFrame = ({ children, title, description }: Props) => {
         <div className="mx-auto flex h-full w-full flex-col items-center justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col items-center space-y-2 text-center">
                 {isMobile ? (
-                    <FileStorageImage
+                    <Image
                         className="block lg:hidden"
-                        src={`images/logo-icon.png`}
+                        src={`/images/logo-icon.png`}
                         width={200}
                         height={200}
                         alt="logo"

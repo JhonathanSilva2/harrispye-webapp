@@ -1,5 +1,5 @@
-import FileStorageImage from "@/components/file-storage/image";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import React from "react";
 
 const AuthLayout = ({ children }: { children: React.JSX.Element }) => {
@@ -15,8 +15,8 @@ const AuthLayout = ({ children }: { children: React.JSX.Element }) => {
                     </div>
                     <div className="relative z-20 flex h-full w-full items-center justify-center">
                         <div className="flex flex-col items-center justify-center space-y-8 text-center">
-                            <FileStorageImage
-                                src={`images/vertical-logo.png`}
+                            <Image
+                                src={`/images/vertical-logo.png`}
                                 width={300}
                                 height={200}
                                 alt="logo"
