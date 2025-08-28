@@ -10,7 +10,10 @@ export async function middleware(request: NextRequest) {
     if (maintenanceResponse) return maintenanceResponse;
 
     // Allow GET requests to /api/storage without authentication
-    if (!pathname.startsWith("/api/storage")) {
+    if (
+        !pathname.startsWith("/api/storage") ||
+        !pathname.startsWith("/api/keepalive")
+    ) {
         if (pathname.startsWith("/api") || pathname.startsWith("/i")) {
             const token = await getToken({
                 req: request,
