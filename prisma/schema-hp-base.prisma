@@ -88,25 +88,25 @@ model fabrication_monitoring {
   fabrication_monitoring_design_id Int?
   id_fabrication_monitoring_jobs   Int
   spec                             String?                                 @dbHPBase.VarChar(255)
-  mass                             Decimal?                                @dbHPBase.Decimal(10, 2)
-  price_per_kg                     Decimal?                                @dbHPBase.Decimal(10, 2)
-  m2_fbe                           Decimal?                                @dbHPBase.Decimal(10, 2)
-  m2_galvanized                    Decimal?                                @dbHPBase.Decimal(10, 2)
-  m2_price                         Decimal?                                @dbHPBase.Decimal(10, 2)
-  gross_spool_cost                 Decimal?                                @dbHPBase.Decimal(10, 2)
+  mass                             Decimal?                                @dbHPBase.Decimal(10, 2) @default(0.00)
+  price_per_kg                     Decimal?                                @dbHPBase.Decimal(10, 2) @default(0.00)
+  m2_fbe                           Decimal?                                @dbHPBase.Decimal(10, 2) @default(0.00)
+  m2_galvanized                    Decimal?                                @dbHPBase.Decimal(10, 2) @default(0.00)
+  m2_price                         Decimal?                                @dbHPBase.Decimal(10, 2) @default(0.00)
+  gross_spool_cost                 Decimal?                                @dbHPBase.Decimal(10, 2) @default(0.00)
   description                      String?                                 @dbHPBase.VarChar(255)
   drawing_ref                      String?                                 @dbHPBase.VarChar(255)
   spool_number                     String?                                 @dbHPBase.VarChar(255)
-  materials_ordered                Int?
-  materials_arrived                Int?
-  fabrication_complete             Int?
-  scan_3d                          Int?
-  ndt_complete                     Int?
-  pressure_test                    Int?
-  internal_coating                 Int?
-  external_coating                 Int?
-  packing                          Int?
-  dispatch                         Int?
+  materials_ordered                Int? @default(0)
+  materials_arrived                Int? @default(0)
+  fabrication_complete             Int? @default(0)
+  scan_3d                          Int? @default(0)
+  ndt_complete                     Int? @default(0)
+  pressure_test                    Int? @default(0)
+  internal_coating                 Int? @default(0)
+  external_coating                 Int? @default(0)
+  packing                          Int? @default(0)
+  dispatch                         Int? @default(0)
   notes                            String?                                 @dbHPBase.VarChar(255)
   client_approval                  fabrication_monitoring_client_approval  @default(PENDING)
   manager_approval                 fabrication_monitoring_manager_approval @default(PENDING)
