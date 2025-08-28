@@ -9,31 +9,25 @@ export async function middleware(request: NextRequest) {
     const maintenanceResponse = MaintenanceMiddleware(request, pathname);
     if (maintenanceResponse) return maintenanceResponse;
 
-    // Allow GET requests to /api/storage without authentication
-    if (
-        !pathname.startsWith("/api/storage") ||
-        !pathname.startsWith("/api/keepalive")
-    ) {
-        if (pathname.startsWith("/api") || pathname.startsWith("/i")) {
-            const token = await getToken({
-                req: request,
-                secret: serverEnv.NEXTAUTH_SECRET,
-            });
-            const pageAuthResponse = await PageAuthMiddleware(
-                request,
-                pathname,
-                token,
-            );
-            if (pageAuthResponse) return pageAuthResponse;
-            const apiAuthResponse = await ApiAuthMiddleware(pathname, token);
-            if (apiAuthResponse) return apiAuthResponse;
-        }
+    if (pathname.startsWith("/api") || pathname.startsWith("/i")) {
+        const token = await getToken({
+            req: request,
+            secret: serverEnv.NEXTAUTH_SECRET,
+        });
+        const pageAuthResponse = await PageAuthMiddleware(
+            request,
+            pathname,
+            token,
+        );
+        if (pageAuthResponse) return pageAuthResponse;
+        const apiAuthResponse = await ApiAuthMiddleware(pathname, token);
+        if (apiAuthResponse) return apiAuthResponse;
     }
 
     return NextResponse.next();
 }
 export const config = {
     matcher: [
-        "/((?!_next/static|_next/image|favicon.ico|api/auth|auth|images|maintenance).*)",
+        "/((?!_next/static|_next/image|favicon.ico|api/auth|auth|images|maintenance|api/storage|api/keepalive).*)",
     ],
 };
