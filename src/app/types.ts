@@ -73,11 +73,16 @@ export type InputType =
     | "datalist"
     | "currency";
 
+export type Option<T> = {
+    label: string;
+    value: T[keyof T] | string | number;
+};
+
 export interface GenericInputProps<T extends FieldValues> {
     name: Path<T>;
     label?: string;
     type?: InputType;
-    options?: { value: string; label: string }[];
+    options?: Option<T>[];
     placeholder?: string;
     className?: string;
     labelClassName?: string;

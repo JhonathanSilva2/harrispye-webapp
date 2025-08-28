@@ -55,6 +55,7 @@ const GenericInput = <T extends FieldValues>({
                         {...rest}
                     />
                 );
+
             case "file":
                 return (
                     <Input
@@ -85,7 +86,7 @@ const GenericInput = <T extends FieldValues>({
                                 {options.map((option) => (
                                     <SelectItem
                                         key={option.value}
-                                        value={option.value}
+                                        value={option.value as string}
                                     >
                                         {option.label}
                                     </SelectItem>
@@ -110,7 +111,7 @@ const GenericInput = <T extends FieldValues>({
                                     className="flex items-center gap-1"
                                 >
                                     <RadioGroupItem
-                                        value={option.value}
+                                        value={option.value as string}
                                         id={`${index}-${option.value}`}
                                     />
                                     <Label htmlFor={`${index}-${option.value}`}>
@@ -133,6 +134,7 @@ const GenericInput = <T extends FieldValues>({
                         {...rest}
                     />
                 );
+
             case "date":
                 return (
                     <DatePicker
@@ -143,6 +145,7 @@ const GenericInput = <T extends FieldValues>({
                         {...rest}
                     />
                 );
+
             case "currency":
                 return (
                     <NumericFormat
