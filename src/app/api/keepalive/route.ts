@@ -2,7 +2,7 @@
 import { prismaBase } from "@/db/base-client";
 import assert from "assert";
 import { NextResponse } from "next/server";
-export const runtime = "node";
+
 export async function GET() {
     try {
         await prismaBase.$queryRaw`SELECT 1`;
