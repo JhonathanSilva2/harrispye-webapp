@@ -230,10 +230,11 @@ export async function POST(request: NextRequest) {
             });
 
         const newBody = validation.data;
+        const hp = newBody.hp.trim().replaceAll(" ", "").toUpperCase();
         const duplicate =
             await prismaBase.fabrication_monitoring_jobs.findUnique({
                 where: {
-                    hp: newBody.hp,
+                    hp,
                 },
             });
         if (duplicate)
@@ -244,7 +245,7 @@ export async function POST(request: NextRequest) {
 
         const newJob = await prismaBase.fabrication_monitoring_jobs.create({
             data: {
-                hp: newBody.hp,
+                hp,
                 client: newBody.client,
                 po_number: newBody.po_number,
                 contract_delivery_date: newBody.contract_delivery_date,
