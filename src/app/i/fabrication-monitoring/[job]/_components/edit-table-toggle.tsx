@@ -17,13 +17,13 @@ export default function EditTableToggle({ onToggle }: EditTableToggleProps) {
 
     return (
         <Button
-            className={`${isEditing ? "bg-accent text-white" : ""}`}
-            size="icon"
+            className={`min-w-24 ${!isEditing ? "bg-accent text-white" : ""}`}
             variant="outline"
             onClick={handleToggle}
             data-cy="editTableToggle"
         >
-            {isEditing ? <Edit /> : <CheckSquare />}
+            {!isEditing ? <Edit /> : <CheckSquare />}{" "}
+            {!isEditing ? " Edit" : "Editing"}
         </Button>
     );
 }
