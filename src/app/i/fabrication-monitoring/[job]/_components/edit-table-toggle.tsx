@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { CheckSquare, Edit } from "lucide-react";
 import { useState } from "react";
 
@@ -17,12 +18,14 @@ export default function EditTableToggle({ onToggle }: EditTableToggleProps) {
 
     return (
         <Button
-            className={`min-w-24 ${!isEditing ? "bg-accent text-white" : ""}`}
+            className={cn("min-w-24", {
+                "bg-accent text-white": !isEditing,
+            })}
             variant="outline"
             onClick={handleToggle}
             data-cy="editTableToggle"
         >
-            {!isEditing ? <Edit /> : <CheckSquare />}{" "}
+            {!isEditing ? <Edit /> : <CheckSquare />}
             {!isEditing ? " Edit" : "Editing"}
         </Button>
     );
