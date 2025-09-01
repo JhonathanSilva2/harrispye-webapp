@@ -21,6 +21,6 @@ export const createAttribute = async (
         | TRoleAttribute[]
     >(`${clientEnv.NEXT_PUBLIC_URL}/api/attributes/${attribute}`, {
         method: "POST",
-        body: JSON.stringify({ attribute }),
+        body: JSON.stringify({ attribute, newAttribute }),
     });
 };

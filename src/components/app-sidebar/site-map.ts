@@ -67,8 +67,8 @@ export const modules: SidebarItem[] = [
                 icon: UsersRound,
             },
             {
-                title: "Policies",
-                url: `${clientEnv.NEXT_PUBLIC_URL}/i/admin/policies`,
+                title: "Attributes",
+                url: `${clientEnv.NEXT_PUBLIC_URL}/i/admin/attributes`,
                 icon: ScrollTextIcon,
             },
         ],
