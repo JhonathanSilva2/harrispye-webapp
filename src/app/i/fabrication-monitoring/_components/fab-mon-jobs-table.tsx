@@ -40,7 +40,6 @@ const FabMonJobsTable = ({ session }: { session: Session }) => {
     const { data, isError, isPending } = useFabMonJobs({
         filters,
     });
-
     const accessControl = new AccessControl(session);
 
     const initialPagination = {

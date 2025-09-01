@@ -15,6 +15,9 @@ import options from "../auth/[...nextauth]/options";
 
 export interface FabricationMonitoringFetchReturn
     extends fabrication_monitoring_jobs {
+    user_organizations: {
+        organization: string;
+    };
     progress: number;
     grossCost: number;
 }
@@ -93,6 +96,11 @@ export async function GET(request: NextRequest) {
                     take,
                     include: {
                         fabrication_monitoring: true, // Include related fabrication_monitoring data
+                        user_organizations: {
+                            select: {
+                                organization: true,
+                            },
+                        },
                     },
                     orderBy,
                 });
