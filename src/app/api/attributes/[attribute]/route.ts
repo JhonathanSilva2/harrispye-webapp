@@ -134,11 +134,11 @@ export async function POST(
             return new NextResponse(err.message, { status: 500 });
         }
 
-        return new NextResponse(
-            `${capitalize(attribute)} created successfully`,
+        return NextResponse.json(
             {
-                status: 201,
+                message: `${capitalize(attribute)} created successfully`,
             },
+            { status: 201 },
         );
     } catch (err) {
         assert(err instanceof Error);

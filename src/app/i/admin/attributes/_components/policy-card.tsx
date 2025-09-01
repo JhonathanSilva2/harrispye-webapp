@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -12,27 +10,29 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle } from "lucide-react";
 import { DictionaryList } from "../types";
 import { TableCardPolicy } from "./table-card-policy";
+import { Input } from "@/components/ui/input";
+import InputAddAttribute from "./input-add-attribute";
+import { AttributeKeys } from "@/app/api/type";
 
 interface Props {
     title: string;
     isLoading: boolean;
     content?: DictionaryList[];
+    attributeKey: AttributeKeys;
 }
 
-export function PolicyCard({ title, isLoading, content }: Props) {
+export function PolicyCard({ title, isLoading, content, attributeKey }: Props) {
     return (
         <Card className="flex-grow flex-wrap">
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center justify-between gap-4">
                         <p>{title}</p>
-                        <Button size={"icon"} type="button">
-                            <PlusCircle />
-                        </Button>
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
+                <InputAddAttribute title={title} attributeKey={attributeKey} />
                 {!isLoading ? (
                     <TableCardPolicy dictList={content} />
                 ) : (

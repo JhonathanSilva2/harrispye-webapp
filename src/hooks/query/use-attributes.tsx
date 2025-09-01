@@ -9,7 +9,7 @@ import {
     fetchUserAttributes,
 } from "@/app/i/admin/attributes/_actions/fetch-attributes";
 import { updateUserAttributes } from "@/app/i/admin/users/_actions/user-attributes";
-
+import { createAttribute } from "@/app/i/admin/attributes/_actions/create-attributes";
 import {
     useMutation,
     UseMutationOptions,
@@ -26,6 +26,10 @@ interface UpdateUserAttributesPayload {
     role_id?: number | null;
     clearances?: string;
 }
+type CreateAttributePayload = {
+    AttributeKey: AttributeKeys;
+    AttributeValue: string;
+};
 
 export function useAttribute<T extends AttributeKeys>(
     attribute: T,
@@ -101,6 +105,30 @@ export function useUpdateUserAttributes(
 
         onError: (error) => {
             toast.error(error.message || "Failed to update user attributes");
+        },
+    });
+}
+
+export function useCreateAttributes() {
+    const queryClient = useQueryClient();
+
+    return useMutation<void, Error, CreateAttributePayload>({
+        mutationFn: async ({ AttributeKey, AttributeValue }) => {
+            const response = await createAttribute(
+                AttributeKey,
+                AttributeValue,
+            );
+
+            if (!response || !response.data) {
+                throw new Error("Failed to create attributes");
+            }
+        },
+        onSuccess: () => {
+            toast.success("Attributes created");
+            queryClient.invalidateQueries({ queryKey: ["attribute"] });
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to create attributes");
         },
     });
 }
