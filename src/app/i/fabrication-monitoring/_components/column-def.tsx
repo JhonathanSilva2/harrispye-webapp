@@ -26,7 +26,6 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
                 const organization = row.original.user_organizations
                     ? row.original.user_organizations.organization
                     : "N/A";
-                console.log(organization);
                 return (
                     <Badge
                         className="min-w-24 justify-center"
