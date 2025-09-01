@@ -20,7 +20,7 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
         },
 
         {
-            accessorKey: "organization_id",
+            accessorKey: "user_organizations.organization",
             header: "Organization",
             cell: ({ row }) => {
                 const organization = row.original.user_organizations
