@@ -18,6 +18,25 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
             accessorKey: "client",
             header: "Client",
         },
+
+        {
+            accessorKey: "organization_id",
+            header: "Organization",
+            cell: ({ row }) => {
+                const organization = row.original.user_organizations
+                    ? row.original.user_organizations.organization
+                    : "N/A";
+                console.log(organization);
+                return (
+                    <Badge
+                        className="min-w-24 justify-center"
+                        variant={"outline"}
+                    >
+                        {organization}
+                    </Badge>
+                );
+            },
+        },
         {
             accessorKey: "expected_delivery_date",
             header: "Delivery Date",
