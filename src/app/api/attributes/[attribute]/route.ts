@@ -15,7 +15,7 @@ const CLIENT_APPROVER_ROLE_ID = 1;
 const CLIENT_GUEST_ROLE_ID = 2;
 const BRAZIL_LOCALIZATION_ID = 1;
 
-export function buildClientPermissionPayload({
+function buildClientPermissionPayload({
     organizationId,
     roleId,
     clientApproval,
