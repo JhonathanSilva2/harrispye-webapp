@@ -110,14 +110,98 @@ export async function POST(
                         },
                     });
                     break;
+
                 case "organizations":
-                    await prismaBase.user_organizations.create({
-                        data: {
-                            ...data,
-                            organization: body.newAttribute,
-                        },
-                    });
-                    break;
+                    try {
+                        await prismaBase.$transaction(async (tx) => {
+                            const organization =
+                                await tx.user_organizations.create({
+                                    data: {
+                                        ...data,
+                                        organization: body.newAttribute,
+                                    },
+                                });
+                            // Add CLIENT_APPROVER permissions
+                            await tx.fabrication_monitoring_permissions.create({
+                                data: {
+                                    user_organizations_id: organization.id,
+                                    user_roles_id: 1, // CLIENT_APPROVER,
+                                    user_localizations_id: 1, // BRAZIL,
+                                    user_clearance: "LOW",
+                                    add_spools: false,
+                                    delete_spools: false,
+                                    spec: "READ",
+                                    mass: "READ",
+                                    price_per_kg: "NONE",
+                                    gross_spool_cost: "NONE",
+                                    description: "READ",
+                                    drawing_ref: "READ",
+                                    spool_number: "READ",
+                                    materials_arrived: "READ",
+                                    fabrication_complete: "READ",
+                                    scan_3d: "READ",
+                                    ndt_complete: "READ",
+                                    pressure_test: "READ",
+                                    internal_coating: "READ",
+                                    external_coating: "READ",
+                                    packing: "READ",
+                                    dispatch: "READ",
+                                    notes: "READ",
+                                    client_approval: "ALL",
+                                    manager_approval: "NONE",
+                                    graph: false,
+                                    summary: false,
+                                    m2_fbe: "NONE",
+                                    m2_galvanized: "NONE",
+                                    m2_price: "NONE",
+                                },
+                            });
+                            // Add CLIENT_GUEST permissions
+                            await tx.fabrication_monitoring_permissions.create({
+                                data: {
+                                    user_organizations_id: organization.id,
+                                    user_roles_id: 2, // CLIENT_GUEST,
+                                    user_localizations_id: 1, // BRAZIL,
+                                    user_clearance: "LOW",
+                                    add_spools: false,
+                                    delete_spools: false,
+                                    spec: "READ",
+                                    mass: "READ",
+                                    price_per_kg: "NONE",
+                                    gross_spool_cost: "NONE",
+                                    description: "READ",
+                                    drawing_ref: "READ",
+                                    spool_number: "READ",
+                                    materials_arrived: "READ",
+                                    fabrication_complete: "READ",
+                                    scan_3d: "READ",
+                                    ndt_complete: "READ",
+                                    pressure_test: "READ",
+                                    internal_coating: "READ",
+                                    external_coating: "READ",
+                                    packing: "READ",
+                                    dispatch: "READ",
+                                    notes: "READ",
+                                    client_approval: "READ",
+                                    manager_approval: "NONE",
+                                    graph: false,
+                                    summary: false,
+                                    m2_fbe: "NONE",
+                                    m2_galvanized: "NONE",
+                                    m2_price: "NONE",
+                                },
+                            });
+                        });
+
+                        return NextResponse.json(
+                            { message: "Organization created successfully" },
+                            { status: 201 },
+                        );
+                    } catch (err) {
+                        assert(err instanceof Error);
+                        return new NextResponse(err.message, { status: 500 });
+                    }
+
                 case "roles":
                     await prismaBase.user_roles.create({
                         data: {
