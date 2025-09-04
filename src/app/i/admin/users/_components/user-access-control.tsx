@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Row } from "@tanstack/react-table";
 import { Loader2, Trash2, Undo2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     useDeleteUserAccessControl,
     useUserAccessControl,
@@ -43,20 +43,23 @@ const UserAccessControl = ({ row }: Props) => {
 
     const { mutate, isPending: isPendingDelete } = useDeleteUserAccessControl();
 
-    const handleSearch = (value: string) => {
-        setSearch(value);
-        setSelectedAccessControl(
-            userAccessControl?.filter(
-                (accessControl) =>
-                    accessControl.feature
-                        .toLowerCase()
-                        .includes(value.toLowerCase()) ||
-                    accessControl.action
-                        .toLowerCase()
-                        .includes(value.toLowerCase()),
-            ) ?? null,
-        );
-    };
+    const handleSearch = useCallback(
+        (value: string) => {
+            setSearch(value);
+            setSelectedAccessControl(
+                userAccessControl?.filter(
+                    (accessControl) =>
+                        accessControl.feature
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                        accessControl.action
+                            .toLowerCase()
+                            .includes(value.toLowerCase()),
+                ) ?? null,
+            );
+        },
+        [userAccessControl],
+    );
 
     useEffect(() => {
         if (userAccessControl) {
