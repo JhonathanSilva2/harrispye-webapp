@@ -63,7 +63,7 @@ const UserAccessControl = ({ row }: Props) => {
             setSelectedAccessControl(userAccessControl);
             handleSearch(search);
         }
-    }, [userAccessControl, search]);
+    }, [userAccessControl, search, handleSearch]);
 
     async function toggleDeletion() {
         setIsDeleting(!isDeleting);
