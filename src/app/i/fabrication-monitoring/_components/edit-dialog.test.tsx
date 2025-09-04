@@ -128,8 +128,7 @@ describe("EditDialog component (form)", () => {
             contract_delivery_date: "2025-08-25T00:00:00.000Z",
             expected_delivery_date: "2025-09-01T00:00:00.000Z",
             po_number: "PO-999",
-            mr_number: "MR-111",
-            shutdown_id: "SD-10",
+            client_ref: "MR-111",
         };
 
         mockedUseFabMon.mockReturnValue({
@@ -163,10 +162,7 @@ describe("EditDialog component (form)", () => {
             "2025-09-01",
         );
         expect(screen.getByLabelText("PO Number")).toHaveValue(job.po_number);
-        expect(screen.getByLabelText("MR Number")).toHaveValue(job.mr_number);
-        expect(screen.getByLabelText("Shutdown ID")).toHaveValue(
-            job.shutdown_id,
-        );
+        expect(screen.getByLabelText("CLIENT REF")).toHaveValue(job.client_ref);
 
         // Submit the form
         const form = container.querySelector("form") as HTMLFormElement;
@@ -183,8 +179,7 @@ describe("EditDialog component (form)", () => {
                 contract_delivery_date: "2025-08-25",
                 expected_delivery_date: "2025-09-01",
                 po_number: job.po_number,
-                mr_number: job.mr_number,
-                shutdown_id: job.shutdown_id,
+                client_ref: job.client_ref,
             });
             // After successful mutation, setOpen(false) should be called
             expect(setOpen).toHaveBeenCalledWith(false);
@@ -216,7 +211,7 @@ describe("EditDialog component (form)", () => {
         expect(screen.getByLabelText("Contract Delivery Date")).toHaveValue("");
         expect(screen.getByLabelText("Expect Delivery Date")).toHaveValue("");
         expect(screen.getByLabelText("PO Number")).toHaveValue("");
-        expect(screen.getByLabelText("MR Number")).toHaveValue("");
+        expect(screen.getByLabelText("CLIENT REF")).toHaveValue("");
         expect(screen.getByLabelText("Shutdown ID")).toHaveValue("");
     });
 });

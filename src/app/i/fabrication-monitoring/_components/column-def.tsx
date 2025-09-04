@@ -11,6 +11,10 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
             cell: ({ row }) => <Badge>{row.getValue("hp")}</Badge>,
         },
         {
+            accessorKey: "client_ref",
+            header: "Client Ref",
+        },
+        {
             accessorKey: "po_number",
             header: "PO Number",
         },
