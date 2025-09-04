@@ -43,6 +43,7 @@ const defaultValues: Partial<FabricationFormData> = {
     mr_number: "",
     shutdown_id: "",
     organization_id: undefined,
+    job_description: "",
 };
 
 export const EditDialog = ({
@@ -83,6 +84,7 @@ export const EditDialog = ({
                 mr_number: job.mr_number ?? undefined,
                 shutdown_id: job.shutdown_id ?? undefined,
                 organization_id: job.organization_id ?? undefined,
+                job_description: job.job_description ?? undefined,
             });
         } else if (mode === "create") {
             methods.reset(defaultValues);
@@ -110,6 +112,7 @@ export const EditDialog = ({
         "Expected Delivery Date",
         "MR Number",
         "Shutdown ID",
+        "Job Description",
     ];
     return (
         <Dialog onOpenChange={setOpen} open={open}>
@@ -187,6 +190,12 @@ export const EditDialog = ({
                                     placeholder="Enter Shutdown ID"
                                 />
                             </div>
+                            <GenericInput
+                                name={"job_description"}
+                                type="textarea"
+                                label={"Job Description"}
+                                placeholder="Enter Job Description"
+                            />
                         </form>
                     )}
                 </FormProvider>

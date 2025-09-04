@@ -18,6 +18,20 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
             accessorKey: "client",
             header: "Client",
         },
+        {
+            accessorKey: "job_description",
+            header: "Job Description",
+            cell: ({ row }) => {
+                const description =
+                    typeof row.original.job_description === "string"
+                        ? row.original.job_description
+                        : "";
+                const truncated = description.length > 50;
+                return truncated
+                    ? description.slice(0, 50) + "..."
+                    : description;
+            },
+        },
 
         {
             accessorKey: "user_organizations.organization",

@@ -35,6 +35,7 @@ const advancedSearch: Searchable[] = [
         title: "Expected Delivery",
     },
 ];
+
 const FabMonJobsTable = ({ session }: { session: Session }) => {
     const { filters, resetFilters, setFilters } = useFilters();
     const { data, isError, isPending } = useFabMonJobs({

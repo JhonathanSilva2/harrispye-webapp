@@ -250,7 +250,6 @@ export async function POST(request: NextRequest) {
                 { message: "Duplicate Job" },
                 { status: 409 },
             );
-
         const newJob = await prismaBase.fabrication_monitoring_jobs.create({
             data: {
                 hp,
@@ -261,6 +260,7 @@ export async function POST(request: NextRequest) {
                 mr_number: newBody.mr_number,
                 shutdown_id: newBody.shutdown_id,
                 organization_id: newBody.organization_id,
+                job_description: newBody.job_description,
             },
         });
         return new NextResponse(JSON.stringify(newJob, null, 4), {
