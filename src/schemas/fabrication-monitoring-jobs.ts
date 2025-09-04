@@ -38,6 +38,11 @@ export const fabricationMonitoringJobCreateSchema = z
             .number()
             .int()
             .min(1, "Organization ID must be at least 1"),
+        job_description: z
+            .string()
+            .min(5, "Job description must be at least 5 characters")
+            .max(1000)
+            .optional(),
     })
     .strict();
 

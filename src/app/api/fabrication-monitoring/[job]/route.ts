@@ -433,6 +433,7 @@ export async function PATCH(
                 mr_number: newBody.mr_number,
                 shutdown_id: newBody.shutdown_id,
                 organization_id: newBody.organization_id,
+                job_description: newBody.job_description,
             },
         });
 
