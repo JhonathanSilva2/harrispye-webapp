@@ -1,5 +1,6 @@
 import { fabrication_monitoring } from "@/../prisma/generated/client-hp-base";
 import options from "@/app/api/auth/[...nextauth]/options";
+import { approvalMail } from "@/app/i/fabrication-monitoring/_mail/approval-mail";
 import { prismaBase } from "@/db/base-client";
 import { fabricationMonitoringUpdateSpoolSchema } from "@/schemas/fabrication-monitoring-spool";
 import assert from "assert";
@@ -12,7 +13,7 @@ export interface FabricationMonitoringSpoolFetchReturn {
 
 export async function PATCH(
     request: Request,
-    { params }: { params: Promise<{ spool_id: string }> },
+    { params }: { params: Promise<{ job: string; spool_id: string }> },
 ) {
     const session = await getServerSession(options);
     const updated_by = session?.user.hp_registration;
@@ -33,6 +34,9 @@ export async function PATCH(
         // Consultando o spool
         const spool = await prismaBase.fabrication_monitoring.findUnique({
             where: { id: Number(spoolID) },
+            include: {
+                fabrication_monitoring_jobs: true,
+            },
         });
 
         if (!spool) {
@@ -64,6 +68,28 @@ export async function PATCH(
 
         // Campos validados e prontos para atualização
         const newBody = validation.data;
+
+        const clientApproval = newBody.client_approval;
+        if (clientApproval && clientApproval !== "PENDING") {
+            const bodyForValidation = {
+                hp: spool.fabrication_monitoring_jobs.hp,
+                client: spool.fabrication_monitoring_jobs.client,
+                spool_name: spool.spool_number ?? "Not informed",
+                drawing_ref: spool.drawing_ref ?? "Not informed",
+                status: clientApproval,
+                status_changed_by: session.user.display_name,
+                status_change_date: new Date().toLocaleString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                }),
+            };
+            await approvalMail(bodyForValidation);
+        }
+
         // Atualiza o spool no banco de dados
         const updateSpool = await prismaBase.fabrication_monitoring.update({
             where: { id: spool.id },
@@ -87,7 +113,7 @@ export async function PATCH(
                 scan_3d: newBody.scan_3d,
                 ndt_complete: newBody.ndt_complete,
                 pressure_test: newBody.pressure_test,
-                internal_coating: newBody.internal_coating, // Corrigido aqui
+                internal_coating: newBody.internal_coating,
                 external_coating: newBody.external_coating,
                 packing: newBody.packing,
                 dispatch: newBody.dispatch,
@@ -98,7 +124,6 @@ export async function PATCH(
             },
         });
 
-        // Retorna o spool atualizado corretamente
         return NextResponse.json(updateSpool, {
             headers: { "Content-Type": "application/json" },
         });
