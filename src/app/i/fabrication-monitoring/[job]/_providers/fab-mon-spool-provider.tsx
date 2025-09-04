@@ -2,6 +2,7 @@
 
 import { cloneDeep } from "lodash";
 import type { fabrication_monitoring } from "prisma/generated/client-hp-base";
+import type { Decimal } from "prisma/generated/client-hp-base/runtime/library";
 import { createContext, useContext, useReducer } from "react";
 
 export type FabMonSpoolsReducerActions =
@@ -35,6 +36,9 @@ const reducer = (
             const newState = cloneDeep(state);
             const { id, payload } = action;
             newState[id] = payload;
+
+            payload.gross_spool_cost = (Number(payload.mass) *
+                Number(payload.price_per_kg)) as unknown as Decimal;
 
             return newState;
         default:
