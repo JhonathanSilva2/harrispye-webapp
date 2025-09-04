@@ -2,16 +2,16 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-	title: "Forgot Password",
-	description: "Recover Password",
+    title: "Forgot Password",
+    description: "Recover Password",
 };
 
-const ForgotPasswordLayout = async ({
-	children,
-}: {
-	children: React.JSX.Element;
-}) => {
-	return <>{children}</>;
+interface Props {
+    children: React.ReactNode;
+}
+
+const ForgotPasswordLayout = ({ children }: Props) => {
+    return <>{children}</>;
 };
 
 export default ForgotPasswordLayout;
