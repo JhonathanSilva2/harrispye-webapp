@@ -2,6 +2,7 @@ import { prismaBase } from "@/db/base-client";
 import assert from "assert";
 import _ from "lodash";
 import { NextRequest, NextResponse } from "next/server";
+import { progressFields } from "./progress-fields";
 
 export async function GET(
     request: NextRequest,
@@ -23,18 +24,6 @@ export async function GET(
             if (!job) {
                 throw new Error("Job don't exists");
             }
-
-            const progressFields = [
-                "materials_ordered",
-                "materials_arrived",
-                "fabrication_complete",
-                "ndt_complete",
-                "pressure_test",
-                "internal_coating",
-                "external_coating",
-                "packing",
-                "dispatch",
-            ];
 
             const aggregation = await tx.fabrication_monitoring.aggregate({
                 where: {
