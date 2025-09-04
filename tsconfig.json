@@ -1,13 +1,6 @@
-// tsconfig.json (root)
 {
     "extends": "./tsconfig.base.json",
-    "compilerOptions": { "baseUrl": ".", "noEmit": true },
+    "compilerOptions": { "noEmit": true },
     "include": ["next-env.d.ts", ".next/types/**/*.ts", "src", "src/types"],
-    "exclude": [
-        "node_modules",
-        "tests",
-        "**/*.test.ts",
-        "**/*.test.tsx",
-        "cypress"
-    ]
+    "exclude": ["node_modules", "cypress", "**/*.test.ts", "**/*.test.tsx"]
 }
