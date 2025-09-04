@@ -12,7 +12,7 @@ import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
 import { Session } from "next-auth";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ChartSpools from "./chart-spools";
 import { fabricationMonitoringColumns } from "./column-def";
 import SummarySpools from "./sumary-spools";

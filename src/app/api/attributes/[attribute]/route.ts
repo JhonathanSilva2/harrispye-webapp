@@ -3,13 +3,20 @@ import assert from "assert";
 import { capitalize } from "lodash";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import options from "../../auth/[...nextauth]/options";
+
 import {
     TDepartmentAttribute,
     TLocalizationAttribute,
     TOrganizationAttribute,
     TRoleAttribute,
 } from "../../type";
+import options from "../../auth/[...nextauth]/options";
+import {
+    BRAZIL_LOCALIZATION_ID,
+    CLIENT_APPROVER_ROLE_ID,
+    CLIENT_GUEST_ROLE_ID,
+} from "../_utils/constants";
+import { buildClientPermissionPayload } from "../_utils/permissions";
 
 export async function GET(
     request: NextRequest,
@@ -110,14 +117,49 @@ export async function POST(
                         },
                     });
                     break;
+
                 case "organizations":
-                    await prismaBase.user_organizations.create({
-                        data: {
-                            ...data,
-                            organization: body.newAttribute,
-                        },
-                    });
-                    break;
+                    try {
+                        await prismaBase.$transaction(async (tx) => {
+                            const organization =
+                                await tx.user_organizations.create({
+                                    data: {
+                                        ...data,
+                                        organization: body.newAttribute,
+                                    },
+                                });
+                            const clientApproverPayload =
+                                buildClientPermissionPayload({
+                                    organizationId: organization.id,
+                                    roleId: CLIENT_APPROVER_ROLE_ID,
+                                    clientApproval: "ALL",
+                                });
+                            const clientGuestPayload =
+                                buildClientPermissionPayload({
+                                    organizationId: organization.id,
+                                    roleId: CLIENT_GUEST_ROLE_ID,
+                                    clientApproval: "NONE",
+                                });
+
+                            // Add CLIENT_APPROVER permissions
+                            await tx.fabrication_monitoring_permissions.create({
+                                data: clientApproverPayload,
+                            });
+                            // Add CLIENT_GUEST permissions
+                            await tx.fabrication_monitoring_permissions.create({
+                                data: clientGuestPayload,
+                            });
+                        });
+
+                        return NextResponse.json(
+                            { message: "Organization created successfully" },
+                            { status: 201 },
+                        );
+                    } catch (err) {
+                        assert(err instanceof Error);
+                        return new NextResponse(err.message, { status: 500 });
+                    }
+
                 case "roles":
                     await prismaBase.user_roles.create({
                         data: {

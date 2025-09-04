@@ -17,7 +17,6 @@ import {
 } from "prisma/generated/client-hp-base";
 import { JSX, useCallback, useState } from "react";
 import { toast } from "sonner";
-import { sendApprovalMail } from "../_actions/send-approval-mail";
 
 type ApprovalStatus = "APPROVED" | "DECLINED" | "PENDING";
 
@@ -61,33 +60,16 @@ export default function ClientApprovalSelect<TData>({
             setSelectedStatus(newStatus);
             const body: Record<string, ApprovalStatus> = {};
             body[select_name] = newStatus;
-            const isSendEmail =
-                newStatus !== "PENDING" &&
-                job &&
-                select_name === "client_approval";
 
             try {
                 await mutation.mutateAsync(body);
                 toast.success(`Status ${newStatus} successfully!`);
-
-                if (isSendEmail) {
-                    await sendApprovalMail({
-                        drawing_ref:
-                            (row.getValue("drawing_ref") as string) ?? "",
-                        status: newStatus as "APPROVED" | "DECLINED",
-                        hp,
-                        client: job.client ?? "",
-                        spool_name:
-                            (row.getValue("spool_number") as string) ?? "",
-                        status_changed_by: row.original.updated_by,
-                    });
-                }
             } catch (error) {
                 toast.error("Failed to update status, please try again.");
                 console.error("Error saving data:", error);
             }
         },
-        [mutation, select_name, job, hp, row],
+        [mutation, select_name],
     );
 
     const canEdit = permission === "EDIT" || permission === "ALL";

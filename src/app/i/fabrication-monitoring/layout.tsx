@@ -3,7 +3,7 @@ import AccessControl from "@/lib/auth/policy-decision-point";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { JSX } from "react";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
     title: "Fabrication Monitoring",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const FabricationMonitoringLayout = async ({
     children,
 }: {
-    children: JSX.Element;
+    children: ReactNode;
 }) => {
     const session = await getServerSession(options);
     if (!session) {

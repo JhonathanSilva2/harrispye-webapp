@@ -11,12 +11,30 @@ export const fabricationMonitoringJobsColumns: ColumnDef<FabricationMonitoringFe
             cell: ({ row }) => <Badge>{row.getValue("hp")}</Badge>,
         },
         {
+            accessorKey: "client_ref",
+            header: "Client Ref",
+        },
+        {
             accessorKey: "po_number",
             header: "PO Number",
         },
         {
             accessorKey: "client",
             header: "Client",
+        },
+        {
+            accessorKey: "job_description",
+            header: "Job Description",
+            cell: ({ row }) => {
+                const description =
+                    typeof row.original.job_description === "string"
+                        ? row.original.job_description
+                        : "";
+                const truncated = description.length > 50;
+                return truncated
+                    ? description.slice(0, 50) + "..."
+                    : description;
+            },
         },
 
         {

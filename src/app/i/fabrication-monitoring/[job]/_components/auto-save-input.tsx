@@ -6,13 +6,11 @@ import {
 } from "@/../prisma/generated/client-hp-base";
 import { Input } from "@/components/ui/input";
 import { useUpdateSpool } from "@/hooks/query/use-spools";
-import { formatBrNumber } from "@/utils/brasil-format-number";
-import { formatMoney } from "@/utils/format-currency";
-import { formatPercentage } from "@/utils/format-percentage";
 import { Row, Table } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { NotApplicableInputWrapper } from "./not-applicable-input-wrapper";
+import { formatValue } from "../_utils/format-number";
 
 interface AutoSaveInputProps<TData> {
     name: string;
@@ -46,38 +44,6 @@ export default function AutoSaveInput<TData>({
     onlyIntegers,
     permission,
 }: AutoSaveInputProps<TData>) {
-    // ... (a função formatValue continua a mesma)
-    const formatValue = (
-        currentValue: string | number | null,
-        typeValue: string,
-    ) => {
-        if (currentValue === null) return "N/A"; // Exibe N/A para valores nulos
-        switch (typeValue) {
-            case "text":
-                return currentValue || "";
-
-            case "number":
-                if (name === "mass")
-                    return (
-                        (formatBrNumber(Number(currentValue)) || "0") + " kg"
-                    );
-                return Number(currentValue) || 0;
-
-            case "currency":
-                return (
-                    formatMoney(Number(currentValue)) || formatMoney(Number(0))
-                );
-            case "percentage":
-                return (
-                    formatPercentage(Number(currentValue), "pt-BR", 0, 0) ||
-                    formatPercentage(0, "pt-BR", 0, 0)
-                );
-
-            default:
-                return currentValue;
-        }
-    };
-
     const initialValue = row.getValue(name) as string | number | null;
     const [value, setValue] = useState(initialValue);
 
@@ -86,15 +52,9 @@ export default function AutoSaveInput<TData>({
     const job = table.options.meta?.hp ?? "";
     const mutation = useUpdateSpool(job, spoolID);
     const handleSave = useCallback(
-        // 👇 ALTERAÇÃO AQUI: Adicione os dois argumentos
         async (name: string, valueToSave: string | number | null) => {
             try {
                 const bodyValue = parseNumericValue(valueToSave, type);
-
-                // O valor inicial precisa ser obtido de forma mais direta,
-                // já que não podemos mais confiar no `initialValue` do escopo externo
-                // se o nome do campo puder variar. Mas para este caso, podemos manter.
-                // A comparação ainda é válida.
                 if (bodyValue === initialValue) return;
 
                 await mutation.mutateAsync({ [name]: bodyValue });
@@ -102,28 +62,30 @@ export default function AutoSaveInput<TData>({
                 console.error("Erro ao salvar os dados:", error);
             }
         },
-        // 👇 ALTERAÇÃO AQUI: Remova 'name' das dependências, pois agora é um argumento
         [type, initialValue, mutation],
     );
-    // ALTERADO: Envolvendo com useCallback
+
     const handleBlur = useCallback(() => {
         handleSave(name, value);
     }, [handleSave, name, value]);
 
-    // O `handleChange` agora é mais simples e genérico
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
+        setValue(handleInputNumValue(inputValue));
+    };
+
+    const handleInputNumValue = (inputValue: string) => {
+        const numValue = parseInt(inputValue);
         if (type === "percentage") {
-            const numValue = parseInt(inputValue);
             if (numValue > 100) {
-                setValue("100");
+                return "100";
             } else if (numValue < 0) {
-                setValue("0");
+                return "0";
             } else {
-                setValue(isNaN(numValue) ? "" : String(numValue));
+                return isNaN(numValue) ? "" : String(numValue);
             }
         } else {
-            setValue(inputValue);
+            return inputValue || "";
         }
     };
 
@@ -134,26 +96,25 @@ export default function AutoSaveInput<TData>({
             <div className="relative w-full">
                 {type === "number" ||
                 type === "percentage" ||
-                type === "currency" ? ( // Adicionado currency
+                type === "currency" ? (
                     <NotApplicableInputWrapper
                         name={name}
                         type={type}
                         handleSave={handleSave}
                         value={value}
-                        setValue={setValue} // Passa a função para o filho controlar este estado
-                        handleBlur={handleBlur} // << LINHA ADICIONADA
-                        onChange={handleChange} // Passa o handler correto
+                        setValue={setValue}
+                        handleBlur={handleBlur}
+                        onChange={handleChange}
                         spoolID={spoolID}
                         job={job}
                     />
                 ) : (
-                    // Lógica para input de texto simples
                     <div className="relative w-full">
                         <Input
                             data-cy={`spool-column-${name}`}
                             name={name}
                             type="text"
-                            value={value ?? ""} // Garante que o valor nunca seja null/undefined para o input
+                            value={value ?? ""}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder="Type here..."
@@ -175,15 +136,14 @@ export default function AutoSaveInput<TData>({
             </div>
         ) : (
             <div data-cy={`spool-column-${name}-readOnly`}>
-                {formatValue(value, type)}
+                {formatValue(name, value, type)}
             </div>
         );
     }
 
-    // Se não houver permissão, retorna o valor formatado sem a capacidade de edição
     return (
         <div data-cy={`spool-column-${name}-readOnly`}>
-            {formatValue(value, type)}
+            {formatValue(name, value, type)}
         </div>
     );
 }

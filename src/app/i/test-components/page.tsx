@@ -1,7 +1,8 @@
 import { PageProps } from "@/app/types";
+import TestComponent from "./test-component";
 
 const TestComponents = async ({ searchParams }: PageProps) => {
-	return <h1>Replace me to test</h1>;
+    return <TestComponent />;
 };
 
 export default TestComponents;

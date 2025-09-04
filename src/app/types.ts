@@ -1,6 +1,7 @@
-import { $Enums, Prisma } from "@/../prisma/generated/client-hp-base";
+import type { $Enums, Prisma } from "@/../prisma/generated/client-hp-base";
 import { User } from "next-auth";
 import { NextResponse } from "next/server";
+import type { Decimal } from "prisma/generated/client-hp-base/runtime/library";
 import { FieldValues, Path } from "react-hook-form";
 
 export interface MockTodo {
@@ -181,3 +182,5 @@ export type TAccessControl = {
     feature: string;
 };
 export type TAccessControlAction = $Enums.user_access_control_action;
+
+export type Primitive = string | number | bigint | Decimal | Date | null;

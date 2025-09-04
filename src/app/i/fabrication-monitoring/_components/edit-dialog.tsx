@@ -40,9 +40,9 @@ const defaultValues: Partial<FabricationFormData> = {
     contract_delivery_date: "",
     expected_delivery_date: "",
     po_number: "",
-    mr_number: "",
-    shutdown_id: "",
+    client_ref: "",
     organization_id: undefined,
+    job_description: "",
 };
 
 export const EditDialog = ({
@@ -80,9 +80,9 @@ export const EditDialog = ({
                 contract_delivery_date: handleDate(job.contract_delivery_date),
                 expected_delivery_date: handleDate(job.expected_delivery_date),
                 po_number: job.po_number,
-                mr_number: job.mr_number ?? undefined,
-                shutdown_id: job.shutdown_id ?? undefined,
+                client_ref: job.client_ref ?? "",
                 organization_id: job.organization_id ?? undefined,
+                job_description: job.job_description ?? undefined,
             });
         } else if (mode === "create") {
             methods.reset(defaultValues);
@@ -108,8 +108,8 @@ export const EditDialog = ({
         "Organization",
         "Contract Delivery Date",
         "Expected Delivery Date",
-        "MR Number",
-        "Shutdown ID",
+        "Client Ref",
+        "Job Description",
     ];
     return (
         <Dialog onOpenChange={setOpen} open={open}>
@@ -177,16 +177,17 @@ export const EditDialog = ({
                                     label={"Expect Delivery Date"}
                                 />
                                 <GenericInput
-                                    name={"mr_number"}
-                                    label={"MR Number"}
-                                    placeholder="Enter MR Number"
-                                />
-                                <GenericInput
-                                    name={"shutdown_id"}
-                                    label={"Shutdown ID"}
-                                    placeholder="Enter Shutdown ID"
+                                    name={"client_ref"}
+                                    label={"Client Ref"}
+                                    placeholder="Enter Client Ref"
                                 />
                             </div>
+                            <GenericInput
+                                name={"job_description"}
+                                type="textarea"
+                                label={"Job Description"}
+                                placeholder="Enter Job Description"
+                            />
                         </form>
                     )}
                 </FormProvider>

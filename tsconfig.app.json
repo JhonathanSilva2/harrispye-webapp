@@ -4,6 +4,6 @@
     "compilerOptions": {
         "composite": true
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "types/**/*.d.ts"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "src/types/**/*.d.ts"],
     "exclude": ["**/*.test.ts", "**/*.test.tsx", "cypress"]
 }

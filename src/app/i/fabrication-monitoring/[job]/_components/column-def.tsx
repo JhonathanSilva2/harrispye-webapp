@@ -7,6 +7,7 @@ import Actions from "./actions";
 import ApprovalSelect from "./approval-select";
 import AutoSaveInput from "./auto-save-input";
 import { DrawingRefSelect } from "./drawing-ref-datalist";
+import { formatBrNumber } from "@/utils/brasil-format-number";
 
 export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
     [
@@ -189,6 +190,39 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             enableHiding: false,
         },
         {
+            accessorKey: "progress",
+            header: () => <span style={{ fontWeight: 800 }}>Progress</span>,
+            cell: ({ row, table }) => {
+                const progressFields = [
+                    "materials_ordered",
+                    "materials_arrived",
+                    "fabrication_complete",
+                    "ndt_complete",
+                    "pressure_test",
+                    "internal_coating",
+                    "external_coating",
+                    "packing",
+                    "dispatch",
+                ];
+
+                const fieldValues = progressFields.map((field) => {
+                    const value = row.getValue(field) as number | null;
+                    return value ?? 0;
+                });
+
+                const average =
+                    fieldValues.reduce((a, b) => a + b, 0) /
+                    progressFields.length;
+
+                return <span>{average.toFixed(1)}%</span>;
+            },
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
             accessorKey: "spec",
             header: () => <span style={{ fontWeight: 800 }}>Spec</span>,
             cell: ({ row, table }) => (
@@ -329,21 +363,12 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
         {
             accessorKey: "gross_spool_cost",
             header: () => <span style={{ fontWeight: 800 }}>Item Cost</span>,
-            cell: ({ row, table }) => (
-                <AutoSaveInput
-                    row={row}
-                    table={table}
-                    type="currency"
-                    name={"gross_spool_cost"}
-                    permission={
-                        table.options.meta?.FabMonPermissions
-                            ? table.options.meta.FabMonPermissions[
-                                  "gross_spool_cost"
-                              ]
-                            : "NONE"
-                    }
-                />
-            ),
+            cell: ({ row, table }) => {
+                const mass = Number(row.getValue("mass")) || 0;
+                const pricePerKg = Number(row.getValue("price_per_kg")) || 0;
+                const cost = mass * pricePerKg;
+                return "R$ " + formatBrNumber(cost);
+            },
             meta: {
                 className: "min-w-[180px] border-y",
             },

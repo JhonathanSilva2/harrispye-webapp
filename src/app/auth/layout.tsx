@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
-const AuthLayout = ({ children }: { children: React.JSX.Element }) => {
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="min-h-screen">
             <div className="container flex min-h-screen max-w-none flex-col items-center justify-center md:grid lg:grid-cols-2 lg:px-0">

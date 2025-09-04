@@ -1,7 +1,7 @@
 import NotImplemented from "@/components/not-implemented";
-import { JSX } from "react";
+import { ReactNode } from "react";
 
-const AppraisalLayout = ({ children }: { children: JSX.Element }) => {
+const AppraisalLayout = ({ children }: { children: ReactNode }) => {
     return <NotImplemented />;
     return <>{children}</>;
 };

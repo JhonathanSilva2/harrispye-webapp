@@ -27,8 +27,7 @@ export async function GET(request: NextRequest) {
         const urlObj = new URL(request.nextUrl);
         const validSort: ValidSort[] = [
             { key: "hp", type: "string" },
-            { key: "mr_number", type: "string" },
-            { key: "shutdown_id", type: "string" },
+            { key: "client_ref", type: "string" },
             { key: "client", type: "string" },
             { key: "po_number", type: "string" },
             { key: "contract_delivery_date", type: "date" },
@@ -217,8 +216,7 @@ export async function GET(request: NextRequest) {
  * - `expected_delivery_date` (date): Data esperada para a entrega.
  *
  * **Campos permitidos (Permitted Fields):**
- * - `mr_number` (string, opcional): Número do MR (Material Requisition).
- * - `shutdown_id` (string, opcional): ID de desligamento.
+ * - `client_ref` (string, opcional): Número do MR (Material Requisition).
  *
  * O endpoint valida os dados fornecidos e garante que não existam jobs duplicados no banco de dados. Caso o job já exista, um erro 409 será retornado. Se os dados estiverem incorretos, será retornado um erro 400.
  *
@@ -250,7 +248,6 @@ export async function POST(request: NextRequest) {
                 { message: "Duplicate Job" },
                 { status: 409 },
             );
-
         const newJob = await prismaBase.fabrication_monitoring_jobs.create({
             data: {
                 hp,
@@ -258,9 +255,9 @@ export async function POST(request: NextRequest) {
                 po_number: newBody.po_number,
                 contract_delivery_date: newBody.contract_delivery_date,
                 expected_delivery_date: newBody.expected_delivery_date,
-                mr_number: newBody.mr_number,
-                shutdown_id: newBody.shutdown_id,
+                client_ref: newBody.client_ref,
                 organization_id: newBody.organization_id,
+                job_description: newBody.job_description,
             },
         });
         return new NextResponse(JSON.stringify(newJob, null, 4), {

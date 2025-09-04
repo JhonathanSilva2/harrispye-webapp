@@ -24,20 +24,20 @@ export const fabricationMonitoringJobCreateSchema = z
             }
             return arg;
         }, z.date()),
-        mr_number: z
+        client_ref: z
             .string()
-            .min(2, "MR number must be at least 2 characters")
-            .max(255)
-            .optional(),
-        shutdown_id: z
-            .string()
-            .min(2, "Shutdown ID must be at least 2 characters")
+            .min(2, "CLIENT REF must be at least 2 characters")
             .max(255)
             .optional(),
         organization_id: z
             .number()
             .int()
             .min(1, "Organization ID must be at least 1"),
+        job_description: z
+            .string()
+            .min(5, "Job description must be at least 5 characters")
+            .max(1000)
+            .optional(),
     })
     .strict();
 
