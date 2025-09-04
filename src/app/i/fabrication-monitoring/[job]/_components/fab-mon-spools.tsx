@@ -12,8 +12,11 @@ import { PaginationConstants } from "@/lib/constants/pagination";
 import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
 import { Session } from "next-auth";
-import { useMemo, useState } from "react";
-import { FabMonSpoolsProvider } from "../_providers/fab-mon-spool-provider";
+import { useEffect, useMemo, useState } from "react";
+import {
+    FabMonSpoolsProvider,
+    useFabMonSpools,
+} from "../_providers/fab-mon-spool-provider";
 import ChartSpools from "./chart-spools";
 import { fabricationMonitoringColumns } from "./column-def";
 import SummarySpools from "./sumary-spools";
@@ -114,6 +117,7 @@ const FabMonSpoolsTable = ({
     session: Session;
     permissions: FabMonSpoolsPermission;
 }) => {
+    const { state, dispatch } = useFabMonSpools();
     const [isEditing, setIsEditing] = useState(false);
     const accessControl = new AccessControl(session);
 
@@ -189,6 +193,11 @@ const FabMonSpoolsTable = ({
               )
             : {};
     }
+
+    useEffect(() => {
+        if (!data?.data) return;
+        dispatch({ type: "init", job: hp, payload: data.data.spools });
+    }, [data, dispatch, hp]);
 
     const columns = useMemo(() => fabricationMonitoringColumns, []);
     const job = data?.data.job;
