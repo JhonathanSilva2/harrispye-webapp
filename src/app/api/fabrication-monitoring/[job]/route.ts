@@ -354,8 +354,7 @@ export async function GET(
  * - `po_number` (string): Número do pedido.
  * - `contract_delivery_date` (date): Data de entrega do contrato.
  * - `expected_delivery_date` (date): Data esperada para a entrega.
- * - `mr_number` (string, opcional): Número do MR (Material Requisition).
- * - `shutdown_id` (string, opcional): ID de desligamento.
+ * - `client_ref` (string, opcional): Número do MR (Material Requisition).
  *
  * O endpoint valida os dados fornecidos e garante que o job a ser atualizado exista no banco de dados. Caso o job não exista, um erro 404 será retornado. Se os dados estiverem incorretos, será retornado um erro 400.
  *
@@ -430,8 +429,7 @@ export async function PATCH(
                 po_number: newBody.po_number,
                 contract_delivery_date: newBody.contract_delivery_date,
                 expected_delivery_date: newBody.expected_delivery_date,
-                mr_number: newBody.mr_number,
-                shutdown_id: newBody.shutdown_id,
+                client_ref: newBody.client_ref,
                 organization_id: newBody.organization_id,
                 job_description: newBody.job_description,
             },

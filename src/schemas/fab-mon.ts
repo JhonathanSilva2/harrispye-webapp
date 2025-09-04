@@ -10,8 +10,7 @@ export const FabricationForm = z.object({
     expected_delivery_date: z
         .string()
         .nonempty("Expected delivery date is required"),
-    mr_number: z.string().nonempty("MR Number is required"),
-    shutdown_id: z.string().nonempty("Shutdown ID is required"),
+    client_ref: z.string().nonempty("CLIENT REF is required"),
     organization_id: z.number().min(1, "Organization ID is required"),
     job_description: z.string().nonempty("Job Description is required"),
 });

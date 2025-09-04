@@ -179,8 +179,7 @@ model fabrication_monitoring_designs {
 model fabrication_monitoring_jobs {
   id                             Int                              @id @default(autoincrement())
   hp                             String                           @unique @dbHPBase.VarChar(255)
-  mr_number                      String?                          @dbHPBase.VarChar(255)
-  shutdown_id                    String?                          @dbHPBase.VarChar(255)
+  client_ref                      String?                          @dbHPBase.VarChar(255)
   client                         String                           @dbHPBase.VarChar(255)
   contract_delivery_date         DateTime                         @dbHPBase.Date
   expected_delivery_date         DateTime                         @dbHPBase.Date
