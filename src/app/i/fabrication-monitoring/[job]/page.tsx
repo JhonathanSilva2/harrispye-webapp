@@ -4,7 +4,6 @@ import { Searchable } from "@/components/data-table/types";
 import { getServerSession } from "next-auth";
 import { fetchPermissions } from "./_actions/fetch-permissions";
 import FabMonSpoolsTable from "./_components/fab-mon-spools";
-import { FabMonSpoolsProvider } from "./_providers/fab-mon-spool-provider";
 
 export default async function JobPage({ searchParams, params }: PageProps) {
     const advancedSearch: Searchable[] = [
@@ -42,12 +41,10 @@ export default async function JobPage({ searchParams, params }: PageProps) {
     const hp = (await params).job;
 
     return (
-        <FabMonSpoolsProvider>
-            <FabMonSpoolsTable
-                hp={hp}
-                session={session}
-                permissions={permissions.data}
-            />
-        </FabMonSpoolsProvider>
+        <FabMonSpoolsTable
+            hp={hp}
+            session={session}
+            permissions={permissions.data}
+        />
     );
 }
