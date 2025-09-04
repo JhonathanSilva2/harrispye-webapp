@@ -13,6 +13,7 @@ import { sortByToState, stateToSortBy } from "@/utils/table-sort-mapper";
 import { SortingState, Updater } from "@tanstack/react-table";
 import { Session } from "next-auth";
 import { useMemo, useState } from "react";
+import { FabMonSpoolsProvider } from "../_providers/fab-mon-spool-provider";
 import ChartSpools from "./chart-spools";
 import { fabricationMonitoringColumns } from "./column-def";
 import SummarySpools from "./sumary-spools";
@@ -192,74 +193,78 @@ const FabMonSpoolsTable = ({
     const columns = useMemo(() => fabricationMonitoringColumns, []);
     const job = data?.data.job;
     return (
-        <div>
-            {canSeeGraphs && <ChartSpools loading={isPending} data={data} />}
-            {canViewSummary && (
-                <SummarySpools loading={isPending} data={data} hp={hp} />
-            )}
+        <FabMonSpoolsProvider>
+            <div>
+                {canSeeGraphs && (
+                    <ChartSpools loading={isPending} data={data} />
+                )}
+                {canViewSummary && (
+                    <SummarySpools loading={isPending} data={data} hp={hp} />
+                )}
 
-            {!permissions && isPending ? (
-                <Skeleton className="min min-h-[250px] w-full rounded-xl" />
-            ) : (
-                <Card>
-                    <CardHeader>
-                        <h2 className="text-lg font-semibold">
-                            Fabrication Table
-                        </h2>
-                    </CardHeader>
-                    <CardContent>
-                        <DataTable
-                            data={
-                                data?.data
-                                    ? {
-                                          ...data,
-                                          data: data?.data?.spools ?? [],
-                                      }
-                                    : {
-                                          data: [],
-                                          rowCount: 0,
-                                          page: 1,
-                                          pageSize: 10,
-                                      }
-                            }
-                            columns={columns}
-                            searchables={advancedSearch}
-                            pagination={pagination}
-                            paginationOptions={{
-                                onPaginationChange: setPaginationState,
-                                rowCount: data?.rowCount,
-                            }}
-                            filters={filters}
-                            resetFilters={resetFilters}
-                            setFilters={setFilters}
-                            sorting={sortingState}
-                            onSortingChange={onSortingChange}
-                            isPending={isPending}
-                            isError={isError}
-                            headerClassName="flex justify-between items-center"
-                            headerComponent={
-                                !isPending && !isError ? (
-                                    <TableHeader
-                                        canEdit={canEdit}
-                                        canAddSpool={canAddSpool}
-                                        job={hp}
-                                        jobId={data?.data.job.id}
-                                        onToggle={setIsEditing}
-                                    />
-                                ) : undefined
-                            }
-                            unpermittedColumns={unpermittedColumns}
-                            meta={{
-                                hp,
-                                isEditing,
-                                FabMonPermissions: permissions,
-                                job: job,
-                            }}
-                        />
-                    </CardContent>
-                </Card>
-            )}
-        </div>
+                {!permissions && isPending ? (
+                    <Skeleton className="min min-h-[250px] w-full rounded-xl" />
+                ) : (
+                    <Card>
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">
+                                Fabrication Table
+                            </h2>
+                        </CardHeader>
+                        <CardContent>
+                            <DataTable
+                                data={
+                                    data?.data
+                                        ? {
+                                              ...data,
+                                              data: data?.data?.spools ?? [],
+                                          }
+                                        : {
+                                              data: [],
+                                              rowCount: 0,
+                                              page: 1,
+                                              pageSize: 10,
+                                          }
+                                }
+                                columns={columns}
+                                searchables={advancedSearch}
+                                pagination={pagination}
+                                paginationOptions={{
+                                    onPaginationChange: setPaginationState,
+                                    rowCount: data?.rowCount,
+                                }}
+                                filters={filters}
+                                resetFilters={resetFilters}
+                                setFilters={setFilters}
+                                sorting={sortingState}
+                                onSortingChange={onSortingChange}
+                                isPending={isPending}
+                                isError={isError}
+                                headerClassName="flex justify-between items-center"
+                                headerComponent={
+                                    !isPending && !isError ? (
+                                        <TableHeader
+                                            canEdit={canEdit}
+                                            canAddSpool={canAddSpool}
+                                            job={hp}
+                                            jobId={data?.data.job.id}
+                                            onToggle={setIsEditing}
+                                        />
+                                    ) : undefined
+                                }
+                                unpermittedColumns={unpermittedColumns}
+                                meta={{
+                                    hp,
+                                    isEditing,
+                                    FabMonPermissions: permissions,
+                                    job: job,
+                                }}
+                            />
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+        </FabMonSpoolsProvider>
     );
 };
 

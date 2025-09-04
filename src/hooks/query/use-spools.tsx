@@ -4,6 +4,7 @@ import {
     UseMutationOptions,
     useQueryClient,
 } from "@tanstack/react-query";
+import { fabrication_monitoring } from "prisma/generated/client-hp-base";
 import { toast } from "sonner";
 type body = Record<string, string | number | null>;
 
@@ -17,7 +18,7 @@ export function useUpdateSpool(
         ...options,
         mutationFn: async (data) => {
             try {
-                await patchSpool(job, spoolID, data);
+                await patchSpool(job, spoolID, data as fabrication_monitoring);
             } catch (error) {
                 throw new Error("Failed to updated spool, please try again");
             }

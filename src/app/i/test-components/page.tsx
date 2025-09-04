@@ -1,7 +1,13 @@
 import { PageProps } from "@/app/types";
+import { FabMonSpoolsProvider } from "../fabrication-monitoring/[job]/_providers/fab-mon-spool-provider";
+import TestComponent from "./test-component";
 
 const TestComponents = async ({ searchParams }: PageProps) => {
-	return <h1>Replace me to test</h1>;
+    return (
+        <FabMonSpoolsProvider>
+            <TestComponent />
+        </FabMonSpoolsProvider>
+    );
 };
 
 export default TestComponents;
