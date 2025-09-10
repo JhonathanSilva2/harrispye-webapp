@@ -19,7 +19,7 @@ const SpoolLogDialog = ({ jobId, className }: Props) => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="">
+                <Button variant="outline" className="" size={"sm"}>
                     <ScrollText />
                     History
                 </Button>
