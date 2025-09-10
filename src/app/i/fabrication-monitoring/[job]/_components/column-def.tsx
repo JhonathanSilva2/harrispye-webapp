@@ -8,6 +8,7 @@ import ApprovalSelect from "./approval-select";
 import AutoSaveInput from "./auto-save-input";
 import { DrawingRefSelect } from "./drawing-ref-datalist";
 import { formatBrNumber } from "@/utils/brasil-format-number";
+import { calculateFabricationProgress } from "@/utils/calculate-fabrication-progress";
 
 export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
     [
@@ -193,28 +194,13 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             accessorKey: "progress",
             header: () => <span style={{ fontWeight: 800 }}>Progress</span>,
             cell: ({ row, table }) => {
-                const progressFields = [
-                    "materials_ordered",
-                    "materials_arrived",
-                    "fabrication_complete",
-                    "ndt_complete",
-                    "pressure_test",
-                    "internal_coating",
-                    "external_coating",
-                    "packing",
-                    "dispatch",
-                ];
-
-                const fieldValues = progressFields.map((field) => {
-                    const value = row.getValue(field) as number | null;
-                    return value ?? 0;
+                const progress = calculateFabricationProgress({
+                    cutting: row.getValue("fabrication_cutting"),
+                    welding: row.getValue("fabrication_welding"),
+                    coating: row.getValue("external_coating"),
                 });
 
-                const average =
-                    fieldValues.reduce((a, b) => a + b, 0) /
-                    progressFields.length;
-
-                return <span>{average.toFixed(1)}%</span>;
+                return <span>{progress.toFixed(1)}%</span>;
             },
             meta: {
                 className: "min-w-[180px] border-y",
@@ -428,20 +414,46 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             enableHiding: false,
         },
         {
-            accessorKey: "fabrication_complete",
+            accessorKey: "fabrication_cutting",
             header: () => (
-                <span style={{ fontWeight: 800 }}>Fabrication Complete</span>
+                <span style={{ fontWeight: 800 }}>Fabrication Cutting</span>
             ),
             cell: ({ row, table }) => (
                 <AutoSaveInput
                     row={row}
                     table={table}
                     type="percentage"
-                    name={"fabrication_complete"}
+                    name={"fabrication_cutting"}
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions[
-                                  "fabrication_complete"
+                                  "fabrication_cutting"
+                              ]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "fabrication_welding",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Fabrication Welding</span>
+            ),
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="percentage"
+                    name={"fabrication_welding"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions[
+                                  "fabrication_welding"
                               ]
                             : "NONE"
                     }
