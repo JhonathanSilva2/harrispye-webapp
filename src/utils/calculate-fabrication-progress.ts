@@ -18,12 +18,12 @@ export function calculateFabricationProgress({
     console.log(
         cutting * cuttingWeight +
             welding * weldingWeight +
-            (coating + coatingWeight),
+            (coating * coatingWeight),
     );
 
     return (
         cutting * cuttingWeight +
         welding * weldingWeight +
-        (coating + coatingWeight)
+        (coating * coatingWeight)
     );
 }
