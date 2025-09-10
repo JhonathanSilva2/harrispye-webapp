@@ -33,7 +33,8 @@ export async function GET(
                 _sum: {
                     materials_ordered: true,
                     materials_arrived: true,
-                    fabrication_complete: true,
+                    fabrication_cutting: true,
+                    fabrication_welding: true,
                     ndt_complete: true,
                     pressure_test: true,
                     internal_coating: true,

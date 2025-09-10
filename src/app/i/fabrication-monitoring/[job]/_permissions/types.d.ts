@@ -14,7 +14,8 @@ export interface ProfilePermissions {
     gross_spool_cost: PermissionValue;
     materials_ordered: PermissionValue;
     materials_arrived: PermissionValue;
-    fabrication_complete: PermissionValue;
+    fabrication_cutting: PermissionValue;
+    fabrication_welding: PermissionValue;
     scan_3d: PermissionValue;
     ndt_complete: PermissionValue;
     pressure_test: PermissionValue;

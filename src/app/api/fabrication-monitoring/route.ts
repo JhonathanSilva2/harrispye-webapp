@@ -113,8 +113,10 @@ export async function GET(request: NextRequest) {
                                 spool.materials_ordered || 0;
                             const materials_arrived =
                                 spool.materials_arrived || 0;
-                            const fabrication_complete =
-                                spool.fabrication_complete || 0;
+                            const fabrication_cutting =
+                                spool.fabrication_cutting || 0;
+                            const fabrication_welding =
+                                spool.fabrication_welding || 0;
                             const ndt_complete = spool.ndt_complete || 0;
                             const pressure_test = spool.pressure_test || 0;
                             const internal_coating =
@@ -129,9 +131,12 @@ export async function GET(request: NextRequest) {
                                     acc.materials_ordered + materials_ordered,
                                 materials_arrived:
                                     acc.materials_arrived + materials_arrived,
-                                fabrication_complete:
-                                    acc.fabrication_complete +
-                                    fabrication_complete,
+                                fabrication_cutting:
+                                    acc.fabrication_cutting +
+                                    fabrication_cutting,
+                                fabrication_welding:
+                                    acc.fabrication_welding +
+                                    fabrication_welding,
                                 ndt_complete: acc.ndt_complete + ndt_complete,
                                 pressure_test:
                                     acc.pressure_test + pressure_test,
@@ -150,7 +155,8 @@ export async function GET(request: NextRequest) {
                         {
                             materials_ordered: 0,
                             materials_arrived: 0,
-                            fabrication_complete: 0,
+                            fabrication_cutting: 0,
+                            fabrication_welding: 0,
                             ndt_complete: 0,
                             pressure_test: 0,
                             internal_coating: 0,
