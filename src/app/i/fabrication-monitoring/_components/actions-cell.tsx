@@ -16,7 +16,7 @@ import AccessControl from "@/lib/auth/policy-decision-point";
 import { clientEnv } from "@/lib/constants/config";
 import { useQueryClient } from "@tanstack/react-query";
 import { Row } from "@tanstack/react-table";
-import { Edit2, MoreHorizontal, Send, Trash2 } from "lucide-react";
+import { Download, Edit2, MoreHorizontal, Send, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -100,7 +100,52 @@ export const ActionsCell: React.FC<{
                                         <span>Edit</span>
                                     </DropdownMenuItem>
                                 </HOCAuthComponent>
-
+                                <HOCAuthComponent
+                                    enforcePolicy={{
+                                        roleBasedAccess: {
+                                            action: "READ",
+                                            resource: "fabrication-monitoring",
+                                        },
+                                    }}
+                                >
+                                    <DropdownMenuItem
+                                        className="gap-x-5 text-center"
+                                        data-cy="editHp"
+                                        onClick={(e) => {
+                                            const hp = row.getValue("hp");
+                                            fetch(
+                                                `/api/fabrication-monitoring/${hp}?excel-report=true`,
+                                            )
+                                                .then((res) => res.blob())
+                                                .then((blob) => {
+                                                    const url =
+                                                        window.URL.createObjectURL(
+                                                            blob,
+                                                        );
+                                                    const a =
+                                                        document.createElement(
+                                                            "a",
+                                                        );
+                                                    a.href = url;
+                                                    a.download =
+                                                        "jobs_report.xlsx";
+                                                    document.body.appendChild(
+                                                        a,
+                                                    );
+                                                    a.click();
+                                                    a.remove();
+                                                    window.URL.revokeObjectURL(
+                                                        url,
+                                                    );
+                                                });
+                                        }}
+                                    >
+                                        <Download />
+                                        <span className="text-xs">
+                                            Export Excel
+                                        </span>
+                                    </DropdownMenuItem>
+                                </HOCAuthComponent>
                                 <HOCAuthComponent
                                     enforcePolicy={{
                                         roleBasedAccess: {
@@ -132,16 +177,14 @@ export const ActionsCell: React.FC<{
                                         }}
                                         triggerBtn={
                                             <DropdownMenuItem
-                                                className="gap-x-5 text-center"
+                                                className="gap-x-5 text-center text-red-400"
                                                 data-cy="deleteHp"
                                                 onSelect={(e) =>
                                                     e.preventDefault()
                                                 }
                                             >
-                                                <Trash2 className="text-red-500" />
-                                                <span className="text-red-500">
-                                                    Delete
-                                                </span>
+                                                <Trash2 className="" />
+                                                <span className="">Delete</span>
                                             </DropdownMenuItem>
                                         }
                                     />

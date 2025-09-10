@@ -24,6 +24,7 @@ export default function EditTableToggle({ onToggle }: EditTableToggleProps) {
             variant="outline"
             onClick={handleToggle}
             data-cy="editTableToggle"
+            size={"sm"}
         >
             {!isEditing ? <Edit /> : <CheckSquare />}
             {!isEditing ? " Edit" : "Editing"}

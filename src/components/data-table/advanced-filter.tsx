@@ -76,7 +76,11 @@ export function AdvancedFilter({
     return (
         <Drawer>
             <DrawerTrigger asChild>
-                <Button variant="outline" className={`${className}`}>
+                <Button
+                    variant="outline"
+                    className={`${className}`}
+                    size={"sm"}
+                >
                     <Filter />
                 </Button>
             </DrawerTrigger>

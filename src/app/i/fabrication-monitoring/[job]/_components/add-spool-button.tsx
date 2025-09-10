@@ -36,6 +36,7 @@ export default function AddSpoolButton({ job }: AddSpoolButtonProps) {
             onClick={handleSpool}
             disabled={isLoading}
             data-cy="addSpool"
+            size={"sm"}
         >
             {isLoading ? <Loader2 className="animate-spin" /> : <CirclePlus />}{" "}
             Items
