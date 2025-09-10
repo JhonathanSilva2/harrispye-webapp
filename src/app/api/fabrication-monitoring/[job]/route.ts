@@ -327,35 +327,29 @@ export async function GET(
                 Progress: progress.data || 0,
             },
         };
-        try {
-            const isExcel = urlObj.searchParams.get("excel-report") === "true";
+        const isExcel = urlObj.searchParams.get("excel-report") === "true";
 
-            if (isExcel) {
-                try {
-                    const generator = new FabricationReportGenerator(data);
+        if (isExcel) {
+            try {
+                const generator = new FabricationReportGenerator(data);
 
-                    const buffer = await generator.build();
+                const buffer = await generator.build();
 
-                    // 3. Retorne o arquivo pronto na resposta.
-                    return new NextResponse(buffer, {
-                        status: 200, // 200 OK é mais comum para sucesso de download
-                        headers: {
-                            "Content-Disposition": `attachment; filename=report_${data.job.hp}.xlsx`,
-                            "Content-Type":
-                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        },
-                    });
-                } catch (error) {
-                    // O tratamento de erro continua o mesmo
-                    assert(error instanceof Error);
-                    console.log("Error generating Excel report", error);
-                    return new NextResponse(error.message, { status: 500 });
-                }
+                // 3. Retorne o arquivo pronto na resposta.
+                return new NextResponse(buffer, {
+                    status: 200, // 200 OK é mais comum para sucesso de download
+                    headers: {
+                        "Content-Disposition": `attachment; filename=report_${data.job.hp}.xlsx`,
+                        "Content-Type":
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    },
+                });
+            } catch (error) {
+                // O tratamento de erro continua o mesmo
+                assert(error instanceof Error);
+                console.log("Error generating Excel report", error);
+                return new NextResponse(error.message, { status: 500 });
             }
-        } catch (error) {
-            assert(error instanceof Error);
-            console.log("Error generating Excel report", error);
-            return new NextResponse(error.message, { status: 500 });
         }
 
         const payload: TPayload<FabricationMonitoringSpoolsFetchReturn> = {
