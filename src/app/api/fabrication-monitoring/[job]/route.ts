@@ -335,9 +335,8 @@ export async function GET(
 
                 const buffer = await generator.build();
 
-                // 3. Retorne o arquivo pronto na resposta.
                 return new NextResponse(buffer, {
-                    status: 200, // 200 OK é mais comum para sucesso de download
+                    status: 200,
                     headers: {
                         "Content-Disposition": `attachment; filename=report_${data.job.hp}.xlsx`,
                         "Content-Type":
@@ -345,7 +344,6 @@ export async function GET(
                     },
                 });
             } catch (error) {
-                // O tratamento de erro continua o mesmo
                 assert(error instanceof Error);
                 console.log("Error generating Excel report", error);
                 return new NextResponse(error.message, { status: 500 });
