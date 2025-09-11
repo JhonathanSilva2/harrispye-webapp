@@ -155,7 +155,7 @@ export class FabricationReportGenerator {
     }
 
     /**
-     * Usa um layout customizado e `cellFormats` para formatar um resumo com tipos de dados mistos.
+     * Uses a custom layout and `cellFormats` to format a summary with mixed data types.
      */
     private _summarySheet(): void {
         const summary = this.data.summary;
