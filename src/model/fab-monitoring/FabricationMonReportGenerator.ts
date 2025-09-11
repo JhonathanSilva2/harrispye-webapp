@@ -23,7 +23,7 @@ export class FabricationReportGenerator {
     }
 
     /**
-     * Formata as datas na tabela vertical usando `cellFormats` para precisão.
+     * Formats dates in the vertical table using `cellFormats` for precision.
      */
     private _jobDetailsSheet(): void {
         const jobData = this.data.job;
