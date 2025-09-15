@@ -121,7 +121,7 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
         {
             accessorKey: "client_approval",
             header: () => (
-                <span style={{ fontWeight: 800 }}>Client Approval</span>
+                <span style={{ fontWeight: 800 }}>Document Approval</span>
             ),
             cell: ({ row, table }) => {
                 const status = row.getValue("client_approval") as
@@ -145,6 +145,43 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                             table.options.meta?.FabMonPermissions
                                 ? table.options.meta.FabMonPermissions[
                                       "client_approval"
+                                  ]
+                                : "NONE"
+                        }
+                    />
+                );
+            },
+            meta: {
+                className: "border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "abs_approval",
+            header: () => <span style={{ fontWeight: 800 }}>ABS Approval</span>,
+            cell: ({ row, table }) => {
+                const status = row.getValue("abs_approval") as
+                    | "APPROVED"
+                    | "DECLINED"
+                    | "PENDING";
+
+                const job = table.options.meta?.job;
+                if (!job) {
+                    return <div>Loading...</div>; // or some fallback UI
+                }
+
+                return (
+                    <ApprovalSelect
+                        status={status}
+                        row={row}
+                        table={table}
+                        select_name="abs_approval"
+                        job={job}
+                        permission={
+                            table.options.meta?.FabMonPermissions
+                                ? table.options.meta.FabMonPermissions[
+                                      "abs_approval"
                                   ]
                                 : "NONE"
                         }
@@ -466,6 +503,32 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
             enableHiding: false,
         },
         {
+            accessorKey: "abs_inspection",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>ABS Inspection</span>
+            ),
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="percentage"
+                    name={"abs_inspection"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions[
+                                  "abs_inspection"
+                              ]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
             accessorKey: "scan_3d",
             header: () => <span style={{ fontWeight: 800 }}>3D Scan</span>,
             cell: ({ row, table }) => (
@@ -645,6 +708,56 @@ export const fabricationMonitoringColumns: ColumnDef<fabrication_monitoring>[] =
                     permission={
                         table.options.meta?.FabMonPermissions
                             ? table.options.meta.FabMonPermissions["notes"]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "delivered_to",
+            header: () => <span style={{ fontWeight: 800 }}>Delivered To</span>,
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="text"
+                    name={"delivered_to"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions[
+                                  "delivered_to"
+                              ]
+                            : "NONE"
+                    }
+                />
+            ),
+            meta: {
+                className: "min-w-[180px] border-y",
+            },
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "container_number",
+            header: () => (
+                <span style={{ fontWeight: 800 }}>Container Number</span>
+            ),
+            cell: ({ row, table }) => (
+                <AutoSaveInput
+                    row={row}
+                    table={table}
+                    type="text"
+                    name={"container_number"}
+                    permission={
+                        table.options.meta?.FabMonPermissions
+                            ? table.options.meta.FabMonPermissions[
+                                  "container_number"
+                              ]
                             : "NONE"
                     }
                 />
