@@ -22,7 +22,7 @@ type ApprovalStatus = "APPROVED" | "DECLINED" | "PENDING";
 
 interface ApprovalSelectProps<TData> {
     status: ApprovalStatus;
-    select_name: "client_approval" | "manager_approval";
+    select_name: "abs_approval" | "client_approval" | "manager_approval";
     row: Row<fabrication_monitoring>;
     table: Table<TData>;
     permission: $Enums.fabrication_monitoring_permission_action;
