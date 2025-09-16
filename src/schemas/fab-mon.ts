@@ -13,6 +13,7 @@ export const FabricationForm = z.object({
     client_ref: z.string().nonempty("CLIENT REF is required"),
     organization_id: z.number().min(1, "Organization ID is required"),
     job_description: z.string().nonempty("Job Description is required"),
+    project_manager: z.string().min(3, "Project Manager is required"),
 });
 
 export type FabricationFormData = z.infer<typeof FabricationForm>;

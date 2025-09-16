@@ -41,8 +41,8 @@ const defaultValues: Partial<FabricationFormData> = {
     expected_delivery_date: "",
     po_number: "",
     client_ref: "",
-    organization_id: undefined,
     job_description: "",
+    project_manager: "",
 };
 
 export const EditDialog = ({
@@ -83,6 +83,7 @@ export const EditDialog = ({
                 client_ref: job.client_ref ?? "",
                 organization_id: job.organization_id ?? undefined,
                 job_description: job.job_description ?? undefined,
+                project_manager: job.project_manager ?? undefined,
             });
         } else if (mode === "create") {
             methods.reset(defaultValues);
@@ -109,6 +110,7 @@ export const EditDialog = ({
         "Contract Delivery Date",
         "Expected Delivery Date",
         "Client Ref",
+        "Project Manager",
         "Job Description",
     ];
     return (
@@ -180,6 +182,11 @@ export const EditDialog = ({
                                     name={"client_ref"}
                                     label={"Client Ref"}
                                     placeholder="Enter Client Ref"
+                                />
+                                <GenericInput
+                                    name={"project_manager"}
+                                    label={"Project Manager"}
+                                    placeholder="Enter Project Manager"
                                 />
                             </div>
                             <GenericInput

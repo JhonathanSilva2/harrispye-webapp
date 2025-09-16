@@ -56,7 +56,8 @@ export class FabricationReportGenerator {
     }
 
     /**
-     * Usa `columnFormats` para formatar colunas inteiras de números e porcentagens.
+     * Uses `columnFormats` to format entire columns of numbers and percentages.
+
      */
     private _addFabricationItemsSheet(): void {
         const fabricationColumns: ColumnDefinition<SpoolData>[] = [
@@ -110,7 +111,7 @@ export class FabricationReportGenerator {
             },
         ];
 
-        // A chamada ao addSheet agora é limpa e declarativa
+
         this.writer.addSheet<SpoolData>({
             name: "Fabrication Items",
             useTableFormat: true,
@@ -120,7 +121,8 @@ export class FabricationReportGenerator {
     }
 
     /**
-     * Formata a coluna de data.
+     * Formats the date column.
+
      */
     private _designListSheet(): void {
         const designColumns: ColumnDefinition<DesignData>[] = [

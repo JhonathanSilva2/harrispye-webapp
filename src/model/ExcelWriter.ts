@@ -2,8 +2,8 @@ import ExcelJS, { Column, Style } from "exceljs";
 
 export type CellValue = string | number | boolean | Date | null;
 type RowData = Record<string, CellValue>;
+// Interface for defining columns in declarative mode
 
-// Interface para o modo declarativo
 export interface ColumnDefinition<T> {
     key: string;
     header: string;
@@ -13,33 +13,36 @@ export interface ColumnDefinition<T> {
     selector: (item: T) => CellValue;
 }
 
-// Interface para o modo de planilhas de resumo (chave-valor)
+// Interface for defining key-value rows in summary sheets
+
 export interface KeyValueRow {
     description: string;
     value: CellValue;
     format?: string;
 }
 
-// A configuração unificada. Você usará um dos "modos" de cada vez.
+// The unified configuration interface. You will use one of the "modes" at a time.
+
 export interface ReportConfig<T> {
     name: string;
     useTableFormat?: boolean;
 
-    // MODO 1: Declarativo (preferencial para tabelas de dados)
+    // MODE 1)
     sourceData?: T[];
     columnDefinitions?: ColumnDefinition<T>[];
 
-    // MODO 2: Chave-Valor (preferencial para resumos)
+    // MODE 2) Key-Value (preferred for summaries)
     keyValueData?: KeyValueRow[];
 
-    // MODO 3: Vertical (para detalhes de um único item)
+    // MODE 3) Vertical (for details of a single item)
     verticalTable?: boolean;
-    data?: RowData[]; // Usado pelos modos 3 e 4
+    data?: RowData[]; // Used by modes 3 and 4
 
-    // MODO 4: Simples (fallback, quando os outros não se aplicam)
+    // MODE 4) Simple (fallback when others do not apply)
     columns?: Partial<Column>[];
 
-    // Formatação de célula avulsa (funciona com qualquer modo)
+    // Cell formatting (works with any mode)
+
     cellFormats?: Record<string, string>;
 }
 
@@ -62,7 +65,8 @@ export class ExcelWriter {
     }
 
     /**
-     * Ponto de entrada que orquestra qual construtor de planilha usar.
+     * Entry point that orchestrates which sheet builder to use.
+
      */
     public addSheet<T>(config: ReportConfig<T>): void {
         const sheet = this.workbook.addWorksheet(config.name);
@@ -80,7 +84,8 @@ export class ExcelWriter {
         this._applyCellFormats(sheet, config);
     }
     /**
-     * MODO 1: Constrói a planilha a partir de dados brutos e definições de coluna.
+     * MODE 1) Builds the sheet from raw data and column definitions.
+
      */
     private _buildDeclarativeSheet<T>(
         sheet: ExcelJS.Worksheet,
@@ -88,7 +93,7 @@ export class ExcelWriter {
     ): void {
         const defs = config.columnDefinitions!;
 
-        // A lógica de estilo é ajustada aqui
+
         sheet.columns = defs.map((d) => {
             const style = { ...this.defaultStyle, ...d.style };
 
@@ -129,7 +134,7 @@ export class ExcelWriter {
         }
     }
     /**
-     * MODO 2: Constrói uma planilha de resumo (chave-valor).
+     * MODE 2) Builds a summary (key-value) sheet.
      */
     private _buildKeyValueSheet<T>(
         sheet: ExcelJS.Worksheet,
@@ -168,7 +173,8 @@ export class ExcelWriter {
     }
 
     /**
-     * MODO 3: Constrói uma planilha vertical.
+     * MODE 3) Builds a vertical sheet.
+
      */
     private _buildVerticalSheet<T>(
         sheet: ExcelJS.Worksheet,
@@ -225,7 +231,7 @@ export class ExcelWriter {
     }
 
     /**
-     * MODO 4: Constrói uma planilha simples (fallback).
+     * MODE 4) Builds a simple (fallback) sheet.
      */
     private _buildSimpleSheet<T>(
         sheet: ExcelJS.Worksheet,
@@ -247,7 +253,8 @@ export class ExcelWriter {
     }
 
     /**
-     * Adiciona dados formatados como uma Tabela do Excel.
+     * Adds formatted data as an Excel Table.
+
      */
     private _addAsTable(
         sheet: ExcelJS.Worksheet,
@@ -267,7 +274,8 @@ export class ExcelWriter {
     }
 
     /**
-     * Aplica formatação a células individuais.
+     * Applies formatting to individual cells.
+
      */
     private _applyCellFormats<T>(
         sheet: ExcelJS.Worksheet,
@@ -283,7 +291,8 @@ export class ExcelWriter {
     }
 
     /**
-     * Converte um nome de formato em sua string correspondente no Excel.
+     * Converts a format name into its corresponding string in Excel.
+
      */
     private _getFormatString(formatType: string): string {
         switch (formatType) {

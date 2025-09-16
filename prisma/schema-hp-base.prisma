@@ -197,6 +197,7 @@ model fabrication_monitoring_jobs {
   updated_design                 String?                          @dbHPBase.VarChar(255)
   po_number                      String                           @dbHPBase.VarChar(255)
   organization_id                Int?
+  project_manager                String?                           @dbHPBase.VarChar(255)
   user_organizations             user_organizations?              @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_fabrication_monitoring_jobs_organization_id", name: "OrgToJobs")
   fabrication_monitoring         fabrication_monitoring[]
   fabrication_monitoring_designs fabrication_monitoring_designs[]

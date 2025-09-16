@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
             { key: "po_number", type: "string" },
             { key: "contract_delivery_date", type: "date" },
             { key: "expected_delivery_date", type: "date" },
+            { key: "project_manager", type: "string" },
         ];
 
         const advancedFilterKeys: ValidSort[] = [
@@ -40,6 +41,7 @@ export async function GET(request: NextRequest) {
             { key: "client", type: "string" },
             { key: "po_number", type: "string" },
             { key: "expected_delivery_date", type: "date" },
+            { key: "project_manager", type: "string" },
         ];
 
         const session = await getServerSession(options);
@@ -203,6 +205,7 @@ export async function POST(request: NextRequest) {
                 client_ref: newBody.client_ref,
                 organization_id: newBody.organization_id,
                 job_description: newBody.job_description,
+                project_manager: newBody.project_manager ?? "",
             },
         });
         return new NextResponse(JSON.stringify(newJob, null, 4), {
