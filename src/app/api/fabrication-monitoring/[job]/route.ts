@@ -455,6 +455,7 @@ export async function PATCH(
                 client_ref: newBody.client_ref,
                 organization_id: newBody.organization_id,
                 job_description: newBody.job_description,
+                project_manager: newBody.project_manager ?? "",
             },
         });
 

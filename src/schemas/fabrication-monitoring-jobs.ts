@@ -38,6 +38,11 @@ export const fabricationMonitoringJobCreateSchema = z
             .min(5, "Job description must be at least 5 characters")
             .max(1000)
             .optional(),
+        project_manager: z
+            .string()
+            .min(3, "Project Manager must be at least 3 characters")
+            .max(255)
+            .optional(),
     })
     .strict();
 
@@ -51,9 +56,9 @@ export const fabricationMonitoringJobUpdateSchema =
                 .min(4, "HP must be at least 4 characters")
                 .max(255)
                 .optional(),
-            client: z
+            project_manager: z
                 .string()
-                .min(3, "Client must be at least 3 characters")
+                .min(3, "Project Manager must be at least 3 characters")
                 .max(255)
                 .optional(),
             po_number: z
