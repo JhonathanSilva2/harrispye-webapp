@@ -1,4 +1,3 @@
-import { serverEnv } from "@/lib/constants/config";
 import { Prisma } from "prisma/generated/client-hp-base";
 import { Prisma as PrismaProposals } from "prisma/generated/client-proposals";
 

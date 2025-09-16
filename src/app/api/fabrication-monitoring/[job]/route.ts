@@ -14,6 +14,7 @@ import { fabricationMonitoringJobUpdateSchema } from "@/schemas/fabrication-moni
 import assert from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getJobProgress } from "./progress/progress-fields";
 
 export interface FabricationMonitoringSpoolsFetchReturn {
     job: fabrication_monitoring_jobs;
@@ -161,9 +162,7 @@ export async function GET(
             );
 
         const transaction = await prismaBase.$transaction(async (tx) => {
-            const promiseProgress = fetchProgress({
-                hp: job.hp,
-            });
+            const promiseProgress = getJobProgress(job.id);
 
             const drawing_sort_order = !orderBy?.drawing_ref
                 ? "asc"
@@ -324,7 +323,7 @@ export async function GET(
                 "Total Mass": summary._sum.mass || 0,
                 "Gross Spool Cost By Approval": grossCostApprovals || {},
                 "Total Gross Spool Cost": summary._sum.gross_spool_cost || 0,
-                Progress: progress.data || 0,
+                Progress: progress,
             },
         };
         const isExcel = urlObj.searchParams.get("excel-report") === "true";
@@ -533,7 +532,6 @@ export async function POST(
             { status: 400 },
         ); // Retorne uma resposta com status e mensagem
     }
-    console.error("É necessario implementar o updated_by");
     const job = (await params).job;
     if (!job) {
         return new NextResponse("Job not found", { status: 404 });

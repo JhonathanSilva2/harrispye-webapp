@@ -3,6 +3,7 @@ import ExcelJS, { Column, Style } from "exceljs";
 export type CellValue = string | number | boolean | Date | null;
 type RowData = Record<string, CellValue>;
 // Interface for defining columns in declarative mode
+
 export interface ColumnDefinition<T> {
     key: string;
     header: string;
@@ -13,6 +14,7 @@ export interface ColumnDefinition<T> {
 }
 
 // Interface for defining key-value rows in summary sheets
+
 export interface KeyValueRow {
     description: string;
     value: CellValue;
@@ -20,6 +22,7 @@ export interface KeyValueRow {
 }
 
 // The unified configuration interface. You will use one of the "modes" at a time.
+
 export interface ReportConfig<T> {
     name: string;
     useTableFormat?: boolean;
@@ -39,6 +42,7 @@ export interface ReportConfig<T> {
     columns?: Partial<Column>[];
 
     // Cell formatting (works with any mode)
+
     cellFormats?: Record<string, string>;
 }
 
@@ -62,6 +66,7 @@ export class ExcelWriter {
 
     /**
      * Entry point that orchestrates which sheet builder to use.
+
      */
     public addSheet<T>(config: ReportConfig<T>): void {
         const sheet = this.workbook.addWorksheet(config.name);
@@ -80,12 +85,14 @@ export class ExcelWriter {
     }
     /**
      * MODE 1) Builds the sheet from raw data and column definitions.
+
      */
     private _buildDeclarativeSheet<T>(
         sheet: ExcelJS.Worksheet,
         config: ReportConfig<T>,
     ): void {
         const defs = config.columnDefinitions!;
+
 
         sheet.columns = defs.map((d) => {
             const style = { ...this.defaultStyle, ...d.style };
@@ -167,6 +174,7 @@ export class ExcelWriter {
 
     /**
      * MODE 3) Builds a vertical sheet.
+
      */
     private _buildVerticalSheet<T>(
         sheet: ExcelJS.Worksheet,
@@ -246,6 +254,7 @@ export class ExcelWriter {
 
     /**
      * Adds formatted data as an Excel Table.
+
      */
     private _addAsTable(
         sheet: ExcelJS.Worksheet,
@@ -266,6 +275,7 @@ export class ExcelWriter {
 
     /**
      * Applies formatting to individual cells.
+
      */
     private _applyCellFormats<T>(
         sheet: ExcelJS.Worksheet,
@@ -282,6 +292,7 @@ export class ExcelWriter {
 
     /**
      * Converts a format name into its corresponding string in Excel.
+
      */
     private _getFormatString(formatType: string): string {
         switch (formatType) {

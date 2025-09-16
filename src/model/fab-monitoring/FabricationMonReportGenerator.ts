@@ -4,6 +4,7 @@ import { ColumnDefinition, ExcelWriter } from "../ExcelWriter";
 type ReportData = FabricationMonitoringSpoolsFetchReturn;
 type SpoolData = FabricationMonitoringSpoolsFetchReturn["spools"][0];
 type DesignData = FabricationMonitoringSpoolsFetchReturn["designs"][0];
+
 export class FabricationReportGenerator {
     private writer: ExcelWriter;
     private data: ReportData;
@@ -56,6 +57,7 @@ export class FabricationReportGenerator {
 
     /**
      * Uses `columnFormats` to format entire columns of numbers and percentages.
+
      */
     private _addFabricationItemsSheet(): void {
         const fabricationColumns: ColumnDefinition<SpoolData>[] = [
@@ -109,6 +111,7 @@ export class FabricationReportGenerator {
             },
         ];
 
+
         this.writer.addSheet<SpoolData>({
             name: "Fabrication Items",
             useTableFormat: true,
@@ -119,6 +122,7 @@ export class FabricationReportGenerator {
 
     /**
      * Formats the date column.
+
      */
     private _designListSheet(): void {
         const designColumns: ColumnDefinition<DesignData>[] = [

@@ -17,10 +17,13 @@ export function useUpdateSpool(
     return useMutation<void, Error, body>({
         ...options,
         mutationFn: async (data) => {
-            try {
-                await patchSpool(job, spoolID, data as fabrication_monitoring);
-            } catch (error) {
-                throw new Error("Failed to updated spool, please try again");
+            const response = await patchSpool(
+                job,
+                spoolID,
+                data as fabrication_monitoring,
+            );
+            if (!response.ok) {
+                throw new Error(response.message);
             }
         },
         onSuccess: () => {
