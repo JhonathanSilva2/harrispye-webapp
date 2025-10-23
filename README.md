@@ -1,5 +1,5 @@
 ## Getting Started
-**Deploy Teste - [22/10/2025 - 15:43]**
+**Deploy Teste - [23/10/2025 - 08:50]**
 ### Docs
 
 -   [MySQL](https://dev.mysql.com/doc/refman/8.4/en/introduction.html)
