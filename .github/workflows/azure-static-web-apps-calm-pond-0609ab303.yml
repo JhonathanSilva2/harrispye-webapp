@@ -24,19 +24,6 @@ jobs:
               with:
                   submodules: true
                   lfs: false
-            - name: Install OIDC Client from Core Package
-              run: |
-                  npm config set registry https://registry.npmjs.org/
-                  npm config set progress false
-                  npm install @actions/core@1.6.0 @actions/http-client --loglevel verbose --prefer-offline --no-audit --no-fund
-            - name: Get Id Token
-              uses: actions/github-script@v6
-              id: idtoken
-              with:
-                  script: |
-                      const coredemo = require('@actions/core')
-                      return await coredemo.getIDToken()
-                  result-encoding: string
             - name: Build and Deploy
               env:
                   DATABASE_URL_HPBASE: ${{ secrets.DATABASE_URL_HPBASE }}
@@ -73,7 +60,6 @@ jobs:
                       rm -rf $SOURCE_DIR/node_modules/@next/swc-* &&
                       rm -rf $SOURCE_DIR/.next/cache
                   output_location: "" # Built app content directory - optional
-                  github_id_token: ${{ steps.idtoken.outputs.result }}
                   ###### End of Repository/Build Configurations ######
 
     close_pull_request_job:
@@ -88,3 +74,4 @@ jobs:
                   action: "close"
                   azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_CALM_POND_0609AB303 }}
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
+
