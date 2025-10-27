@@ -1,37 +1,27 @@
-// import { withSentryConfig } from "@sentry/nextjs";
+// import { withSentryConfig } from "@sentry/nextjs"; // Sentry desativado
 import type { NextConfig } from "next";
 import path from "path";
 
 const isCI = process.env.CI === "true";
-.
+
 const nextConfig: NextConfig = {
     webpack(config, { isServer }) {
-        /**.
-         * Lets you import with import Foo from "@/components/Foo" instead of long relative paths.
-         */
         config.resolve.alias = {
             ...config.resolve.alias,
             "@": path.resolve(__dirname, "src"),
         };
-        /**
-         * Tells Webpack to emit any .node (binary addon) files as separate assets under /_next/static/chunks/,
-         * so your server bundle can load them at runtime.
-         */
         config.module.rules.push({
             test: /\.node$/,
             type: "asset/resource",
             generator: { filename: "static/chunks/[name][ext]" },
         });
-        /**
-         * Disable cache on the server build
-         */
         if (isServer) {
             config.cache = false;
         }
         return config;
     },
     output: "standalone",
-    productionBrowserSourceMaps: false,
+    productionBrowserSourceMaps: false, // Desativado para produção
     logging: {
         fetches: {
             hmrRefreshes: true,
@@ -50,6 +40,8 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: "https",
+                // A '!' assume que NEXT_PUBLIC_URL estará definido em produção.
+                // Considerar um valor default se puder ser undefined.
                 hostname: process.env.NEXT_PUBLIC_URL!.replace(
                     /^https?:\/\//,
                     "",
@@ -59,8 +51,7 @@ const nextConfig: NextConfig = {
             },
         ],
     },
-    reactStrictMode: true, // Disable when you thinks your component is re-rendering too much
-    // https://nextjs.org/docs/app/api-reference/config/next-config-js/reactStrictMode
+    reactStrictMode: true,
     experimental: {
         authInterrupts: true,
         serverActions: {
@@ -87,6 +78,7 @@ const nextConfig: NextConfig = {
             process.env.AZURE_STORAGE_CONNECTION_STRING,
         AZURE_STORAGE_ACCOUNT_NAME: process.env.AZURE_STORAGE_ACCOUNT_NAME,
         AZURE_STORAGE_ACCOUNT_KEY: process.env.AZURE_STORAGE_ACCOUNT_KEY,
+        // Variáveis Sentry mantidas no env, mas não usadas se Sentry desativado
         SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
         SENTRY_DSN: process.env.SENTRY_DSN,
         NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -96,35 +88,19 @@ const nextConfig: NextConfig = {
     },
 };
 
-   export default nextConfig;
-// export default withSentryConfig(nextConfig, {
-    // For all available options, see:
-    // https://www.npmjs.com/package/@sentry/webpack-plugin#options
+// --- Bloco Sentry Desativado ---
+// export default withSentryConfig(
+//   nextConfig,
+//   {
+//     org: "azuri-tech",
+//     project: "harrispye-az-next",
+//     silent: isCI,
+//     widenClientFileUpload: true,
+//     tunnelRoute: "/monitoring",
+//     disableLogger: true,
+//     automaticVercelMonitors: true,
+//   }
+// );
+// --- Fim do Bloco Sentry Desativado ---
 
-    // org: "azuri-tech",
-    // project: "harrispye-az-next",
-
-    // Only print logs for uploading source maps in CI
-    // silent: isCI,
-
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    // widenClientFileUpload: true,
-
-    // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-    // This can increase your server load as well as your hosting bill.
-    // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-    // side errors will fail.
-    // tunnelRoute: "/monitoring",
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    // disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    // automaticVercelMonitors: true,
-// });
+export default nextConfig; // Exporta a configuração normal do Next.js
