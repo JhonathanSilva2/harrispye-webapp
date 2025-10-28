@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
         }
         return config;
     },
-    output: "standalone",
     productionBrowserSourceMaps: false, // Desativado para produção
     logging: {
         fetches: {
