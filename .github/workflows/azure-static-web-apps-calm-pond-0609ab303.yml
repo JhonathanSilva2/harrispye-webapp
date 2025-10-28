@@ -59,7 +59,7 @@ jobs:
                   api_build_command: >
                       rm -rf $SOURCE_DIR/node_modules/@next/swc-* &&
                       rm -rf $SOURCE_DIR/.next/cache
-                  output_location: "" # Built app content directory - optional
+                  output_location: "." # Built app content directory - optional
                   ###### End of Repository/Build Configurations ######
 
     close_pull_request_job:
@@ -74,4 +74,5 @@ jobs:
                   action: "close"
                   azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_CALM_POND_0609AB303 }}
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
+
 
