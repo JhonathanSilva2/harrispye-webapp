@@ -6,6 +6,9 @@ import { MaintenanceMiddleware } from "./middleware/maintenance";
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+     if (pathname.startsWith("/.swa/health")) {
+        return NextResponse.next();
+    }
     const maintenanceResponse = MaintenanceMiddleware(request, pathname);
     if (maintenanceResponse) return maintenanceResponse;
 
